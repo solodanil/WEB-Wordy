@@ -1,3 +1,20 @@
 footer {
     text-align: center;
 }
+.head_h2 {
+    margin-top: 20px;
+}
+.head_link {
+    color: black;
+}
+.link_arrow {
+    color: #E9ECEF;
+    font-size: 70%;
+}
+.main_card_header {
+    color: #777777;
+    size: 13pt;
+}
+.card_sc {
+    border-radius: 25px;
+}
