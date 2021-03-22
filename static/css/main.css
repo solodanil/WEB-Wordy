@@ -13,8 +13,15 @@ footer {
 }
 .main_card_header {
     color: #777777;
-    size: 13pt;
+    font-size: 11pt;
+    font-variant: small-caps;
+    font-weight: 400;
+    padding-left: 15px;
 }
-.card_sc {
+div.card_sc {
     border-radius: 25px;
+    margin-bottom: 25px;
+}
+img.card_sc {
+    border-radius: 25px 25px 0 0;
 }
