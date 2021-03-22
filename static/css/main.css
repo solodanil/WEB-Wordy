@@ -7,6 +7,10 @@ footer {
 .head_link {
     color: black;
 }
+.head_link:hover {
+    color: black;
+    text-decoration: none;
+}
 .link_arrow {
     color: #E9ECEF;
     font-size: 70%;
@@ -22,6 +26,20 @@ div.card_sc {
     border-radius: 25px;
     margin-bottom: 25px;
 }
-img.card_sc {
+card_sc img {
     border-radius: 25px 25px 0 0;
+}
+.sc-ul {
+    padding-top: 0;
+    padding-left: 0;
+    color: #777777;
+}
+.sc-ul li {
+    display: block;
+}
+.sc-ul i {
+    margin-right: 8px;
+}
+.card-text-sc {
+    margin-bottom: 7px;
 }
