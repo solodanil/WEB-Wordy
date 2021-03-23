@@ -25,3 +25,13 @@ div.card_sc {
 img.card_sc {
     border-radius: 25px 25px 0 0;
 }
+
+.table_design {
+    width: 520px;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -khtml-border-radius: 10px;
+    border: 1px solid #808080;
+    display: block;
+}
