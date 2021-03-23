@@ -26,6 +26,20 @@ img.card_sc {
     border-radius: 25px 25px 0 0;
 }
 
+.sc-ul {
+    padding-top: 0;
+    padding-left: 0;
+    color: #777777;
+}
+.sc-ul li {
+    display: block;
+}
+.sc-ul i {
+    margin-right: 8px;
+}
+.card-text-sc {
+    margin-bottom: 7px;
+
 .table_design {
     width: 520px;
     border-radius: 10px;
