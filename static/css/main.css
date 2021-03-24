@@ -19,11 +19,21 @@ footer {
     padding-left: 15px;
 }
 div.card_sc {
-    border-radius: 25px;
+    border-radius: 15px;
     margin-bottom: 25px;
 }
-img.card_sc {
-    border-radius: 25px 25px 0 0;
+card_sc img{
+    border-radius: 15px 15px 0 0;
+}
+
+.table_design {
+    width: 520px;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -khtml-border-radius: 10px;
+    border: 1px solid #808080;
+    display: block;
 }
 
 .sc-ul {
@@ -39,6 +49,7 @@ img.card_sc {
 }
 .card-text-sc {
     margin-bottom: 7px;
+}
 
 .table_design {
     width: 520px;
@@ -48,4 +59,24 @@ img.card_sc {
     -khtml-border-radius: 10px;
     border: 1px solid #808080;
     display: block;
+}
+
+.all-sc-img {
+    max-width: 100%;
+    border-radius: 15px 15px 15px 15px; /* Тут нужно 25px 0 0 25 px */
+}
+
+.all-sc-card-body button {
+    float: right;
+    position: absolute;
+    bottom: 15px;
+    right: 30px;
+}
+
+.all-sc-date-picker {
+    margin-bottom: 10px;
+}
+
+.mt25 {
+    margin-top: 25px;
 }
