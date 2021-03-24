@@ -7,6 +7,11 @@ footer {
 .head_link {
     color: black;
 }
+.head_link:hover {
+    text-decoration: none;
+    color: black;
+}
+
 .link_arrow {
     color: #E9ECEF;
     font-size: 70%;
@@ -22,8 +27,12 @@ div.card_sc {
     border-radius: 15px;
     margin-bottom: 25px;
 }
-card_sc img{
+.card-img-sc{
     border-radius: 15px 15px 0 0;
+}
+
+.card-text {
+    color: #212529 !important
 }
 
 .table_design {
@@ -39,7 +48,7 @@ card_sc img{
 .sc-ul {
     padding-top: 0;
     padding-left: 0;
-    color: #777777;
+    color: #777777; !important
 }
 .sc-ul li {
     display: block;
@@ -79,4 +88,24 @@ card_sc img{
 
 .mt25 {
     margin-top: 25px;
+}
+
+.card-title{
+    color: #212529; !important
+}
+
+.card-title a:hover {
+    text-decoration: none;
+}
+
+.tdn {
+    text-decoration: none;
+}
+
+.tdn:hover {
+    text-decoration: none;
+}
+
+.card-disabled {
+    opacity: 0.5;
 }
