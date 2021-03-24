@@ -72,7 +72,7 @@ div.card_sc {
 
 .all-sc-img {
     max-width: 100%;
-    border-radius: 15px 15px 15px 15px; /* Тут нужно 25px 0 0 25 px */
+    border-radius: 15px 15px 15px 15px; /* Для десктопа тут нужно 25px 0 0 25 px */
 }
 
 .all-sc-card-body button {
