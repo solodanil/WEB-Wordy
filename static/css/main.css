@@ -26,6 +26,7 @@ img.card_sc {
     border-radius: 25px 25px 0 0;
 }
 
+
 .sc-ul {
     padding-top: 0;
     padding-left: 0;
@@ -41,12 +42,109 @@ img.card_sc {
     margin-bottom: 7px;
 }
 
-.table_design {
-    width: 520px;
-    border-radius: 10px;
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    -khtml-border-radius: 10px;
-    border: 1px solid #808080;
-    display: block;
+
+img.image_card {
+    position: absolute;
+    width: 219px;
+    height: 265px;
+    left: 179px;
+    border-radius: 4px 0px 0px 4px;
+}
+
+p.text {
+    position: absolute;
+    width: 698px;
+    height: 163px;
+    left: 178px;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 28px;
+    color: #68717A;
+}
+
+p.rect_card {
+    position: absolute;
+    width: 540px;
+    height: 265px;
+    left: 179px;
+    background: #FFFFFF;
+    border: 1px solid #AAAAAA;
+    box-sizing: border-box;
+    border-radius: 4px;
+}
+
+.name_card {
+    position: absolute;
+    width: 87px;
+    height: 29px;
+    left: 420px;
+    top: 575px;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 29px;
+    color: #152536;
+}
+
+p.text_card {
+    position: absolute;
+    width: 272px;
+    height: 96px;
+    left: 420px;
+    top: 620px;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 24px;
+    color: #68717A;
+}
+
+p.words_card {
+    position: absolute;
+    width: 58px;
+    height: 16px;
+    left: 420px;
+    top: 770px;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 13px;
+    line-height: 16px;
+    color: #ABB5BE;
+}
+
+button.button_card {
+    position: absolute;
+    width: 165px;
+    height: 36px;
+    left: 548px;
+    top: 765px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 6px 12px;
+    border: 1px solid #007BFF;
+    box-sizing: border-box;
+    border-radius: 4px;
+
+    font-family: SF Pro Display;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 24px;
+
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #007BFF;
+
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+    margin: 0px 0px;
 }
