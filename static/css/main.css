@@ -133,13 +133,16 @@ div.card_sc {
 }
 
 .name_club {
-    position: absolute;
-    top: 55%;
-    text-transform: uppercase;
-    color: white;
-    font-size: 48px;
+    color: white
 }
 
-img.image_club {
+div.image {
+    width: 50%
+    height: 10%
+}
+
+img.club_image {
+    margin: 0;
     width: 100%;
+    object-fit: cover;
 }
