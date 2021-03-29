@@ -121,3 +121,25 @@ div.card_sc {
     right: 30px;
     bottom: 15px;
 }
+
+.description {
+    width: 698px;
+    height: 163px;
+    left: 178px;
+    top: 559px;
+    font-size: 18px;
+    line-height: 28px;
+    color: #68717A;
+}
+
+.name_club {
+    position: absolute;
+    top: 55%;
+    text-transform: uppercase;
+    color: white;
+    font-size: 48px;
+}
+
+img.image_club {
+    width: 100%;
+}
