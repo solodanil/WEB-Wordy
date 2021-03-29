@@ -70,13 +70,108 @@
 </div>
 
 <h2 class="head_h2">Подборки слов</h2>
-<div>
-    <p class="rect_card"></p>
-    <h4 class="name_card">Города</h4>
-    <img class="image_card" src="..." alt="...">
-    <p class="text_card">This is a wider card with supporting text below as a natural lead-in
-            to additional content. This content is a little bit longer.</p>
-    <p class="words_card">32 слова</p>
-    <button type="button" class="button_card">Добавить в словарь</button>
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <div class="card mb-3" style="max-width: 540px;">
+        <div class="row g-0">
+          <div class="col-md-4">
+            <div class="collection-img">
+              <img src="../static/images/tmp.jpg" alt="...">
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">Название карточки</h5>
+              <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+              <table>
+                <tr>
+                  <td>
+                    <a href="" data-bs-toggle="modal" data-bs-target="#Modal1"><p class="card-text"><small class="text-muted">10 слов</small></p></a>
+                  </td>
+                  <td>
+                    <button type="button" class="btn btn-outline-primary btn-sm collection-btn">Добавить в словарь</button>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card mb-3" style="max-width: 540px;">
+        <div class="row g-0">
+          <div class="col-md-4">
+            <div class="collection-img">
+              <img src="../static/images/tmp.jpg" alt="...">
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title">Название карточки</h5>
+              <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+              <table>
+                <tr>
+                  <td>
+                    <a href="" data-bs-toggle="modal" data-bs-target="#Modal2"><p class="card-text"><small class="text-muted">10 слов</small></p></a>
+                  </td>
+                  <td>
+                    <button type="button" class="btn btn-outline-primary btn-sm collection-btn">Добавить в словарь</button>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="Modal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Название подборки</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="bi bi-x"></i></button>
+      </div>
+      <div class="modal-body">
+        <ul>
+          <li>Hello</li>
+          <li>Hello</li>
+          <li>Hello</li>
+          <li>Hello</li>
+          <li>Hello</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="Modal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Название подборки 2</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="bi bi-x"></i></button>
+      </div>
+      <div class="modal-body">
+        <ul>
+          <li>Hello</li>
+          <li>Hello</li>
+          <li>Hello</li>
+          <li>Hello</li>
+          <li>Hello</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 {% endblock %}
