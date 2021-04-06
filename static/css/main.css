@@ -112,8 +112,8 @@ div.card_sc {
 
 
 .collection-img img {
-    object-fit: cover;
     width: 100%; /*  Не знаю, как сделать нормально */
+    object-fit: cover;
 }
 
 .collection-btn {
@@ -133,9 +133,7 @@ div.card_sc {
 }
 
 .name_club {
-    color: white;
-    position: absolute;
-    bottom: 15px;
+    color: black;
     z-index: 300;
 }
 
