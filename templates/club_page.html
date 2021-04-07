@@ -2,21 +2,36 @@
 
 {% block content %}
 
-<div class="container">
+<div>
     <div class='image' style="background-image:url(../static/images/hor.jpg);"></div>
-    <h2 class="head_h2">Тема разговорного клуба №2</h2>
-
-    <h2 class="head_h2">Описание</h2>
-    <p class="description">Leo diam vestibulum aenean vel faucibus non augue integer ut. A eleifend nulla elementum
-        habitasse sed diam, tempus et consectetur. Dictum eget orci, turpis blandit facilisis risus. In velit nunc risus
-        mi. Aliquam mattis vehicula mi volutpat tortor auctor. Cursus ac est orci, felis varius nunc, diam cras
-        ultrices. Viverra ac est non varius diam donec lacus, pretium, lorem. Rhoncus, at odio arcu malesuada amet
-        integer ut nibh cursus.</p>
-    <button type="button" class="btn btn-primary">Записаться</button>
-
-    <h2 class="head_h2">Эти слова пригодятся</h2>
     <div class="row">
-        <div class="col">
+        <div class="col-md-8">
+            <h1 class="head_h2">Тема разговорного клуба №2</h1>
+
+            <h3 class="head_h2">Описание</h3>
+            <p class="description">Leo diam vestibulum aenean vel faucibus non augue integer ut. A eleifend nulla elementum
+                habitasse sed diam, tempus et consectetur. Dictum eget orci, turpis blandit facilisis risus. In velit nunc risus
+                mi. Aliquam mattis vehicula mi volutpat tortor auctor. Cursus ac est orci, felis varius nunc, diam cras
+                ultrices. Viverra ac est non varius diam donec lacus, pretium, lorem. Rhoncus, at odio arcu malesuada amet
+                integer ut nibh cursus.</p>
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-3">
+            <ul class="sc-btn-group">
+                <li><button type="button" class="btn btn-primary">Записаться</button></li>
+                <li><button type="button" class="btn btn-outline-secondary"><i class="bi bi-share-fill"></i></button></li>
+            </ul>
+            <ul class="sc-ul">
+                <li><i class="bi bi-calendar"></i>8 августа, в 12:00</li>
+                <li><i class="bi bi-clock"></i>30 минут</li>
+                <li><i class="bi bi-people"></i>5 мест</li>
+            </ul>
+        </div>
+    </div>
+
+    <h3 class="head_h2">Эти слова пригодятся</h3>
+    <div class="row">
+        <div class="col-md">
             <div class="card mb-3" style="max-width: 540px;">
                 <div class="row g-0">
                     <div class="col-md-4">
@@ -47,7 +62,7 @@
                 </div>
             </div>
         </div>
-        <div class="col">
+        <div class="col-md">
             <div class="card mb-3" style="max-width: 540px;">
                 <div class="row g-0">
                     <div class="col-md-4">

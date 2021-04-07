@@ -123,10 +123,6 @@ div.card_sc {
 }
 
 .description {
-    width: 698px;
-    height: 163px;
-    left: 178px;
-    top: 559px;
     font-size: 18px;
     line-height: 28px;
     color: #68717A;
@@ -143,4 +139,12 @@ div.image {
     background-position: center;
     background-repeat: no-repeat;
 
+}
+
+.sc-btn-group li{
+    display: inline;
+}
+
+.sc-btn-group{
+    margin-top: 25px;
 }
