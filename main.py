@@ -1,5 +1,8 @@
 from flask import Flask, url_for, request, render_template
 
+from data import db_session
+from data.conversation_club import ConversationClub
+
 app = Flask(__name__)
 
 
@@ -23,6 +26,9 @@ def club_page():
 def word():
     return render_template('word.html')
 
+def main():
+    db_session.global_init("db/conversation_club.db")
+    app.run(port=8080, host='127.0.0.1')
 
 if __name__ == '__main__':
-    app.run(port=8080, host='127.0.0.1')
+    main()
