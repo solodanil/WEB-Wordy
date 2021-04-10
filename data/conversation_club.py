@@ -10,7 +10,7 @@ class ConversationClub(SqlAlchemyBase):
     title = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     time = sqlalchemy.Column(sqlalchemy.Time, default=datetime.time)
     date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now)
-    duration = sqlalchemy.Column(sqlalchemy.String, nullable=True, default=datetime.timedelta)
+    duration = sqlalchemy.Column(sqlalchemy.DateTime, nullable=True, default=datetime.timedelta)
     link = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     number_of_seats = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     image = sqlalchemy.Column(sqlalchemy.String, nullable=True)
