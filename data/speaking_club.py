@@ -3,8 +3,18 @@ import sqlalchemy
 
 from .db_session import SqlAlchemyBase
 
+club_to_user = sqlalchemy.Table(
+    'club_to_user',
+    SqlAlchemyBase.metadata,
+    sqlalchemy.Column('club', sqlalchemy.Integer,
+                      sqlalchemy.ForeignKey('speaking_club.id')),
+    sqlalchemy.Column('user', sqlalchemy.Integer,
+                      sqlalchemy.ForeignKey('users.id'))
+)
+
+
 class SpeakingClub(SqlAlchemyBase):
-    __tablename__ = 'conversation_club'
+    __tablename__ = 'speaking_club'
 
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True, index=True)
     title = sqlalchemy.Column(sqlalchemy.String, nullable=True)
@@ -14,5 +24,3 @@ class SpeakingClub(SqlAlchemyBase):
     link = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     number_of_seats = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     image = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-
-

@@ -1,9 +1,11 @@
 import datetime
 import sqlalchemy
+import sqlalchemy.orm as orm
 
 from .db_session import SqlAlchemyBase
 
-class Users(SqlAlchemyBase):
+
+class User(SqlAlchemyBase):
     __tablename__ = 'users'
 
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True, index=True)
@@ -14,3 +16,7 @@ class Users(SqlAlchemyBase):
     # email = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     photo = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     registration_date = sqlalchemy.Column(sqlalchemy.DateTime, nullable=datetime.datetime.now())
+
+    speaking_club = orm.relation("club_to_user",
+                          secondary="speaking_club",
+                          backref="users")

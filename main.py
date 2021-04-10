@@ -26,9 +26,11 @@ def club_page():
 def word():
     return render_template('word.html')
 
+
 def main():
     db_session.global_init("db/database.db")
     app.run(port=8080, host='127.0.0.1')
+
 
 if __name__ == '__main__':
     main()

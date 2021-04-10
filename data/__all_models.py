@@ -1,3 +1,3 @@
 from . import speaking_club
 from . import collection
-from . import users
+from . import user
