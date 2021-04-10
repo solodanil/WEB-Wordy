@@ -3,7 +3,7 @@ import sqlalchemy
 
 from .db_session import SqlAlchemyBase
 
-class ConversationClub(SqlAlchemyBase):
+class SpeakingClub(SqlAlchemyBase):
     __tablename__ = 'conversation_club'
 
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True, index=True)

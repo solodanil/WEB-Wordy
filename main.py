@@ -1,7 +1,7 @@
 from flask import Flask, url_for, request, render_template
 
 from data import db_session
-from data.conversation_club import ConversationClub
+from data.speaking_club import SpeakingClub
 
 app = Flask(__name__)
 
