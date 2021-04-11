@@ -1,4 +1,5 @@
 from flask import Flask, url_for, request, render_template, redirect
+from dateutil import parser
 
 from data import db_session
 from data.speaking_club import SpeakingClub
@@ -39,6 +40,12 @@ def add_news():
         club = SpeakingClub()
         club.title = form.name.data
         club.description = form.content.data
+        club.date = parser.parse(form.date.data).date()
+        club.time = parser.parse(form.time.data).time()
+        club.duration = form.duration.data
+        club.link = form.link.data
+        club.number_of_seats = form.number_of_seats.data
+
         db_sess.add(club)
         db_sess.commit()
         print(club)

@@ -20,7 +20,7 @@ class SpeakingClub(SqlAlchemyBase):
     title = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     description = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     time = sqlalchemy.Column(sqlalchemy.Time, default=datetime.time, nullable=True)
-    date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now, nullable=True)
+    date = sqlalchemy.Column(sqlalchemy.Date, default=datetime.date.today(), nullable=True)
     duration = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     link = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     number_of_seats = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)

@@ -22,6 +22,51 @@
             </p>
         {% endfor %}
     </p>
+    <p>
+        {{ form.date.label }}<br>
+        {{ form.date(class="form-control") }}<br>
+        {% for error in form.date.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.time.label }}<br>
+        {{ form.time(class="form-control") }}<br>
+        {% for error in form.time.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.duration.label }}<br>
+        {{ form.duration(class="form-control") }}<br>
+        {% for error in form.duration.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.link.label }}<br>
+        {{ form.link(class="form-control") }}<br>
+        {% for error in form.link.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.number_of_seats.label }}<br>
+        {{ form.number_of_seats(class="form-control") }}<br>
+        {% for error in form.number_of_seats.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </p>
     {{message}}
     <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
 </form>
