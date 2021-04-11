@@ -1,4 +1,5 @@
 from flask import Flask, url_for, request, render_template, redirect
+from werkzeug.utils import secure_filename
 from dateutil import parser
 
 from data import db_session
@@ -45,6 +46,9 @@ def add_news():
         club.duration = form.duration.data
         club.link = form.link.data
         club.number_of_seats = form.number_of_seats.data
+        img = form.image.data
+        print(img)
+        img.save(f'static/images/clubs/id/{secure_filename(img.filename)}')
 
         db_sess.add(club)
         db_sess.commit()

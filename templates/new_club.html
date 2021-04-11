@@ -67,6 +67,15 @@
             </p>
         {% endfor %}
     </p>
+    <p>
+        {{ form.image.label }}<br>
+        {{ form.image(class="form-control", enctype="multipart/form-data") }}<br>
+        {% for error in form.image.errors %}
+            <p class="alert alert-danger" role="alert">
+                {{ error }}
+            </p>
+        {% endfor %}
+    </p>
     {{message}}
     <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
 </form>
