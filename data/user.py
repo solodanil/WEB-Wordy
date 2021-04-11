@@ -17,6 +17,6 @@ class User(SqlAlchemyBase):
     photo = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     registration_date = sqlalchemy.Column(sqlalchemy.DateTime, nullable=datetime.datetime.now())
 
-    speaking_club = orm.relation("club_to_user",
-                          secondary="speaking_club",
-                          backref="users")
+    speaking_club = orm.relation("SpeakingClub",
+                          secondary="club_to_user",
+                          backref="user")
