@@ -13,6 +13,8 @@ from forms.club_form import SpeakingClubForm
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 
+basedir = os.path.abspath(os.path.dirname(__file__))
+
 
 @app.route('/')
 @app.route('/index')
