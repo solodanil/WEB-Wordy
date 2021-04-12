@@ -1,3 +1,6 @@
+import os
+from os.path import dirname, realpath
+
 from flask import Flask, url_for, request, render_template, redirect
 from werkzeug.utils import secure_filename
 from dateutil import parser
@@ -8,6 +11,8 @@ from forms.club_form import SpeakingClubForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
+
+basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 @app.route('/')
@@ -47,9 +52,13 @@ def add_news():
         club.link = form.link.data
         club.number_of_seats = form.number_of_seats.data
         img = form.image.data
-        print(img)
-        img.save(f'static/images/clubs/id/{secure_filename(img.filename)}')
+        filename = secure_filename(img.filename)
+        id = db_sess.query(SpeakingClub).order_by(SpeakingClub.id.desc()).first().id + 1
 
+        print(f'static/images/clubs/{filename}')
+        os.mkdir(os.path.join(basedir, f'static/images/clubs/{id}'))
+        img.save(os.path.join(basedir, f'static/images/clubs/{id}/{filename}'))
+        club.image = os.path.join(basedir, f'static/images/clubs/{id}/{filename}')
         db_sess.add(club)
         db_sess.commit()
         print(club)
