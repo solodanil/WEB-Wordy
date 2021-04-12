@@ -30,50 +30,54 @@
     </li>
 </ul>
 
-<div class="card mb-3 card_sc mt25">
-    <div class="row g-0">
-        <div class="col-md-4">
-            <img class="all-sc-img" src="../static/images/tmp.jpg" alt="...">
-        </div>
-        <div class="col-md-8">
-            <div class="card-body all-sc-card-body">
-                <a class="tdn" href="/clubs/0">
-                    <h5 class="card-title">Работай</h5>
-                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
-                        additional content. This content is a little bit longer.</p>
-                    <ul class="sc-ul">
-                        <li><i class="bi bi-calendar"></i>8 августа, в 12:00</li>
-                        <li><i class="bi bi-clock"></i>30 минут</li>
-                        <li><i class="bi bi-people"></i>5 мест</li>
-                    </ul>
-                </a>
-                <button type="button" class="btn btn-outline-primary">Записаться</button>
+{% for club in clubs %}
+    {% if club['active'] %}
+        <div class="card mb-3 card_sc mt25">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <img class="all-sc-img" src="{{club['image']}}" alt="{{club['title']}}">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body all-sc-card-body">
+                        <a class="tdn" href="/clubs/{{club['id']}}">
+                            <h5 class="card-title">{{club['title']}}</h5>
+                            <p class="card-text">{{club['description']}}</p>
+                            <ul class="sc-ul">
+                                <li><i class="bi bi-calendar"></i>8 августа, в {{club['time']}}</li>
+                                <li><i class="bi bi-clock"></i>{{club['duration']}} минут</li>
+                                <li><i class="bi bi-people"></i>5 мест</li>
+                            </ul>
+                        </a>
+                        <button type="button" class="btn btn-outline-primary">Записаться</button>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
+    {% else %}
 
-<div class="card mb-3 card_sc mt25 card-disabled">
-    <div class="row g-0">
-        <div class="col-md-4">
-            <img class="all-sc-img" src="../static/images/tmp.jpg" alt="...">
-        </div>
-        <div class="col-md-8">
-            <div class="card-body all-sc-card-body">
-                <a class="tdn" href="/clubs/0">
-                    <h5 class="card-title">Название карточки</h5>
-                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
-                        additional content. This content is a little bit longer.</p>
-                    <ul class="sc-ul">
-                        <li><i class="bi bi-calendar"></i>8 августа, в 12:00</li>
-                        <li><i class="bi bi-clock"></i>30 минут</li>
-                        <li><i class="bi bi-people"></i>0 мест</li>
-                    </ul>
-                </a>
-                <button type="button" class="btn btn-outline-primary" disabled>Записаться</button>
+        <div class="card mb-3 card_sc mt25 card-disabled">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <img class="all-sc-img" src="{{club['image']}}" alt="{{club['title']}}">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body all-sc-card-body">
+                        <a class="tdn" href="/clubs/{{club['id']}}">
+                            <h5 class="card-title">{{club['title']}}</h5>
+                            <p class="card-text">{{club['description']}}</p>
+                            <ul class="sc-ul">
+                                <li><i class="bi bi-calendar"></i>8 августа, в {{club['time']}}</li>
+                                <li><i class="bi bi-clock"></i>{{club['duration']}} минут</li>
+                                <li><i class="bi bi-people"></i>5 мест</li>
+                            </ul>
+                        </a>
+                        <button type="button" class="btn btn-outline-primary" disabled>Записаться</button>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
+    {% endif %}
+{% endfor %}
+
 
 {% endblock %}

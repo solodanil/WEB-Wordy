@@ -1,5 +1,6 @@
 import os
 from os.path import dirname, realpath
+import datetime
 
 from flask import Flask, url_for, request, render_template, redirect
 from werkzeug.utils import secure_filename
@@ -12,8 +13,6 @@ from forms.club_form import SpeakingClubForm
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 
-basedir = os.path.abspath(os.path.dirname(__file__))
-
 
 @app.route('/')
 @app.route('/index')
@@ -23,7 +22,22 @@ def index():
 
 @app.route('/clubs')
 def clubs():
-    return render_template('clubs.html')
+    db_sess = db_session.create_session()
+    raw_clubs = db_sess.query(SpeakingClub).all()
+    club_list = list()
+    for raw_club in raw_clubs:
+        club = {'id': raw_club.id,
+                'title': raw_club.title,
+                'description': raw_club.description,
+                'date': raw_club.date, # нужно будет сделать нормальный формат
+                'time': raw_club.time,
+                'duration': raw_club.duration,
+                'link': raw_club.link,
+                'number_of_seats': raw_club.number_of_seats, # нужно будет высчитывать кол-во оставшихся мест
+                'image': raw_club.image,
+                'active': True}
+        club_list.append(club)
+    return render_template('clubs.html', clubs=club_list)
 
 
 @app.route('/clubs/0')
@@ -62,7 +76,7 @@ def add_news():
         db_sess.add(club)
         db_sess.commit()
         print(club)
-        return redirect('/')
+        return redirect(f'./club/{id}')
     return render_template('new_club.html', title='Добавление новости',
                            form=form)
 
