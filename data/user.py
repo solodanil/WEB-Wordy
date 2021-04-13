@@ -18,5 +18,5 @@ class User(SqlAlchemyBase):
     registration_date = sqlalchemy.Column(sqlalchemy.DateTime, nullable=datetime.datetime.now())
 
     speaking_club = orm.relation("SpeakingClub",
-                          secondary="club_to_user",
-                          backref="user")
+                                 secondary="club_to_user",
+                                 backref="user")

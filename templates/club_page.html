@@ -3,17 +3,12 @@
 {% block content %}
 
 <div>
-    <div class='image' style="background-image:url(../static/images/hor.jpg);"></div>
+    <div class='image' style="background-image:url({{club['image']}});"></div>
     <div class="row">
         <div class="col-md-8">
-            <h1 class="head_h2">Тема разговорного клуба №2</h1>
-
+            <h1 class="head_h2">{{club['title']}}</h1>
             <h3 class="head_h2">Описание</h3>
-            <p class="description">Leo diam vestibulum aenean vel faucibus non augue integer ut. A eleifend nulla elementum
-                habitasse sed diam, tempus et consectetur. Dictum eget orci, turpis blandit facilisis risus. In velit nunc risus
-                mi. Aliquam mattis vehicula mi volutpat tortor auctor. Cursus ac est orci, felis varius nunc, diam cras
-                ultrices. Viverra ac est non varius diam donec lacus, pretium, lorem. Rhoncus, at odio arcu malesuada amet
-                integer ut nibh cursus.</p>
+            <p class="description">{{club['description']}}</p>
         </div>
         <div class="col-md-1"></div>
         <div class="col-md-3">
@@ -22,8 +17,8 @@
                 <li><button type="button" class="btn btn-outline-secondary"><i class="bi bi-share-fill"></i></button></li>
             </ul>
             <ul class="sc-ul">
-                <li><i class="bi bi-calendar"></i>8 августа, в 12:00</li>
-                <li><i class="bi bi-clock"></i>30 минут</li>
+                <li><i class="bi bi-calendar"></i>{{club['human_date']}}, в {{club['human_time']}}</li>
+                <li><i class="bi bi-clock"></i>{{club['duration']}} минут</li>
                 <li><i class="bi bi-people"></i>5 мест</li>
             </ul>
         </div>

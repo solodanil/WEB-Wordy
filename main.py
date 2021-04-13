@@ -31,20 +31,37 @@ def clubs():
         club = {'id': raw_club.id,
                 'title': raw_club.title,
                 'description': raw_club.description,
-                'date': raw_club.date, # нужно будет сделать нормальный формат
+                'date': raw_club.date,
                 'time': raw_club.time,
+                'human_date': raw_club.date.strftime('%m %B'),
+                'human_time': raw_club.time.strftime('%H:%M'),
                 'duration': raw_club.duration,
                 'link': raw_club.link,
-                'number_of_seats': raw_club.number_of_seats, # нужно будет высчитывать кол-во оставшихся мест
+                'number_of_seats': raw_club.number_of_seats,  # нужно будет высчитывать кол-во оставшихся мест
                 'image': raw_club.image,
                 'active': True}
         club_list.append(club)
-    return render_template('clubs.html', clubs=club_list)
+    club_list.sort(key=lambda x: (x['date'], x['time']))
+    return render_template('clubs.html', clubs=club_list, title='Разговорные клубы')
 
 
-@app.route('/clubs/0')
-def club_page():
-    return render_template('club_page.html')
+@app.route('/clubs/<club_id>')
+def club_page(club_id):
+    db_sess = db_session.create_session()
+    raw_club = db_sess.query(SpeakingClub).filter(SpeakingClub.id == club_id).first()
+    club = {'id': raw_club.id,
+            'title': raw_club.title,
+            'description': raw_club.description,
+            'date': raw_club.date,
+            'time': raw_club.time,
+            'human_date': raw_club.date.strftime('%m %B'),
+            'human_time': raw_club.time.strftime('%H:%M'),
+            'duration': raw_club.duration,
+            'link': raw_club.link,
+            'number_of_seats': raw_club.number_of_seats,  # нужно будет высчитывать кол-во оставшихся мест
+            'image': ''.join(['../', raw_club.image]),
+            'active': True}
+    return render_template('club_page.html', club=club, title=club['title'])
 
 
 @app.route('/word')
@@ -74,12 +91,12 @@ def add_news():
         print(f'static/images/clubs/{filename}')
         os.mkdir(os.path.join(basedir, f'static/images/clubs/{id}'))
         img.save(os.path.join(basedir, f'static/images/clubs/{id}/{filename}'))
-        club.image = os.path.join(basedir, f'static/images/clubs/{id}/{filename}')
+        club.image = f'static/images/clubs/{id}/{filename}'
         db_sess.add(club)
         db_sess.commit()
         print(club)
-        return redirect(f'./club/{id}')
-    return render_template('new_club.html', title='Добавление новости',
+        return redirect(f'./clubs/{id}')
+    return render_template('new_club.html', title='Добавление разговорного клуба',
                            form=form)
 
 
