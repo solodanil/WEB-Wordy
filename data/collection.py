@@ -13,6 +13,16 @@ word_to_collection = sqlalchemy.Table(
 )
 
 
+collection_to_club = sqlalchemy.Table(
+    'collection_to_club',
+    SqlAlchemyBase.metadata,
+    sqlalchemy.Column('speaking_club', sqlalchemy.Integer,
+                      sqlalchemy.ForeignKey('speaking_club.id')),
+    sqlalchemy.Column('collection', sqlalchemy.Integer,
+                      sqlalchemy.ForeignKey('collection.id'))
+)
+
+
 class Collection(SqlAlchemyBase):
     __tablename__ = 'collection'
 

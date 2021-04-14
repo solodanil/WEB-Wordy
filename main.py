@@ -11,7 +11,7 @@ from data.speaking_club import SpeakingClub
 from forms.club_form import SpeakingClubForm
 
 from data.collection import Collection, Word
-from forms.collection_form import CollectionForm
+from forms.collection_form import CollectionForm, CollectionClubForm
 from forms.word_form import WordForm
 
 app = Flask(__name__)
@@ -63,7 +63,7 @@ def club_page(club_id):
             'duration': raw_club.duration,
             'link': raw_club.link,
             'number_of_seats': raw_club.number_of_seats,  # нужно будет высчитывать кол-во оставшихся мест
-            'image': ''.join(['../', raw_club.image]),
+            'image': ''.join(['../', str(raw_club.image)]),
             'active': True}
     return render_template('club_page.html', club=club, title=club['title'])
 
@@ -90,7 +90,10 @@ def add_club():
         club.number_of_seats = form.number_of_seats.data
         img = form.image.data
         filename = secure_filename(img.filename)
-        id = db_sess.query(SpeakingClub).order_by(SpeakingClub.id.desc()).first().id + 1
+        try:
+            id = db_sess.query(SpeakingClub).order_by(SpeakingClub.id.desc()).first().id + 1
+        except AttributeError:
+            id = 1
 
         print(f'static/images/clubs/{filename}')
         os.mkdir(os.path.join(basedir, f'static/images/clubs/{id}'))
@@ -105,7 +108,7 @@ def add_club():
 
 
 @app.route('/new_collection', methods=['GET', 'POST'])
-def add_collection():
+def new_collection():
     form = CollectionForm()
     print(0)
     print(form.validate_on_submit())
@@ -116,7 +119,10 @@ def add_collection():
         collection.description = form.content.data
         img = form.image.data
         filename = secure_filename(img.filename)
-        id = db_sess.query(Collection).order_by(Collection.id.desc()).first().id + 1
+        try:
+            id = db_sess.query(Collection).order_by(Collection.id.desc()).first().id + 1
+        except AttributeError:
+            id = 1
 
         os.mkdir(os.path.join(basedir, f'static/images/collection/{id}'))
         img.save(os.path.join(basedir, f'static/images/collection/{id}/{filename}'))
@@ -124,7 +130,7 @@ def add_collection():
         db_sess.add(collection)
         db_sess.commit()
         print(collection)
-        return redirect(f'/')
+        return redirect(f'../add_word/{id}')
     return render_template('new_collection.html', title='Добавление подборки',
                            form=form)
 
@@ -140,7 +146,23 @@ def add_word(collection_id):
         new_word.word = form.name.data
         collection.word.append(new_word)
         db_sess.commit()
+        return redirect(f'/add_word/{collection_id}')
     return render_template('add_word.html', form=form, title='Добавление слова', collection_name=collection.name)
+
+
+@app.route('/clubs/<club_id>/add_collection', methods=['GET', 'POST'])
+def add_collection(club_id):
+    db_sess = db_session.create_session()
+    club = db_sess.query(SpeakingClub).filter(SpeakingClub.id == club_id).first()
+    print(club)
+    print(club.title)
+    form = CollectionClubForm()
+    if form.validate_on_submit():
+        collection = db_sess.query(Collection).filter(Collection.id == form.id.data).first()
+        club.collection.append(collection)
+        db_sess.commit()
+        return redirect(f'/clubs/{club_id}')
+    return render_template('collection_club_form.html', form=form, title='Добавление подборки к клубу', club_name=club.title)
 
 
 def main():

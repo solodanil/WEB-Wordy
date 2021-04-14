@@ -1,5 +1,6 @@
 import datetime
 import sqlalchemy
+import sqlalchemy.orm as orm
 
 from .db_session import SqlAlchemyBase
 
@@ -25,6 +26,10 @@ class SpeakingClub(SqlAlchemyBase):
     link = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     number_of_seats = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     image = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+
+    collection = orm.relation("Collection",
+                              secondary="collection_to_club",
+                              backref="speaking_club")
 
     def __repr__(self):
         return f'<speaking club> {self.id} {self.title}'

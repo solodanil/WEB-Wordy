@@ -9,3 +9,8 @@ class CollectionForm(FlaskForm):
     content = TextAreaField("Описание")
     image = FileField('Обложка')
     submit = SubmitField('Создать')
+
+
+class CollectionClubForm(FlaskForm):
+    id = StringField('Id подборки', validators=[DataRequired()])
+    submit = SubmitField('Добавить')
