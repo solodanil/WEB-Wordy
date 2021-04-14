@@ -10,8 +10,9 @@ from data import db_session
 from data.speaking_club import SpeakingClub
 from forms.club_form import SpeakingClubForm
 
-from data.collection import Collection
+from data.collection import Collection, Word
 from forms.collection_form import CollectionForm
+from forms.word_form import WordForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -126,6 +127,20 @@ def add_collection():
         return redirect(f'/')
     return render_template('new_collection.html', title='Добавление подборки',
                            form=form)
+
+
+@app.route('/add_word/<collection_id>', methods=['GET', 'POST'])
+def add_word(collection_id):
+    db_sess = db_session.create_session()
+    collection = db_sess.query(Collection).filter(Collection.id == collection_id).first()
+    print(collection)
+    form = WordForm()
+    if form.validate_on_submit():
+        new_word = Word()
+        new_word.word = form.name.data
+        collection.word.append(new_word)
+        db_sess.commit()
+    return render_template('add_word.html', form=form, title='Добавление слова', collection_name=collection.name)
 
 
 def main():

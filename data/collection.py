@@ -1,5 +1,5 @@
-import datetime
 import sqlalchemy
+import sqlalchemy.orm as orm
 
 from .db_session import SqlAlchemyBase
 
@@ -8,7 +8,8 @@ word_to_collection = sqlalchemy.Table(
     SqlAlchemyBase.metadata,
     sqlalchemy.Column('collection', sqlalchemy.Integer,
                       sqlalchemy.ForeignKey('collection.id')),
-    sqlalchemy.Column('word', sqlalchemy.String)
+    sqlalchemy.Column('word', sqlalchemy.Integer,
+                      sqlalchemy.ForeignKey('word.id'))
 )
 
 
@@ -19,3 +20,15 @@ class Collection(SqlAlchemyBase):
     name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     description = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     image = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    word = orm.relation("Word",
+                              secondary="word_to_collection",
+                              backref="collection")
+
+    def __repr__(self):
+        return f'<Collection> {self.id} {self.name}'
+
+
+class Word(SqlAlchemyBase):
+    __tablename__ = 'word'
+    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True, index=True)
+    word = sqlalchemy.Column(sqlalchemy.String, index=True)
