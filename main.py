@@ -10,6 +10,9 @@ from data import db_session
 from data.speaking_club import SpeakingClub
 from forms.club_form import SpeakingClubForm
 
+from data.collection import Collection
+from forms.collection_form import CollectionForm
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 
@@ -70,7 +73,7 @@ def word():
 
 
 @app.route('/new_club', methods=['GET', 'POST'])
-def add_news():
+def add_club():
     form = SpeakingClubForm()
     print(0)
     print(form.validate_on_submit())
@@ -97,6 +100,31 @@ def add_news():
         print(club)
         return redirect(f'./clubs/{id}')
     return render_template('new_club.html', title='Добавление разговорного клуба',
+                           form=form)
+
+
+@app.route('/new_collection', methods=['GET', 'POST'])
+def add_collection():
+    form = CollectionForm()
+    print(0)
+    print(form.validate_on_submit())
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        collection = Collection()
+        collection.name = form.name.data
+        collection.description = form.content.data
+        img = form.image.data
+        filename = secure_filename(img.filename)
+        id = db_sess.query(Collection).order_by(Collection.id.desc()).first().id + 1
+
+        os.mkdir(os.path.join(basedir, f'static/images/collection/{id}'))
+        img.save(os.path.join(basedir, f'static/images/collection/{id}/{filename}'))
+        collection.image = f'static/images/collection/{id}/{filename}'
+        db_sess.add(collection)
+        db_sess.commit()
+        print(collection)
+        return redirect(f'/')
+    return render_template('new_collection.html', title='Добавление подборки',
                            form=form)
 
 
