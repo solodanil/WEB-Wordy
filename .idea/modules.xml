@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/WEB-Yandex.Layceum-.iml" filepath="$PROJECT_DIR$/.idea/WEB-Yandex.Layceum-.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../lyceum_web/.idea/lyceum_web.iml" filepath="$PROJECT_DIR$/../lyceum_web/.idea/lyceum_web.iml" />
     </modules>
   </component>
 </project>

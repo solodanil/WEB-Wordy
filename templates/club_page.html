@@ -42,7 +42,7 @@
                                 <table>
                                     <tr>
                                         <td>
-                                            <a href="" data-bs-toggle="modal" data-bs-target="#Modal1"><p class="card-text">
+                                            <a href="" data-bs-toggle="modal" data-bs-target="#Modal{{loop.index}}"><p class="card-text">
                                                 <small class="text-muted">{{collection['words_len']}}</small></p></a>
                                         </td>
                                         <td>
@@ -60,4 +60,26 @@
         {% endfor %}
     </div>
 </div>
+
+
+{% for collection in club['collections'] %}
+    <!-- Modal -->
+    <div class="modal fade" id="Modal{{loop.index}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">{{collection['name']}}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="bi bi-x"></i></button>
+          </div>
+          <div class="modal-body">
+            <ul>
+                {% for word in collection['words'] %}
+                    <li><a>{{word}}</a></li>
+                {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+{% endfor %}
 {% endblock %}
