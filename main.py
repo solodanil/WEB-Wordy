@@ -2,6 +2,7 @@ import os
 from os.path import dirname, realpath
 import datetime
 
+import pymorphy2
 from flask import Flask, url_for, request, render_template, redirect
 from werkzeug.utils import secure_filename
 from dateutil import parser
@@ -53,6 +54,21 @@ def clubs():
 def club_page(club_id):
     db_sess = db_session.create_session()
     raw_club = db_sess.query(SpeakingClub).filter(SpeakingClub.id == club_id).first()
+    raw_collections = raw_club.collection
+    collections = []
+    for collection in raw_collections:
+        words = []
+        for word in collection.word:
+            words.append(word.word)
+        morph = pymorphy2.MorphAnalyzer()
+        slov_parse = morph.parse('слово')[0]
+        slov = slov_parse.make_agree_with_number(len(words)).word
+        collections.append({'name': collection.name,
+                            'description': collection.description,
+                            'image': ''.join(['../', str(collection.image)]),
+                            'words_len': ' '.join((str(len(words)), slov)),
+                            'words': words})
+    print(collections)
     club = {'id': raw_club.id,
             'title': raw_club.title,
             'description': raw_club.description,
@@ -64,7 +80,8 @@ def club_page(club_id):
             'link': raw_club.link,
             'number_of_seats': raw_club.number_of_seats,  # нужно будет высчитывать кол-во оставшихся мест
             'image': ''.join(['../', str(raw_club.image)]),
-            'active': True}
+            'active': True,
+            'collections': collections}
     return render_template('club_page.html', club=club, title=club['title'])
 
 

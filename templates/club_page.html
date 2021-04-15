@@ -26,68 +26,38 @@
 
     <h3 class="head_h2">Эти слова пригодятся</h3>
     <div class="row">
-        <div class="col-md">
-            <div class="card mb-3" style="max-width: 540px;">
-                <div class="row g-0">
-                    <div class="col-md-4">
-                        <div class="collection-img">
-                            <img src="../static/images/true_clubimg.jpg" alt="...">
+        {% for collection in club['collections'] %}
+            <div class="col-md">
+                <div class="card mb-3" style="max-width: 540px;">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <div class="collection-img">
+                                <img src="{{collection['image']}}" alt="{{collection['name']}}">
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">Название карточки</h5>
-                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
-                                additional content. This content is a little bit longer.</p>
-                            <table>
-                                <tr>
-                                    <td>
-                                        <a href="" data-bs-toggle="modal" data-bs-target="#Modal1"><p class="card-text">
-                                            <small class="text-muted">10 слов</small></p></a>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-outline-primary btn-sm collection-btn">
-                                            Добавить в словарь
-                                        </button>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md">
-            <div class="card mb-3" style="max-width: 540px;">
-                <div class="row g-0">
-                    <div class="col-md-4">
-                        <div class="collection-img">
-                            <img src="../static/images/true_clubimg.jpg" alt="...">
-                        </div>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">Название карточки</h5>
-                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
-                                additional content. This content is a little bit longer.</p>
-                            <table>
-                                <tr>
-                                    <td>
-                                        <a href="" data-bs-toggle="modal" data-bs-target="#Modal2"><p class="card-text">
-                                            <small class="text-muted">10 слов</small></p></a>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-outline-primary btn-sm collection-btn">
-                                            Добавить в словарь
-                                        </button>
-                                    </td>
-                                </tr>
-                            </table>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">{{collection['name']}}</h5>
+                                <p class="card-text">{{collection['description']}}</p>
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <a href="" data-bs-toggle="modal" data-bs-target="#Modal1"><p class="card-text">
+                                                <small class="text-muted">{{collection['words_len']}}</small></p></a>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-outline-primary btn-sm collection-btn">
+                                                Добавить в словарь
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}
