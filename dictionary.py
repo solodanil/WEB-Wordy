@@ -16,9 +16,10 @@ def translate(word, lang='ru'):
 
 
 def emoji(word):
-    emo = Translator(exact_match_only=False, randomize=True)
+    emo = Translator(exact_match_only=False)
     return emo.emojify(word)
 
 
 if __name__ == '__main__':
+    print(translate('word'))
     print(emoji('hello'))
