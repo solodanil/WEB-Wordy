@@ -2,7 +2,7 @@ import requests
 import json
 
 import translators as ts
-from emoji_translate.emoji_translate import Translator
+from emoji_translate import Translator
 
 
 def google_dict(word, lang='en_US'):

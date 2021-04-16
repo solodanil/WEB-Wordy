@@ -1,0 +1,8 @@
+SQLAlchemy~=1.4.1
+WTForms~=2.3.3
+pymorphy2~=0.9.1
+Flask~=0.10.1
+Werkzeug~=0.10.4
+python-dateutil~=2.8.1
+requests~=2.25.1
+translators~=4.7.16
