@@ -26,9 +26,16 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 def index():
     return render_template('index.html')
 
+
 @app.route('/login')
 def login():
     return render_template('login.html')
+
+
+@app.route('/oauth_handler')
+def oauth_handler():
+    # обработка всего
+    return redirect('/index')
 
 
 @app.route('/clubs')
@@ -183,7 +190,8 @@ def add_collection(club_id):
         club.collection.append(collection)
         db_sess.commit()
         return redirect(f'/clubs/{club_id}')
-    return render_template('collection_club_form.html', form=form, title='Добавление подборки к клубу', club_name=club.title)
+    return render_template('collection_club_form.html', form=form, title='Добавление подборки к клубу',
+                           club_name=club.title)
 
 
 def main():
