@@ -3,40 +3,24 @@ from os.path import dirname, realpath
 import datetime
 
 import pymorphy2
-from flask import Flask, url_for, request, render_template, redirect, flash
-from flask_login import LoginManager, current_user, login_user
+from flask import Flask, url_for, request, render_template, redirect
 from werkzeug.utils import secure_filename
 from dateutil import parser
 
 from data import db_session
 from data.speaking_club import SpeakingClub
-from data.user import User
 from forms.club_form import SpeakingClubForm
 
 from data.collection import Collection, Word
 from forms.collection_form import CollectionForm, CollectionClubForm
 from forms.word_form import WordForm
-from oauth import OAuthSignIn
+
+import dictionary
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
-app.config['OAUTH_CREDENTIALS'] = {
-    'vk': {
-        'id': '7827948',
-        'secret': 'y1kadgFlVsZoCJ5Ohylj'
-    },
-}
-
-login_manager = LoginManager()
-login_manager.init_app(app)
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-
-
-@login_manager.user_loader
-def load_user(user_id):
-    db_sess = db_session.create_session()
-    return db_sess.query(User).get(user_id)
 
 
 @app.route('/')
@@ -45,32 +29,14 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/auth')
-def auth():
-    if not current_user.is_anonymous:
-        return redirect(url_for('index'))
-    oauth = OAuthSignIn.get_provider('vk')
-    return oauth.authorize()
+@app.route('/login')
+def login():
+    return render_template('login.html')
 
 
-@app.route('/callback/<provider>')
-def oauth_callback(provider):
-    print(request.args.get('access_token'))
-    # if not current_user.is_anonymous:
-    #     return redirect(url_for('index'))
-    # oauth = OAuthSignIn.get_provider(provider)
-    # social_id, username, email = oauth.callback()
-    # if social_id is None:
-    #     flash('Authentication failed.')
-    #     return redirect(url_for('index'))
-    # user = User.query.filter_by(social_id=social_id).first()
-    # # if not user:
-    # #     user = User(social_id=social_id, nickname=username, email=email)
-    # #     db.session.add(user)
-    # #     db.session.commit()
-    # login_user(user, True)
-    return f'request.args.get("access_token") = {request.args.get("access_token")}'
-    return redirect(url_for('index'))
+@app.route('/oauth_handler')
+def oauth_handler():
+    return redirect('/index')
 
 
 @app.route('/clubs')
@@ -131,9 +97,12 @@ def club_page(club_id):
     return render_template('club_page.html', club=club, title=club['title'])
 
 
-@app.route('/word')
-def word():
-    return render_template('word.html')
+@app.route('/word/<word>')
+def word(word):
+    print(dictionary.google_dict(word))
+    return render_template('word.html', original=word.capitalize(), translate_word=dictionary.translate(word),
+                           emodji=dictionary.emoji(word),
+                           trancription=dictionary.google_dict(word)[0]['phonetics'][0]['text'])
 
 
 @app.route('/new_club', methods=['GET', 'POST'])

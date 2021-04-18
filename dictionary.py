@@ -21,5 +21,5 @@ def emoji(word):
 
 
 if __name__ == '__main__':
-    print(translate('word'))
-    print(emoji('hello'))
+    print(translate('cold'))
+    print(emoji('cold'))

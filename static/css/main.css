@@ -133,6 +133,11 @@ div.card_sc {
     z-index: 300;
 }
 
+.light_text {
+    margin-top: 20px;
+    color: #BCBCBC;
+}
+
 div.image {
     width: 100%;
     height: 400px;
