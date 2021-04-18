@@ -14,7 +14,7 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
+        <div class="container-fluid container">
           <a class="navbar-brand" href="http://127.0.0.1:8080/">Unnamed</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -35,6 +35,9 @@
               <input class="form-control me-2" type="search" placeholder="Поиск слова" aria-label="Search" style="float: right;">
               <button class="btn btn-outline-success" type="submit"><i class="bi bi-search"></i></button>
             </form>
+            <a class="d-flex login-btn tdn" data-bs-toggle="modal" data-bs-target="#exampleModal", href="">
+              <i class="bi bi-door-open"></i>
+            </a>
           </div>
         </div>
       </nav>
@@ -43,4 +46,23 @@
 </main>
     <footer><small>©2021. Unnamed</small></footer>
 </body>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="exampleModalLabel">Войти или зарегистрироваться</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Для записи на разговорные клубы и заучивания слов в боте Вам нужно войти с помощью вашего аккаунта VK. 
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+        <button type="button" class="btn btn-vk" onclick="location.href='https://oauth.vk.com/authorize?client_id=7827948&display=page&redirect_uri=http://127.0.0.1:8080/oauth_handler&scope=friends&response_type=token&v=5.130'">Войти или зарегистрироваться через VK</button>
+      </div>
+    </div>
+  </div>
+</div>
 </html>

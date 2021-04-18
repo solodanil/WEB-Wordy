@@ -12,7 +12,6 @@ word_to_collection = sqlalchemy.Table(
                       sqlalchemy.ForeignKey('word.id'))
 )
 
-
 collection_to_club = sqlalchemy.Table(
     'collection_to_club',
     SqlAlchemyBase.metadata,
@@ -31,8 +30,8 @@ class Collection(SqlAlchemyBase):
     description = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     image = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     word = orm.relation("Word",
-                              secondary="word_to_collection",
-                              backref="collection")
+                        secondary="word_to_collection",
+                        backref="collection")
 
     def __repr__(self):
         return f'<Collection> {self.id} {self.name}'
@@ -40,5 +39,6 @@ class Collection(SqlAlchemyBase):
 
 class Word(SqlAlchemyBase):
     __tablename__ = 'word'
+
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True, index=True)
     word = sqlalchemy.Column(sqlalchemy.String, index=True)

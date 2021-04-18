@@ -141,10 +141,31 @@ div.image {
 
 }
 
-.sc-btn-group li{
+.sc-btn-group li {
     display: inline;
 }
 
-.sc-btn-group{
+.sc-btn-group {
     margin-top: 25px;
+}
+
+.login-btn {
+    margin-left: 10px;
+    color: black;
+    font-size: 20pt;
+}
+
+.btn-vk {
+    background-color: #4a85ce;
+    color: white;
+    border-radius: 30px;
+}
+
+.btn-vk:hover {
+    background-color: #3b6eac;
+    color: white;
+}
+
+.btn {
+    border-radius: 10px;
 }
