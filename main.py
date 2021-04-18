@@ -26,6 +26,10 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 def index():
     return render_template('index.html')
 
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
 
 @app.route('/clubs')
 def clubs():
