@@ -174,3 +174,10 @@ div.image {
 .btn {
     border-radius: 10px;
 }
+
+.navbar-main {
+    opacity: 0.9;
+    -webkit-backdrop-filter: blur(30px);
+    backdrop-filter: blur(30px);
+    background-color: rgba(255, 255, 255, 0.8); 
+}
