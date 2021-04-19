@@ -40,9 +40,9 @@ def login():
 
 
 @app.route('/oauth_handler')
-def oauth_handler(test):
+def oauth_handler():
     print(request.referrer)
-    return f'{test}'
+    return f'{request.path_info}'
     return redirect('/index')
 
 
@@ -50,23 +50,30 @@ def oauth_handler(test):
 def clubs():
     db_sess = db_session.create_session()
     raw_clubs = db_sess.query(SpeakingClub).all()
-    club_list = list()
-    for raw_club in raw_clubs:
-        club = {'id': raw_club.id,
-                'title': raw_club.title,
-                'description': raw_club.description,
-                'date': raw_club.date,
-                'time': raw_club.time,
-                'human_date': raw_club.date.strftime('%m %B'),
-                'human_time': raw_club.time.strftime('%H:%M'),
-                'duration': raw_club.duration,
-                'link': raw_club.link,
-                'number_of_seats': raw_club.number_of_seats,  # нужно будет высчитывать кол-во оставшихся мест
-                'image': raw_club.image,
-                'active': True}
-        club_list.append(club)
-    club_list.sort(key=lambda x: (x['date'], x['time']))
-    return render_template('clubs.html', clubs=club_list, title='Разговорные клубы')
+    dates = db_sess.query(SpeakingClub.date).all()
+    res_clubs = {}
+    for date in dates:
+        date = date[0]
+        raw_clubs = db_sess.query(SpeakingClub).filter(SpeakingClub.date == date).all()
+        date = date.strftime('%m %B')
+        raw_clubs.sort(key=lambda x: (x.date, x.time))
+        res_clubs[date] = list()
+        for raw_club in raw_clubs:
+            club = {'id': raw_club.id,
+                    'title': raw_club.title,
+                    'description': raw_club.description,
+                    'date': raw_club.date,
+                    'time': raw_club.time,
+                    'human_date': raw_club.date.strftime('%m %B'),
+                    'human_time': raw_club.time.strftime('%H:%M'),
+                    'duration': raw_club.duration,
+                    'link': raw_club.link,
+                    'number_of_seats': raw_club.number_of_seats,  # нужно будет высчитывать кол-во оставшихся мест
+                    'image': raw_club.image,
+                    'active': True}
+            res_clubs[date].append(club)
+        print(res_clubs)
+    return render_template('clubs.html', clubs=res_clubs, title='Разговорные клубы')
 
 
 @app.route('/clubs/<club_id>')
