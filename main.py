@@ -15,6 +15,8 @@ from data.collection import Collection, Word
 from forms.collection_form import CollectionForm, CollectionClubForm
 from forms.word_form import WordForm
 
+from tools import get_collections
+
 import dictionary
 
 app = Flask(__name__)
@@ -26,16 +28,21 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 @app.route('/')
 @app.route('/index')
 def index():
-    return render_template('index.html')
+    db_sess = db_session.create_session()
+    raw_collections = db_sess.query(Collection).all()[-2::]
+    collections = get_collections(raw_collections)
+    return render_template('index.html', collections=collections)
 
 
-@app.route('/login')
+@app.route('/auth')
 def login():
-    return render_template('login.html')
+    return redirect('https://oauth.vk.com/authorize?client_id=7827948&display=page&redirect_uri=http://127.0.0.1:8080/oauth_handler&scope=friends&response_type=token&v=5.130')
 
 
 @app.route('/oauth_handler')
-def oauth_handler():
+def oauth_handler(test):
+    print(request.referrer)
+    return f'{test}'
     return redirect('/index')
 
 
@@ -67,20 +74,7 @@ def club_page(club_id):
     db_sess = db_session.create_session()
     raw_club = db_sess.query(SpeakingClub).filter(SpeakingClub.id == club_id).first()
     raw_collections = raw_club.collection
-    collections = []
-    for collection in raw_collections:
-        words = []
-        for word in collection.word:
-            words.append(word.word)
-        morph = pymorphy2.MorphAnalyzer()
-        slov_parse = morph.parse('слово')[0]
-        slov = slov_parse.make_agree_with_number(len(words)).word
-        collections.append({'name': collection.name,
-                            'description': collection.description,
-                            'image': ''.join(['../', str(collection.image)]),
-                            'words_len': ' '.join((str(len(words)), slov)),
-                            'words': words})
-    print(collections)
+    collections = get_collections(raw_collections)
     club = {'id': raw_club.id,
             'title': raw_club.title,
             'description': raw_club.description,
