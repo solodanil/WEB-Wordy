@@ -3,12 +3,16 @@ from os.path import dirname, realpath
 import datetime
 
 import pymorphy2
-from flask import Flask, url_for, request, render_template, redirect
+import requests
+from flask import Flask, url_for, request, render_template, redirect, flash
+from flask_login import current_user, login_user, LoginManager, logout_user, login_required
 from werkzeug.utils import secure_filename
 from dateutil import parser
+import vk_api
 
 from data import db_session
 from data.speaking_club import SpeakingClub
+from data.user import User
 from forms.club_form import SpeakingClubForm
 
 from data.collection import Collection, Word
@@ -16,13 +20,22 @@ from forms.collection_form import CollectionForm, CollectionClubForm
 from forms.word_form import WordForm
 
 from tools import get_collections
+import config
 
 import dictionary
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
+login_manager = LoginManager()
+login_manager.init_app(app)
 
 basedir = os.path.abspath(os.path.dirname(__file__))
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    db_sess = db_session.create_session()
+    return db_sess.query(User).get(user_id)
 
 
 @app.route('/')
@@ -36,14 +49,44 @@ def index():
 
 @app.route('/auth')
 def login():
-    return redirect('https://oauth.vk.com/authorize?client_id=7827948&display=page&redirect_uri=http://127.0.0.1:8080/oauth_handler&scope=friends&response_type=token&v=5.130')
+    return redirect(
+        'https://oauth.vk.com/authorize?client_id=7827948&display=page&redirect_uri=http://127.0.0.1:8080/oauth_handler&scope=friends,email,offline&response_type=code&v=5.130')
 
 
 @app.route('/oauth_handler')
 def oauth_handler():
     print(request.referrer)
-    return f'{request.path_info}'
-    return redirect('/index')
+    req_url = f'https://oauth.vk.com/access_token?client_id={config.vk_id}&client_secret={config.vk_secret}&redirect_uri=http://127.0.0.1:8080/oauth_handler&code={request.args.get("code")}'
+    response = requests.get(req_url).json()
+    print(response)
+    if not current_user.is_anonymous:
+        return redirect(url_for('index'))
+    if response['user_id'] is None:
+        flash('Authentication failed.')
+        return redirect(url_for('index'))
+    db_sess = db_session.create_session()
+    user = db_sess.query(User).filter(User.social_id == response['user_id']).first()
+    if not user:
+        vk_session = vk_api.VkApi(token=response['access_token'])
+        vk = vk_session.get_api()
+        user_obj = vk.users.get(user_id=response['user_id'], fields="contacts")[0]
+        print(user_obj)
+        user = User()
+        user.social_id = response['user_id']
+        user.name = user_obj['first_name']
+        user.surname = user_obj['last_name']
+        user.email = response.get('email')
+        db_sess.add(user)
+        db_sess.commit()
+    login_user(user, True)
+    return redirect(url_for('index'))
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect("/")
 
 
 @app.route('/clubs')

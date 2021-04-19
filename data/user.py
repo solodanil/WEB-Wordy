@@ -15,7 +15,7 @@ class User(SqlAlchemyBase, UserMixin):
     social_id = sqlalchemy.Column(sqlalchemy.Integer, nullable=True, unique=True)
     phone = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     email = sqlalchemy.Column(sqlalchemy.String, nullable=True)
-    registration_date = sqlalchemy.Column(sqlalchemy.DateTime, nullable=datetime.datetime.now())
+    registration_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now())
 
     speaking_club = orm.relation("SpeakingClub",
                                  secondary="club_to_user",

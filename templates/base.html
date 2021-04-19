@@ -35,9 +35,14 @@
               <input class="form-control me-2" type="search" placeholder="Поиск слова" aria-label="Search" style="float: right;">
               <button class="btn btn-outline-success" type="submit"><i class="bi bi-search"></i></button>
             </form>
-            <a class="d-flex login-btn tdn" data-bs-toggle="modal" data-bs-target="#exampleModal", href="">
-              <i class="bi bi-door-open"></i>
+            {% if current_user.is_authenticated %}
+                <a class="navbar-brand">{{ current_user.name }}</a>
+              <a href="/logout"> <i class="bi bi-door-closed-fill"></i></a>
+{% else %}
+    <a class="d-flex login-btn tdn" data-bs-toggle="modal" data-bs-target="#exampleModal", href="">
+              <i class="bi bi-box-arrow-in-right"></i>
             </a>
+{% endif %}
           </div>
         </div>
       </nav>
@@ -56,7 +61,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        Для записи на разговорные клубы и заучивания слов в боте Вам нужно войти с помощью вашего аккаунта VK. 
+        Для записи на разговорные клубы и заучивания слов в боте Вам нужно войти с помощью вашего аккаунта VK. <br> Мы будем использовать Ваш список друзей, чтобы рекомендовать самые интересные клубы.
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
