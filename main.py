@@ -167,10 +167,17 @@ def delete_club(club_id):
 
 @app.route('/word/<word>')
 def word(word):
-    print(dictionary.google_dict(word))
-    return render_template('word.html', original=word.capitalize(), translate_word=dictionary.translate(word),
-                           emodji=dictionary.emoji(word),
-                           trancription=dictionary.google_dict(word)[0]['phonetics'][0]['text'], title=word)
+    image = requests.get(f'http://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=1&imgsz=large&q={word}&start=0')
+    smile = dictionary.emoji(word)
+    if word == smile:
+        smile = ''
+    return render_template('word.html', original=word.capitalize(),
+                           image=image,
+                           translate_word=dictionary.translate(word),
+                           emodji=smile,
+                           trancription=dictionary.google_dict(word)[0]['phonetics'][0]['text'],
+                           definition=dictionary.google_dict(word)[0]['meanings'][0]['definitions'][0]['definition'],
+                           synonyms=dictionary.google_dict(word)[0]['meanings'][0]['definitions'][0]['synonyms'])
 
 
 @app.route('/new_club', methods=['GET', 'POST'])
