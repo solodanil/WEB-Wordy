@@ -177,7 +177,7 @@ def word(word):
                            emodji=smile,
                            trancription=dictionary.google_dict(word)[0]['phonetics'][0]['text'],
                            definition=dictionary.google_dict(word)[0]['meanings'][0]['definitions'][0]['definition'],
-                           synonyms=dictionary.google_dict(word)[0]['meanings'][0]['definitions'][0]['synonyms'])
+                           synonyms=', '.join(dictionary.google_dict(word)[0]['meanings'][0]['definitions'][0]['synonyms']))
 
 
 @app.route('/new_club', methods=['GET', 'POST'])
