@@ -26,6 +26,7 @@ class SpeakingClub(SqlAlchemyBase):
     link = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     number_of_seats = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     image = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+    # author = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
 
     collection = orm.relation("Collection",
                               secondary="collection_to_club",

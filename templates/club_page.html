@@ -21,10 +21,16 @@
                 <li><i class="bi bi-clock"></i>{{club['duration']}} минут</li>
                 <li><i class="bi bi-people"></i>5 мест</li>
             </ul>
+            {% if current_user.is_admin %}
+                <a href="../del_club/{{club['id']}}"><i class="bi bi-trash"></i> Удалить клуб</a>
+                {% endif %}
         </div>
     </div>
 
     <h3 class="head_h2">Эти слова пригодятся</h3>
+    {% if current_user.is_admin %}
+                <a href="../clubs/{{club['id']}}/add_collection"><i class="bi bi-plus"></i>Привязать подборку</a>
+                {% endif %}
     <div class="row">
         {% for collection in club['collections'] %}
             <div class="col-md">
@@ -76,6 +82,9 @@
                 {% for word in collection['words'] %}
                     <li><a href="/word/{{word}}">{{word}}</a></li>
                 {% endfor %}
+                {% if current_user.is_admin %}
+                <a href="../add_word/{{collection['id']}}"><i class="bi bi-plus"></i>Добавить слово</a>
+                {% endif %}
             </ul>
           </div>
         </div>

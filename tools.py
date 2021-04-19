@@ -14,5 +14,6 @@ def get_collections(raw_collections):
                             'description': collection.description,
                             'image': ''.join(['../', str(collection.image)]),
                             'words_len': ' '.join((str(len(words)), slov)),
-                            'words': words})
+                            'words': words,
+                            'id': collection.id})
     return collections

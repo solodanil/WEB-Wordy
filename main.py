@@ -153,12 +153,21 @@ def club_page(club_id):
     return render_template('club_page.html', club=club, title=club['title'])
 
 
+@app.route('/del_club/<club_id>')
+def delete_club(club_id):
+    db_sess = db_session.create_session()
+    club = db_sess.query(SpeakingClub).filter(SpeakingClub.id == club_id).first()
+    db_sess.delete(club)
+    db_sess.commit()
+    return redirect('index')
+
+
 @app.route('/word/<word>')
 def word(word):
     print(dictionary.google_dict(word))
     return render_template('word.html', original=word.capitalize(), translate_word=dictionary.translate(word),
                            emodji=dictionary.emoji(word),
-                           trancription=dictionary.google_dict(word)[0]['phonetics'][0]['text'])
+                           trancription=dictionary.google_dict(word)[0]['phonetics'][0]['text'], title=word)
 
 
 @app.route('/new_club', methods=['GET', 'POST'])

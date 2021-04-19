@@ -65,5 +65,8 @@
     {% endfor %}
 {% endfor %}
 
+{% if current_user.is_admin %}
+<a href="../new_club"><i class="bi bi-plus"></i> Новый разговорный клуб</a>
+{% endif %}
 
 {% endblock %}
