@@ -111,7 +111,7 @@ def clubs():
         elif date == datetime.date.today() + datetime.timedelta(days=1):
             date = 'Завтра'
         else:
-            date = date.strftime('%m %B')
+            date = date.strftime('%d %B')
         raw_clubs.sort(key=lambda x: (x.date, x.time))
         res_clubs[date] = list()
         for raw_club in raw_clubs:
@@ -120,7 +120,7 @@ def clubs():
                     'description': raw_club.description,
                     'date': raw_club.date,
                     'time': raw_club.time,
-                    'human_date': raw_club.date.strftime('%m %B'),
+                    'human_date': raw_club.date.strftime('%d %B'),
                     'human_time': raw_club.time.strftime('%H:%M'),
                     'duration': raw_club.duration,
                     'link': raw_club.link,
@@ -143,7 +143,7 @@ def club_page(club_id):
             'description': raw_club.description,
             'date': raw_club.date,
             'time': raw_club.time,
-            'human_date': raw_club.date.strftime('%m %B'),
+            'human_date': raw_club.date.strftime('%d %B'),
             'human_time': raw_club.time.strftime('%H:%M'),
             'duration': raw_club.duration,
             'link': raw_club.link,
