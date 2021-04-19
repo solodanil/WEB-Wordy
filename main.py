@@ -38,6 +38,10 @@ def load_user(user_id):
     return db_sess.query(User).get(user_id)
 
 
+@app.errorhandler(404)
+def not_found(error):
+    return render_template('404_error.html')
+
 @app.route('/')
 @app.route('/index')
 def index():
@@ -92,13 +96,21 @@ def logout():
 @app.route('/clubs')
 def clubs():
     db_sess = db_session.create_session()
-    raw_clubs = db_sess.query(SpeakingClub).all()
     dates = db_sess.query(SpeakingClub.date).all()
+    dates.sort()
     res_clubs = {}
     for date in dates:
         date = date[0]
         raw_clubs = db_sess.query(SpeakingClub).filter(SpeakingClub.date == date).all()
-        date = date.strftime('%m %B')
+        if date < datetime.date.today():
+            pass
+            # тут нужно будет придумать функцию удаления
+        elif date == datetime.date.today():
+            date = 'Сегодня'
+        elif date == datetime.date.today() + datetime.timedelta(days=1):
+            date = 'Завтра'
+        else:
+            date = date.strftime('%m %B')
         raw_clubs.sort(key=lambda x: (x.date, x.time))
         res_clubs[date] = list()
         for raw_club in raw_clubs:
@@ -150,6 +162,7 @@ def word(word):
 
 
 @app.route('/new_club', methods=['GET', 'POST'])
+@login_required
 def add_club():
     form = SpeakingClubForm()
     print(0)
@@ -184,6 +197,7 @@ def add_club():
 
 
 @app.route('/new_collection', methods=['GET', 'POST'])
+@login_required
 def new_collection():
     form = CollectionForm()
     print(0)
@@ -212,6 +226,7 @@ def new_collection():
 
 
 @app.route('/add_word/<collection_id>', methods=['GET', 'POST'])
+@login_required
 def add_word(collection_id):
     db_sess = db_session.create_session()
     collection = db_sess.query(Collection).filter(Collection.id == collection_id).first()
@@ -227,6 +242,7 @@ def add_word(collection_id):
 
 
 @app.route('/clubs/<club_id>/add_collection', methods=['GET', 'POST'])
+@login_required
 def add_collection(club_id):
     db_sess = db_session.create_session()
     club = db_sess.query(SpeakingClub).filter(SpeakingClub.id == club_id).first()
