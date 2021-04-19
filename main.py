@@ -6,6 +6,7 @@ import pymorphy2
 import requests
 from flask import Flask, url_for, request, render_template, redirect, flash
 from flask_login import current_user, login_user, LoginManager, logout_user, login_required
+from werkzeug.exceptions import abort
 from werkzeug.utils import secure_filename
 from dateutil import parser
 import vk_api
@@ -155,6 +156,8 @@ def club_page(club_id):
 
 @app.route('/del_club/<club_id>')
 def delete_club(club_id):
+    if not current_user.is_admin:
+        return abort(404)
     db_sess = db_session.create_session()
     club = db_sess.query(SpeakingClub).filter(SpeakingClub.id == club_id).first()
     db_sess.delete(club)
@@ -173,6 +176,8 @@ def word(word):
 @app.route('/new_club', methods=['GET', 'POST'])
 @login_required
 def add_club():
+    if not current_user.is_admin:
+        return abort(404)
     form = SpeakingClubForm()
     print(0)
     print(form.validate_on_submit())
@@ -208,6 +213,8 @@ def add_club():
 @app.route('/new_collection', methods=['GET', 'POST'])
 @login_required
 def new_collection():
+    if not current_user.is_admin:
+        return abort(404)
     form = CollectionForm()
     print(0)
     print(form.validate_on_submit())
@@ -237,6 +244,8 @@ def new_collection():
 @app.route('/add_word/<collection_id>', methods=['GET', 'POST'])
 @login_required
 def add_word(collection_id):
+    if not current_user.is_admin:
+        return abort(404)
     db_sess = db_session.create_session()
     collection = db_sess.query(Collection).filter(Collection.id == collection_id).first()
     print(collection)
@@ -253,6 +262,8 @@ def add_word(collection_id):
 @app.route('/clubs/<club_id>/add_collection', methods=['GET', 'POST'])
 @login_required
 def add_collection(club_id):
+    if not current_user.is_admin:
+        return abort(404)
     db_sess = db_session.create_session()
     club = db_sess.query(SpeakingClub).filter(SpeakingClub.id == club_id).first()
     print(club)
