@@ -43,6 +43,7 @@ def load_user(user_id):
 def not_found(error):
     return render_template('404_error.html')
 
+
 @app.route('/')
 @app.route('/index')
 def index():
@@ -167,18 +168,21 @@ def delete_club(club_id):
 
 @app.route('/word/<word>')
 def word(word):
-    response = requests.get(f'https://api.unsplash.com/search/photos?page=1&query={word}&client_id=LbDsTQQY_mSADos2tEp_Y_JXtseb7l92LtH0J0Z1KjY').json()
-    image = response['results'][0]['urls']['raw']
     smile = dictionary.emoji(word)
     if word == smile:
         smile = ''
-    return render_template('word.html', original=word.capitalize(),
-                           image=image,
-                           translate_word=dictionary.translate(word),
-                           emodji=smile,
-                           trancription=dictionary.google_dict(word)[0]['phonetics'][0]['text'],
-                           definition=dictionary.google_dict(word)[0]['meanings'][0]['definitions'][0]['definition'],
-                           synonyms=', '.join(dictionary.google_dict(word)[0]['meanings'][0]['definitions'][0]['synonyms']))
+
+    if dictionary.google_dict(word, 'en_US') == False:
+        return render_template('404_error.html')
+    else:
+        return render_template('word.html', original=word.capitalize(),
+                               image=dictionary.search_image(word),
+                               translate_word=dictionary.translate(word),
+                               emodji=smile,
+                               trancription=dictionary.google_dict(word)[0]['phonetics'][0]['text'],
+                               definition=dictionary.google_dict(word)[0]['meanings'][0]['definitions'][0][
+                                   'definition'],
+                               synonyms=dictionary.search_synonyms(word))
 
 
 @app.route('/new_club', methods=['GET', 'POST'])
