@@ -98,23 +98,30 @@ def logout():
 def clubs():
     db_sess = db_session.create_session()
     dates = db_sess.query(SpeakingClub.date).all()
+    if not current_user.is_anonymous:
+        user = db_sess.query(User).filter(User.id == current_user.id).first()
     dates.sort()
     res_clubs = {}
     for date in dates:
         date = date[0]
         raw_clubs = db_sess.query(SpeakingClub).filter(SpeakingClub.date == date).all()
-        if date < datetime.date.today():
-            pass
-            # тут нужно будет придумать функцию удаления
-        elif date == datetime.date.today():
+        if date == datetime.date.today():
             date = 'Сегодня'
         elif date == datetime.date.today() + datetime.timedelta(days=1):
             date = 'Завтра'
         else:
             date = date.strftime('%d %B')
+        print(date)
         raw_clubs.sort(key=lambda x: (x.date, x.time))
         res_clubs[date] = list()
         for raw_club in raw_clubs:
+            active = True
+            booked = False
+            if current_user.is_anonymous:
+                active = False
+            else:
+                if raw_club in user.speaking_club:
+                    booked = True
             club = {'id': raw_club.id,
                     'title': raw_club.title,
                     'description': raw_club.description,
@@ -126,7 +133,8 @@ def clubs():
                     'link': raw_club.link,
                     'number_of_seats': raw_club.number_of_seats,  # нужно будет высчитывать кол-во оставшихся мест
                     'image': raw_club.image,
-                    'active': True}
+                    'active': active,
+                    'booked': booked}
             res_clubs[date].append(club)
         print(res_clubs)
     return render_template('clubs.html', clubs=res_clubs, title='Разговорные клубы')
@@ -136,6 +144,18 @@ def clubs():
 def club_page(club_id):
     db_sess = db_session.create_session()
     raw_club = db_sess.query(SpeakingClub).filter(SpeakingClub.id == club_id).first()
+    active = True
+    booked = False
+    if current_user.is_anonymous:
+        active = False
+    else:
+        user = db_sess.query(User).filter(User.id == current_user.id).first()
+        if raw_club in user.speaking_club:
+            booked = True
+        elif 'book' in request.args:
+            user.speaking_club.append(raw_club)
+            db_sess.commit()
+            booked = True
     raw_collections = raw_club.collection
     collections = get_collections(raw_collections)
     club = {'id': raw_club.id,
@@ -149,8 +169,9 @@ def club_page(club_id):
             'link': raw_club.link,
             'number_of_seats': raw_club.number_of_seats,  # нужно будет высчитывать кол-во оставшихся мест
             'image': ''.join(['../', str(raw_club.image)]),
-            'active': True,
-            'collections': collections}
+            'active': active,
+            'collections': collections,
+            'booked': booked}
     return render_template('club_page.html', club=club, title=club['title'])
 
 

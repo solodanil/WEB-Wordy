@@ -33,7 +33,17 @@
                                     <li><i class="bi bi-people"></i>5 мест</li>
                                 </ul>
                             </a>
-                            <button type="button" class="btn btn-outline-primary">Записаться</button>
+                            {% if club['booked'] %}
+                                <a href="{{club['link']}}" class="btn btn-success all-sc-card-body-a">Перейти ко встрече</a>
+                            {% else %}
+                                {% if club['active'] %}
+                                    <a href="?book" class="btn btn-primary all-sc-card-body-a">Записаться {{club['booked']}}</a>
+                                {% else %}
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Войдите, чтобы записаться" disabled>
+                                    Записаться
+                                    </button>
+                                {% endif %}
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -56,6 +66,17 @@
                                     <li><i class="bi bi-people"></i>5 мест</li>
                                 </ul>
                             </a>
+                            {% if club['booked'] %}
+                                <li><a href="club['link']" class="btn btn-success">Перейти ко встрече</a></li>
+                            {% else %}
+                                {% if club['active'] %}
+                                    <li><a href="?book" class="btn btn-primary">Записаться</a></li>
+                                {% else %}
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Войдите, чтобы записаться" disabled>
+                                    Записаться
+                                    </button>
+                                {% endif %}
+                            {% endif %}
                             <button type="button" class="btn btn-outline-primary" disabled>Записаться</button>
                         </div>
                     </div>

@@ -21,3 +21,6 @@ class User(SqlAlchemyBase, UserMixin):
     speaking_club = orm.relation("SpeakingClub",
                                  secondary="club_to_user",
                                  backref="user")
+
+    def __repr__(self):
+        return f'<User> {self.id} {self.name} {self.social_id} {self.email}'

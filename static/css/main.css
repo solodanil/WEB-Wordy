@@ -82,6 +82,13 @@ div.card_sc {
     right: 30px;
 }
 
+.all-sc-card-body-a {
+    float: right;
+    position: absolute;
+    bottom: 15px;
+    right: 30px;
+}
+
 .all-sc-date-picker {
     margin-bottom: 10px;
 }
