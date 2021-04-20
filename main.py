@@ -122,7 +122,8 @@ def club_page(club_id):
     db_sess = db_session.create_session()
     raw_club = db_sess.query(SpeakingClub).filter(SpeakingClub.id == club_id).first()
     booked = False
-    user = db_sess.query(User).filter(User.id == current_user.id).first()
+    if not current_user.is_anonymous:
+        user = db_sess.query(User).filter(User.id == current_user.id).first()
     if 'unbook' in request.args:
         user.speaking_club.remove(raw_club)
         db_sess.commit()
