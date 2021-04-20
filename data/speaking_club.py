@@ -4,15 +4,6 @@ import sqlalchemy.orm as orm
 
 from .db_session import SqlAlchemyBase
 
-club_to_user = sqlalchemy.Table(
-    'club_to_user',
-    SqlAlchemyBase.metadata,
-    sqlalchemy.Column('club', sqlalchemy.Integer,
-                      sqlalchemy.ForeignKey('speaking_club.id')),
-    sqlalchemy.Column('user', sqlalchemy.Integer,
-                      sqlalchemy.ForeignKey('users.id'))
-)
-
 
 class SpeakingClub(SqlAlchemyBase):
     __tablename__ = 'speaking_club'
@@ -27,6 +18,10 @@ class SpeakingClub(SqlAlchemyBase):
     number_of_seats = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
     image = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     # author = sqlalchemy.Column(sqlalchemy.Integer, nullable=True)
+
+    users = orm.relation("User",
+                         secondary="club_to_user",
+                         backref="speaking_club")
 
     collection = orm.relation("Collection",
                               secondary="collection_to_club",

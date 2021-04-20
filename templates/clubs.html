@@ -29,8 +29,8 @@
                                 <p class="card-text">{{club['description']}}</p>
                                 <ul class="sc-ul">
                                     <li><i class="bi bi-calendar"></i>{{club['human_date']}}, в {{club['human_time']}}</li>
-                                    <li><i class="bi bi-clock"></i>{{club['duration']}} минут</li>
-                                    <li><i class="bi bi-people"></i>5 мест</li>
+                                    <li><i class="bi bi-clock"></i>{{club['duration']}}</li>
+                                    <li><i class="bi bi-people"></i>{{club['free_seats']}}</li>
                                 </ul>
                             </a>
                             {% if club['booked'] %}
@@ -62,8 +62,8 @@
                                 <p class="card-text">{{club['description']}}</p>
                                 <ul class="sc-ul">
                                     <li><i class="bi bi-calendar"></i>{{club['human_date']}}, в {{club['human_time']}}</li>
-                                    <li><i class="bi bi-clock"></i>{{club['duration']}} минут</li>
-                                    <li><i class="bi bi-people"></i>5 мест</li>
+                                    <li><i class="bi bi-clock"></i>{{club['duration']}}</li>
+                                    <li><i class="bi bi-people"></i>{{club['free_seats']}}</li>
                                 </ul>
                             </a>
                             {% if club['booked'] %}

@@ -18,7 +18,7 @@ from data.collection import Collection, Word
 from forms.collection_form import CollectionForm, CollectionClubForm
 from forms.word_form import WordForm
 
-from tools import get_collections
+from tools import get_collections, get_club
 import config
 
 import dictionary
@@ -59,10 +59,8 @@ def login():
 
 @app.route('/oauth_handler')
 def oauth_handler():
-    print(request.referrer)
     req_url = f'https://oauth.vk.com/access_token?client_id={config.vk_id}&client_secret={config.vk_secret}&redirect_uri=http://127.0.0.1:8080/oauth_handler&code={request.args.get("code")}'
     response = requests.get(req_url).json()
-    print(response)
     if not current_user.is_anonymous:
         return redirect(url_for('index'))
     if response['user_id'] is None:
@@ -110,36 +108,11 @@ def clubs():
             date = 'Завтра'
         else:
             date = date.strftime('%d %B')
-        print(date)
         raw_clubs.sort(key=lambda x: (x.date, x.time))
         res_clubs[date] = list()
         for raw_club in raw_clubs:
-            active = True
-            booked = False
-            if current_user.is_anonymous:
-                active = False
-            else:
-                if raw_club in user.speaking_club:
-                    booked = True
-
-            if raw_club.date < datetime.date.today():
-                active = False
-                booked = False
-            club = {'id': raw_club.id,
-                    'title': raw_club.title,
-                    'description': raw_club.description,
-                    'date': raw_club.date,
-                    'time': raw_club.time,
-                    'human_date': raw_club.date.strftime('%d %B'),
-                    'human_time': raw_club.time.strftime('%H:%M'),
-                    'duration': raw_club.duration,
-                    'link': raw_club.link,
-                    'number_of_seats': raw_club.number_of_seats,  # нужно будет высчитывать кол-во оставшихся мест
-                    'image': raw_club.image,
-                    'active': active,
-                    'booked': booked}
+            club = get_club(raw_club, current_user)
             res_clubs[date].append(club)
-        print(res_clubs)
     return render_template('clubs.html', clubs=res_clubs, title='Разговорные клубы')
 
 
@@ -155,34 +128,13 @@ def club_page(club_id):
         user = db_sess.query(User).filter(User.id == current_user.id).first()
         if 'unbook' in request.args:
             user.speaking_club.remove(raw_club)
-            print(user.speaking_club)
             db_sess.commit()
             booked = False
-        elif raw_club in user.speaking_club:
-            booked = True
         elif 'book' in request.args:
-            user.speaking_club.append(raw_club)
+            raw_club.users.append(user)
             db_sess.commit()
             booked = True
-        if raw_club.date < datetime.date.today():
-            active = False
-            booked = False
-    raw_collections = raw_club.collection
-    collections = get_collections(raw_collections)
-    club = {'id': raw_club.id,
-            'title': raw_club.title,
-            'description': raw_club.description,
-            'date': raw_club.date,
-            'time': raw_club.time,
-            'human_date': raw_club.date.strftime('%d %B'),
-            'human_time': raw_club.time.strftime('%H:%M'),
-            'duration': raw_club.duration,
-            'link': raw_club.link,
-            'number_of_seats': raw_club.number_of_seats,  # нужно будет высчитывать кол-во оставшихся мест
-            'image': ''.join(['../', str(raw_club.image)]),
-            'active': active,
-            'collections': collections,
-            'booked': booked}
+    club = get_club(raw_club, current_user, booked=booked, from_club_page=True)
     return render_template('club_page.html', club=club, title=club['title'])
 
 
@@ -221,8 +173,6 @@ def add_club():
     if not current_user.is_admin:
         return abort(404)
     form = SpeakingClubForm()
-    print(0)
-    print(form.validate_on_submit())
     if form.validate_on_submit():
         db_sess = db_session.create_session()
         club = SpeakingClub()
@@ -240,13 +190,11 @@ def add_club():
         except AttributeError:
             club_id = 1
 
-        print(f'static/images/clubs/{filename}')
         os.mkdir(os.path.join(basedir, f'static/images/clubs/{club_id}'))
         img.save(os.path.join(basedir, f'static/images/clubs/{club_id}/{filename}'))
         club.image = f'static/images/clubs/{club_id}/{filename}'
         db_sess.add(club)
         db_sess.commit()
-        print(club)
         return redirect(f'./clubs/{club_id}')
     return render_template('new_club.html', title='Добавление разговорного клуба',
                            form=form)
@@ -258,8 +206,6 @@ def new_collection():
     if not current_user.is_admin:
         return abort(404)
     form = CollectionForm()
-    print(0)
-    print(form.validate_on_submit())
     if form.validate_on_submit():
         db_sess = db_session.create_session()
         collection = Collection()
@@ -277,7 +223,6 @@ def new_collection():
         collection.image = f'static/images/collection/{collection_id}/{filename}'
         db_sess.add(collection)
         db_sess.commit()
-        print(collection)
         return redirect(f'../add_word/{collection_id}')
     return render_template('new_collection.html', title='Добавление подборки',
                            form=form)
@@ -290,7 +235,6 @@ def add_word(collection_id):
         return abort(404)
     db_sess = db_session.create_session()
     collection = db_sess.query(Collection).filter(Collection.id == collection_id).first()
-    print(collection)
     form = WordForm()
     if form.validate_on_submit():
         new_word = Word()
@@ -308,8 +252,6 @@ def add_collection(club_id):
         return abort(404)
     db_sess = db_session.create_session()
     club = db_sess.query(SpeakingClub).filter(SpeakingClub.id == club_id).first()
-    print(club)
-    print(club.title)
     form = CollectionClubForm()
     if form.validate_on_submit():
         collection = db_sess.query(Collection).filter(Collection.id == form.id.data).first()

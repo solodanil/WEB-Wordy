@@ -5,6 +5,15 @@ from flask_login import UserMixin
 
 from .db_session import SqlAlchemyBase
 
+club_to_user = sqlalchemy.Table(
+    'club_to_user',
+    SqlAlchemyBase.metadata,
+    sqlalchemy.Column('club', sqlalchemy.Integer,
+                      sqlalchemy.ForeignKey('speaking_club.id')),
+    sqlalchemy.Column('user', sqlalchemy.Integer,
+                      sqlalchemy.ForeignKey('users.id'))
+)
+
 
 class User(SqlAlchemyBase, UserMixin):
     __tablename__ = 'users'
@@ -17,10 +26,6 @@ class User(SqlAlchemyBase, UserMixin):
     email = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     registration_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now())
     is_admin = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
-
-    speaking_club = orm.relation("SpeakingClub",
-                                 secondary="club_to_user",
-                                 backref="user")
 
     def __repr__(self):
         return f'<User> {self.id} {self.name} {self.social_id} {self.email}'
