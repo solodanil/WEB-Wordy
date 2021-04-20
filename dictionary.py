@@ -21,10 +21,13 @@ def emoji(word):
     emo = Translator(exact_match_only=False)
     return emo.emojify(word)
 
+
 def search_image(word):
-    response = requests.get(f'https://api.unsplash.com/search/photos?page=1&query={word}&client_id=LbDsTQQY_mSADos2tEp_Y_JXtseb7l92LtH0J0Z1KjY').json()
+    response = requests.get(
+        f'https://api.unsplash.com/search/photos?page=1&query={word}&client_id=LbDsTQQY_mSADos2tEp_Y_JXtseb7l92LtH0J0Z1KjY').json()
     image = response['results'][0]['urls']['raw']
     return image
+
 
 def search_synonyms(word):
     if 'synonyms' in google_dict(word)[0]['meanings'][0]['definitions'][0]:

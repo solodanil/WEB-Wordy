@@ -1,8 +1,6 @@
 import os
-from os.path import dirname, realpath
 import datetime
 
-import pymorphy2
 import requests
 from flask import Flask, url_for, request, render_template, redirect, flash
 from flask_login import current_user, login_user, LoginManager, logout_user, login_required
@@ -204,9 +202,8 @@ def word(word):
     smile = dictionary.emoji(word)
     if word == smile:
         smile = ''
-
-    if dictionary.google_dict(word, 'en_US') == False:
-        return render_template('404_error.html')
+    if not dictionary.google_dict(word, 'en_US'):
+        abort(404)
     else:
         return render_template('word.html', original=word.capitalize(),
                                image=dictionary.search_image(word),
@@ -239,18 +236,18 @@ def add_club():
         img = form.image.data
         filename = secure_filename(img.filename)
         try:
-            id = db_sess.query(SpeakingClub).order_by(SpeakingClub.id.desc()).first().id + 1
+            club_id = db_sess.query(SpeakingClub).order_by(SpeakingClub.id.desc()).first().id + 1
         except AttributeError:
-            id = 1
+            club_id = 1
 
         print(f'static/images/clubs/{filename}')
-        os.mkdir(os.path.join(basedir, f'static/images/clubs/{id}'))
-        img.save(os.path.join(basedir, f'static/images/clubs/{id}/{filename}'))
-        club.image = f'static/images/clubs/{id}/{filename}'
+        os.mkdir(os.path.join(basedir, f'static/images/clubs/{club_id}'))
+        img.save(os.path.join(basedir, f'static/images/clubs/{club_id}/{filename}'))
+        club.image = f'static/images/clubs/{club_id}/{filename}'
         db_sess.add(club)
         db_sess.commit()
         print(club)
-        return redirect(f'./clubs/{id}')
+        return redirect(f'./clubs/{club_id}')
     return render_template('new_club.html', title='Добавление разговорного клуба',
                            form=form)
 
@@ -271,17 +268,17 @@ def new_collection():
         img = form.image.data
         filename = secure_filename(img.filename)
         try:
-            id = db_sess.query(Collection).order_by(Collection.id.desc()).first().id + 1
+            collection_id = db_sess.query(Collection).order_by(Collection.id.desc()).first().id + 1
         except AttributeError:
-            id = 1
+            collection_id = 1
 
-        os.mkdir(os.path.join(basedir, f'static/images/collection/{id}'))
-        img.save(os.path.join(basedir, f'static/images/collection/{id}/{filename}'))
-        collection.image = f'static/images/collection/{id}/{filename}'
+        os.mkdir(os.path.join(basedir, f'static/images/collection/{collection_id}'))
+        img.save(os.path.join(basedir, f'static/images/collection/{collection_id}/{filename}'))
+        collection.image = f'static/images/collection/{collection_id}/{filename}'
         db_sess.add(collection)
         db_sess.commit()
         print(collection)
-        return redirect(f'../add_word/{id}')
+        return redirect(f'../add_word/{collection_id}')
     return render_template('new_collection.html', title='Добавление подборки',
                            form=form)
 
