@@ -123,6 +123,10 @@ def clubs():
             else:
                 if raw_club in user.speaking_club:
                     booked = True
+
+            if raw_club.date < datetime.date.today():
+                active = False
+                booked = False
             club = {'id': raw_club.id,
                     'title': raw_club.title,
                     'description': raw_club.description,
@@ -151,12 +155,20 @@ def club_page(club_id):
         active = False
     else:
         user = db_sess.query(User).filter(User.id == current_user.id).first()
-        if raw_club in user.speaking_club:
+        if 'unbook' in request.args:
+            user.speaking_club.remove(raw_club)
+            print(user.speaking_club)
+            db_sess.commit()
+            booked = False
+        elif raw_club in user.speaking_club:
             booked = True
         elif 'book' in request.args:
             user.speaking_club.append(raw_club)
             db_sess.commit()
             booked = True
+        if raw_club.date < datetime.date.today():
+            active = False
+            booked = False
     raw_collections = raw_club.collection
     collections = get_collections(raw_collections)
     club = {'id': raw_club.id,

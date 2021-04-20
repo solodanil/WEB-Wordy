@@ -15,6 +15,8 @@
             <ul class="sc-btn-group">
                 {% if club['booked'] %}
                 <li><a href="{{club['link']}}" class="btn btn-success">Перейти ко встрече</a></li>
+                <li><a href="" class="btn btn-outline-secondary"><i class="bi bi-share-fill"></i></a></li><br>
+                <a href="?unbook"><i class="bi bi-x-circle"></i> Отменить запись</a>
                 {% else %}
                 {% if club['active'] %}
                 <li><a href="?book" class="btn btn-primary">Записаться</a></li>
