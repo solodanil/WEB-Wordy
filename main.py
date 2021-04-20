@@ -165,8 +165,17 @@ def word(word):
         for voc in vocs:
             if voc.word.word == word:
                 added = True
-        print(added)
-        if 'add' in request.args and not added:
+        if 'del' in request.args and added:
+            word_obj = db_sess.query(Word).filter(Word.word == word).first()
+            if not word_obj:
+                word_obj = Word()
+                word_obj.word = word
+                db_sess.commit()
+            voc = db_sess.query(Vocabulary).filter(Vocabulary.user_id == current_user.id, Vocabulary.word == word_obj).first()
+            db_sess.delete(voc)
+            db_sess.commit()
+            added = False
+        elif 'add' in request.args and not added:
             word_obj = db_sess.query(Word).filter(Word.word == word).first()
             if not word_obj:
                 word_obj = Word()
