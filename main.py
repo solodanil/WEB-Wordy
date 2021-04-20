@@ -13,6 +13,7 @@ from data import db_session
 from data.speaking_club import SpeakingClub
 from data.user import User
 from forms.club_form import SpeakingClubForm
+from data.word_to_user import Vocabulary
 
 from data.collection import Collection, Word
 from forms.collection_form import CollectionForm, CollectionClubForm
@@ -120,20 +121,16 @@ def clubs():
 def club_page(club_id):
     db_sess = db_session.create_session()
     raw_club = db_sess.query(SpeakingClub).filter(SpeakingClub.id == club_id).first()
-    active = True
     booked = False
-    if current_user.is_anonymous:
-        active = False
-    else:
-        user = db_sess.query(User).filter(User.id == current_user.id).first()
-        if 'unbook' in request.args:
-            user.speaking_club.remove(raw_club)
-            db_sess.commit()
-            booked = False
-        elif 'book' in request.args:
-            raw_club.users.append(user)
-            db_sess.commit()
-            booked = True
+    user = db_sess.query(User).filter(User.id == current_user.id).first()
+    if 'unbook' in request.args:
+        user.speaking_club.remove(raw_club)
+        db_sess.commit()
+        booked = False
+    elif 'book' in request.args:
+        raw_club.users.append(user)
+        db_sess.commit()
+        booked = True
     club = get_club(raw_club, current_user, booked=booked, from_club_page=True)
     return render_template('club_page.html', club=club, title=club['title'])
 
@@ -151,20 +148,37 @@ def delete_club(club_id):
 
 @app.route('/word/<word>')
 def word(word):
+    word = word.lower()
     smile = dictionary.emoji(word)
+    added = False
+    db_sess = db_session.create_session()
     if word == smile:
         smile = ''
     if not dictionary.google_dict(word, 'en_US'):
         abort(404)
-    else:
-        return render_template('word.html', original=word.capitalize(),
-                               image=dictionary.search_image(word),
-                               translate_word=dictionary.translate(word),
-                               emodji=smile,
-                               trancription=dictionary.google_dict(word)[0]['phonetics'][0]['text'],
-                               definition=dictionary.google_dict(word)[0]['meanings'][0]['definitions'][0][
-                                   'definition'],
-                               synonyms=dictionary.search_synonyms(word))
+    vocs = db_sess.query(Vocabulary).filter(Vocabulary.user_id == current_user.id).all()
+    for voc in vocs:
+        if voc.word.word == word:
+            added = True
+    print(added)
+    if 'add' in request.args and not added:
+        word_obj = db_sess.query(Word).filter(Word.word == word).first()
+        if not word_obj:
+            word_obj = Word()
+            word_obj.word = word
+            db_sess.commit()
+        voc = Vocabulary(user_id=current_user.id, word=word_obj)
+        db_sess.add(voc)
+        db_sess.commit()
+        added = True
+    dict_response = dictionary.google_dict(word)[0]
+    return render_template('word.html', original=word.capitalize(),
+                           image=dictionary.search_image(word),
+                           translate_word=dictionary.translate(word),
+                           emodji=smile,
+                           trancription=dict_response['phonetics'][0]['text'],
+                           definition=dict_response['meanings'][0]['definitions'][0]['definition'],
+                           synonyms=dictionary.search_synonyms(word), added=added)
 
 
 @app.route('/new_club', methods=['GET', 'POST'])
@@ -238,7 +252,7 @@ def add_word(collection_id):
     form = WordForm()
     if form.validate_on_submit():
         new_word = Word()
-        new_word.word = form.name.data
+        new_word.word = form.name.data.lower()
         collection.word.append(new_word)
         db_sess.commit()
         return redirect(f'/add_word/{collection_id}')

@@ -1,6 +1,7 @@
 import datetime
 import sqlalchemy
 from flask_login import UserMixin
+import sqlalchemy.orm as orm
 
 from .db_session import SqlAlchemyBase
 
@@ -25,6 +26,7 @@ class User(SqlAlchemyBase, UserMixin):
     email = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     registration_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now())
     is_admin = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
+    words = orm.relation("Vocabulary", back_populates='user')
 
     def __repr__(self):
         return f'<User> {self.id} {self.name} {self.social_id} {self.email}'
