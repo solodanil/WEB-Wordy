@@ -14,11 +14,15 @@
         </div>
         <div class="col-md-1"></div>
         <div class="col-md-3 sc-btn-group">
-            {% if added %}
-            <a href="?vk" class="btn btn-outline-primary"><i class="bi bi-check"></i> Добавлено в словарь</a><br>
-            <a href=""><i class="bi bi-trash"></i>Удалить из словаря</a>
+            {% if active %}
+                {% if added %}
+                <a href="?vk" class="btn btn-outline-primary"><i class="bi bi-check"></i> Добавлено в словарь</a><br>
+                <a href=""><i class="bi bi-trash"></i>Удалить из словаря</a>
+                {% else %}
+                <a href="?add" class="btn btn-primary">Добавить в словарь</a>
+                {% endif %}
             {% else %}
-            <a href="?add" class="btn btn-primary">Добавить в словарь</a>
+                <a data-bs-toggle="modal" data-bs-target="#exampleModal" href="">Войдите, чтобы добавить слово в словарь</a>
             {% endif %}
         </div>
     </div>

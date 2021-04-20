@@ -156,21 +156,26 @@ def word(word):
         smile = ''
     if not dictionary.google_dict(word, 'en_US'):
         abort(404)
-    vocs = db_sess.query(Vocabulary).filter(Vocabulary.user_id == current_user.id).all()
-    for voc in vocs:
-        if voc.word.word == word:
-            added = True
-    print(added)
-    if 'add' in request.args and not added:
-        word_obj = db_sess.query(Word).filter(Word.word == word).first()
-        if not word_obj:
-            word_obj = Word()
-            word_obj.word = word
+    if current_user.is_anonymous:
+        active = False
+        added = False
+    else:
+        active = True
+        vocs = db_sess.query(Vocabulary).filter(Vocabulary.user_id == current_user.id).all()
+        for voc in vocs:
+            if voc.word.word == word:
+                added = True
+        print(added)
+        if 'add' in request.args and not added:
+            word_obj = db_sess.query(Word).filter(Word.word == word).first()
+            if not word_obj:
+                word_obj = Word()
+                word_obj.word = word
+                db_sess.commit()
+            voc = Vocabulary(user_id=current_user.id, word=word_obj)
+            db_sess.add(voc)
             db_sess.commit()
-        voc = Vocabulary(user_id=current_user.id, word=word_obj)
-        db_sess.add(voc)
-        db_sess.commit()
-        added = True
+            added = True
     dict_response = dictionary.google_dict(word)[0]
     return render_template('word.html', original=word.capitalize(),
                            image=dictionary.search_image(word),
@@ -178,7 +183,7 @@ def word(word):
                            emodji=smile,
                            trancription=dict_response['phonetics'][0]['text'],
                            definition=dict_response['meanings'][0]['definitions'][0]['definition'],
-                           synonyms=dictionary.search_synonyms(word), added=added)
+                           synonyms=dictionary.search_synonyms(word), added=added, active=active)
 
 
 @app.route('/new_club', methods=['GET', 'POST'])
