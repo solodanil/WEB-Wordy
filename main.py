@@ -167,7 +167,8 @@ def delete_club(club_id):
 
 @app.route('/word/<word>')
 def word(word):
-    image = requests.get(f'http://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=1&imgsz=large&q={word}&start=0')
+    response = requests.get(f'https://api.unsplash.com/search/photos?page=1&query={word}&client_id=LbDsTQQY_mSADos2tEp_Y_JXtseb7l92LtH0J0Z1KjY').json()
+    image = response['results'][0]['urls']['raw']
     smile = dictionary.emoji(word)
     if word == smile:
         smile = ''
