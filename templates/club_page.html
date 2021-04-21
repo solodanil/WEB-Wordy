@@ -94,7 +94,7 @@
           <div class="modal-body">
             <ul>
                 {% for word in collection['words'] %}
-                    <li><a href="/word/{{word}}">{{word}}</a></li>
+                    <li><a href="/word?word={{word}}">{{word}}</a></li>
                 {% endfor %}
                 {% if current_user.is_admin %}
                 <a href="../add_word/{{collection['id']}}"><i class="bi bi-plus"></i>Добавить слово</a>

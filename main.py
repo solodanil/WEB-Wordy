@@ -187,16 +187,17 @@ def delete_club(club_id):
     return redirect('index')
 
 
-@app.route('/word/<word>')
-def word(word):
-    word = word.lower()
+@app.route('/word')
+def word():
+    word = request.args.get('word').lower()
+    print(word)
     smile = dictionary.emoji(word)
     added = False
     db_sess = db_session.create_session()
     if word == smile:
         smile = ''
-    if not dictionary.google_dict(word, 'en_US'):
-        abort(404)
+    # if not dictionary.google_dict(word, 'en_US'):
+    #     abort(404)
     if current_user.is_anonymous:
         active = False
         added = False
