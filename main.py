@@ -4,6 +4,7 @@ import datetime
 import requests
 from flask import Flask, url_for, request, render_template, redirect, flash
 from flask_login import current_user, login_user, LoginManager, logout_user, login_required
+from sqlalchemy.sql.functions import count
 from werkzeug.exceptions import abort
 from werkzeug.utils import secure_filename
 from dateutil import parser
@@ -50,7 +51,24 @@ def index():
     user_words = get_user_words(current_user)
     raw_collections = db_sess.query(Collection).all()[-2::]
     collections = get_collections(raw_collections, user_words)
-    return render_template('index.html', collections=collections)
+    user = db_sess.query(User).filter(User.id == current_user.id).first()
+    res = list()
+    soonest = db_sess.query(SpeakingClub).filter(SpeakingClub.date > datetime.date.today()).order_by(SpeakingClub.date).all()[:3]
+    soonest = list(map(lambda club: ('БЛИЖАЙШИЙ', club), soonest))
+    few_seats = db_sess.query(SpeakingClub).filter(SpeakingClub.date > datetime.date.today()).all()
+    few_seats = sorted(few_seats, key=lambda x: x.number_of_seats - len(x.users))[0]
+    print(soonest)
+    if not current_user.is_anonymous:
+        user_clubs = user.speaking_club
+        user_clubs = list(filter(lambda club: club.date > datetime.date.today(), user_clubs))
+        if user_clubs:
+            res.append(('ВЫ ЗАПИСАНЫ', sorted(user_clubs, key=lambda club: (club.date, club.time))[0]))
+    res.append(soonest)
+    res.append(tuple())
+    res[2] = ('Осталось мало мест', few_seats)
+
+    print(res)
+    return render_template('index.html', collections=collections, clubs=res)
 
 
 @app.route('/auth')

@@ -25,7 +25,6 @@ def get_collections(raw_collections, user_words):
                             'words': words,
                             'id': collection.id,
                             'added': added})
-    print(collections)
     return collections
 
 
