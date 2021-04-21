@@ -13,7 +13,7 @@ def get_collections(raw_collections, user_words):
         added = False
         for word in collection.word:
             words.append(word.word)
-        if set(words) == user_words & set(words):
+        if set(words) == set(user_words) & set(words):
             added = True
         morph = pymorphy2.MorphAnalyzer()
         slov_parse = morph.parse('слово')[0]

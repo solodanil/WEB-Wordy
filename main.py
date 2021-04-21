@@ -56,12 +56,12 @@ def index():
 @app.route('/auth')
 def login():
     return redirect(
-        'https://oauth.vk.com/authorize?client_id=7827948&display=page&redirect_uri=http://127.0.0.1:8080/oauth_handler&scope=friends,email,offline&response_type=code&v=5.130')
+        f'https://oauth.vk.com/authorize?client_id=7827948&display=page&redirect_uri=http://{request.headers.get("host")}/oauth_handler&scope=friends,email,offline&response_type=code&v=5.130')
 
 
 @app.route('/oauth_handler')
 def oauth_handler():
-    req_url = f'https://oauth.vk.com/access_token?client_id={config.vk_id}&client_secret={config.vk_secret}&redirect_uri=http://127.0.0.1:8080/oauth_handler&code={request.args.get("code")}'
+    req_url = f'https://oauth.vk.com/access_token?client_id={config.vk_id}&client_secret={config.vk_secret}&redirect_uri=http://{request.headers.get("host")}/oauth_handler&code={request.args.get("code")}'
     response = requests.get(req_url).json()
     if not current_user.is_anonymous:
         return redirect(url_for('index'))
