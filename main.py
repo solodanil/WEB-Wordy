@@ -19,7 +19,7 @@ from data.collection import Collection, Word
 from forms.collection_form import CollectionForm, CollectionClubForm
 from forms.word_form import WordForm
 
-from tools import get_collections, get_club
+from tools import get_collections, get_club, get_user_words
 import config
 
 import dictionary
@@ -47,8 +47,9 @@ def not_found(error):
 @app.route('/index')
 def index():
     db_sess = db_session.create_session()
+    user_words = get_user_words(current_user)
     raw_collections = db_sess.query(Collection).all()[-2::]
-    collections = get_collections(raw_collections)
+    collections = get_collections(raw_collections, user_words)
     return render_template('index.html', collections=collections)
 
 
@@ -172,7 +173,8 @@ def word(word):
                 word_obj = Word()
                 word_obj.word = word
                 db_sess.commit()
-            voc = db_sess.query(Vocabulary).filter(Vocabulary.user_id == current_user.id, Vocabulary.word == word_obj).first()
+            voc = db_sess.query(Vocabulary).filter(Vocabulary.user_id == current_user.id,
+                                                   Vocabulary.word == word_obj).first()
             db_sess.delete(voc)
             db_sess.commit()
             added = False

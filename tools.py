@@ -3,12 +3,20 @@ import datetime
 import pymorphy2
 
 
-def get_collections(raw_collections):
+def get_collections(raw_collections, user_words):
     collections = list()
     for collection in raw_collections:
         words = []
+        added = False
         for word in collection.word:
             words.append(word.word)
+        if set(words) == user_words & set(words):
+            added = True
+        print(set(words))
+        print(user_words, set(words))
+        print(user_words & set(words))
+        print(set(words) == user_words & set(words))
+        print(1)
         morph = pymorphy2.MorphAnalyzer()
         slov_parse = morph.parse('слово')[0]
         slov = slov_parse.make_agree_with_number(len(words)).word
@@ -17,7 +25,9 @@ def get_collections(raw_collections):
                             'image': ''.join(['../', str(collection.image)]),
                             'words_len': ' '.join((str(len(words)), slov)),
                             'words': words,
-                            'id': collection.id})
+                            'id': collection.id,
+                            'added': added})
+    print(collections)
     return collections
 
 
@@ -59,3 +69,10 @@ def get_club(raw_club, current_user, booked=False, from_club_page=False):
             'booked': booked,
             'collections': collections}
     return club
+
+
+def get_user_words(user):
+    if not user.is_anonymous:
+        return set(map(lambda x: x.word.word, user.words))
+    else:
+        return []

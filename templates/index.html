@@ -93,9 +93,11 @@
                                                 <small class="text-muted">{{collection['words_len']}}</small></p></a>
                                         </td>
                                         <td>
-                                            <button type="button" class="btn btn-outline-primary btn-sm collection-btn">
-                                                Добавить в словарь
-                                            </button>
+                                            {% if collection['added'] %}
+                                                <a href="?del" class="btn btn-outline-primary btn-sm collection-btn"><i class="bi bi-trash"></i> Удалить из словаря</a>
+                                            {% else %}
+                                                <a href="?add" class="btn btn-outline-primary btn-sm collection-btn">Добавить в словарь</a>
+                                            {% endif %}
                                         </td>
                                     </tr>
                                 </table>
