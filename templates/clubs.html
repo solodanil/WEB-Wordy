@@ -12,6 +12,9 @@
       {% endfor %}
   </ul>
 </nav>
+{% if current_user.is_anonymous %}
+<a data-bs-toggle="modal" data-bs-target="#exampleModal" href="">Войдите, чтобы записаться на разговорные клубы</a>
+{% endif %}
 
 {% for date in clubs %}
 <h3 id="{{date}}">{{date}}</h3>
