@@ -12,11 +12,6 @@ def get_collections(raw_collections, user_words):
             words.append(word.word)
         if set(words) == user_words & set(words):
             added = True
-        print(set(words))
-        print(user_words, set(words))
-        print(user_words & set(words))
-        print(set(words) == user_words & set(words))
-        print(1)
         morph = pymorphy2.MorphAnalyzer()
         slov_parse = morph.parse('слово')[0]
         slov = slov_parse.make_agree_with_number(len(words)).word

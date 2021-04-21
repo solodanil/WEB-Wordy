@@ -137,6 +137,24 @@ def club_page(club_id):
     return render_template('club_page.html', club=club, title=club['title'])
 
 
+@app.route('/collection/<collection_id>')
+@login_required
+def collection(collection_id):
+    db_sess = db_session.create_session()
+    coll = db_sess.query(Collection).filter(Collection.id == collection_id).first()
+    vocs = db_sess.query(Vocabulary).filter(Vocabulary.user_id == current_user.id).all()
+    for word_obj in coll.word:
+        print(word_obj)
+        if not db_sess.query(Vocabulary).filter(Vocabulary.user_id == current_user.id, Vocabulary.word == word_obj).first():
+            voc = Vocabulary(user_id=current_user.id, word=word_obj)
+            db_sess.add(voc)
+            print(f'{word_obj} was added')
+        else:
+            print(f'{word_obj} already added')
+    db_sess.commit()
+    return redirect('index')
+
+
 @app.route('/del_club/<club_id>')
 def delete_club(club_id):
     if not current_user.is_admin:

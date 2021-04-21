@@ -42,3 +42,6 @@ class Word(SqlAlchemyBase):
 
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True, index=True)
     word = sqlalchemy.Column(sqlalchemy.String, index=True)
+
+    def __repr__(self):
+        return f'<Word {self.id}> {self.word}'
