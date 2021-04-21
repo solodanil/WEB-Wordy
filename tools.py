@@ -75,4 +75,4 @@ def get_user_words(user):
         user_new = db_sess.query(User).filter(User.id == user.id).first()
         return set(map(lambda x: x.word.word, user_new.words))
     else:
-        return []
+        return {}
