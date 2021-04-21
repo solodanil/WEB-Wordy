@@ -113,7 +113,8 @@ def clubs():
         raw_clubs.sort(key=lambda x: (x.date, x.time))
         res_clubs[date] = list()
         for raw_club in raw_clubs:
-            club = get_club(raw_club, current_user)
+            user_words = get_user_words(current_user)
+            club = get_club(raw_club, current_user, user_words)
             res_clubs[date].append(club)
     return render_template('clubs.html', clubs=res_clubs, title='Разговорные клубы')
 
@@ -133,7 +134,8 @@ def club_page(club_id):
         raw_club.users.append(user)
         db_sess.commit()
         booked = True
-    club = get_club(raw_club, current_user, booked=booked, from_club_page=True)
+    user_words = get_user_words(current_user)
+    club = get_club(raw_club, current_user, user_words, booked=booked, from_club_page=True)
     return render_template('club_page.html', club=club, title=club['title'])
 
 
@@ -163,8 +165,12 @@ def collection_delete(collection_id):
     coll = db_sess.query(Collection).filter(Collection.id == collection_id).first()
     user = db_sess.query(User).filter(User.id == current_user.id).first()
     for word_obj in coll.word:
-        user.words.remove(word_obj)
-        print(word_obj, 'deleted')
+        voc = db_sess.query(Vocabulary).filter(Vocabulary.word == word_obj, Vocabulary.user == current_user).first()
+        db_sess.delete(voc)
+        # print(user.words)
+        # print(word_obj)
+        # user.words.remove(word_obj)
+        print(voc, 'deleted')
     print(request.referrer)
     db_sess.commit()
     return redirect(request.referrer)

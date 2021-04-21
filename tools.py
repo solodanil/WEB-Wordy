@@ -2,6 +2,9 @@ import datetime
 
 import pymorphy2
 
+from data import db_session
+from data.user import User
+
 
 def get_collections(raw_collections, user_words):
     collections = list()
@@ -26,7 +29,7 @@ def get_collections(raw_collections, user_words):
     return collections
 
 
-def get_club(raw_club, current_user, booked=False, from_club_page=False):
+def get_club(raw_club, current_user, user_words, booked=False, from_club_page=False):
     morph = pymorphy2.MorphAnalyzer()
     mest_parse = morph.parse('место')[0]
     min_parse = morph.parse('минута')[0]
@@ -44,7 +47,7 @@ def get_club(raw_club, current_user, booked=False, from_club_page=False):
         active = False
         booked = False
     raw_collections = raw_club.collection
-    collections = get_collections(raw_collections)
+    collections = get_collections(raw_collections, user_words)
     if from_club_page:
         image = ''.join(['../', str(raw_club.image)])
     else:
@@ -68,6 +71,8 @@ def get_club(raw_club, current_user, booked=False, from_club_page=False):
 
 def get_user_words(user):
     if not user.is_anonymous:
-        return set(map(lambda x: x.word.word, user.words))
+        db_sess = db_session.create_session()
+        user_new = db_sess.query(User).filter(User.id == user.id).first()
+        return set(map(lambda x: x.word.word, user_new.words))
     else:
         return []
