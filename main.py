@@ -63,10 +63,12 @@ def index():
         user_clubs = list(filter(lambda club: club.date > datetime.date.today(), user_clubs))
         if user_clubs:
             res.append(('ВЫ ЗАПИСАНЫ', sorted(user_clubs, key=lambda club: (club.date, club.time))[0]))
-    res.append(soonest)
+    print(soonest)
+    res += soonest
     res.append(tuple())
-    res[2] = ('Осталось мало мест', few_seats)
-
+    res[2] = ('ОСТАЛОСЬ МАЛО МЕСТ', few_seats)
+    user_words = get_user_words(current_user)
+    res = list(map(lambda x: (x[0], get_club(x[1], current_user, user_words)), res))
     print(res)
     return render_template('index.html', collections=collections, clubs=res)
 
