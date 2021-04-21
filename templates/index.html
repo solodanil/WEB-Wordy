@@ -94,9 +94,9 @@
                                         </td>
                                         <td>
                                             {% if collection['added'] %}
-                                                <a href="?del" class="btn btn-outline-primary btn-sm collection-btn"><i class="bi bi-trash"></i> Удалить из словаря</a>
+                                                <a href="collection/{{collection['id']}}/delete" class="btn btn-outline-primary btn-sm collection-btn"><i class="bi bi-trash"></i> Удалить из словаря</a>
                                             {% else %}
-                                                <a href="?add" class="btn btn-outline-primary btn-sm collection-btn">Добавить в словарь</a>
+                                                <a href="collection/{{collection['id']}}" class="btn btn-outline-primary btn-sm collection-btn">Добавить в словарь</a>
                                             {% endif %}
                                         </td>
                                     </tr>

@@ -151,8 +151,23 @@ def collection(collection_id):
             print(f'{word_obj} was added')
         else:
             print(f'{word_obj} already added')
+    print(request.referrer)
     db_sess.commit()
-    return redirect('index')
+    return redirect(request.referrer)
+
+
+@app.route('/collection/<collection_id>/delete')
+@login_required
+def collection_delete(collection_id):
+    db_sess = db_session.create_session()
+    coll = db_sess.query(Collection).filter(Collection.id == collection_id).first()
+    user = db_sess.query(User).filter(User.id == current_user.id).first()
+    for word_obj in coll.word:
+        user.words.remove(word_obj)
+        print(word_obj, 'deleted')
+    print(request.referrer)
+    db_sess.commit()
+    return redirect(request.referrer)
 
 
 @app.route('/del_club/<club_id>')
