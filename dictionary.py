@@ -19,7 +19,10 @@ def translate(word, lang='ru'):
 
 def emoji(word):
     emo = Translator(exact_match_only=False)
-    return emo.emojify(word)
+    emoj = emo.emojify(word)
+    if emoj == word.lower():
+        emoj = ''
+    return emoj
 
 
 def search_image(word):

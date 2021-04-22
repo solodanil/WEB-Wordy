@@ -1,5 +1,6 @@
 import sqlalchemy
 import sqlalchemy.orm as orm
+from sqlalchemy_serializer import SerializerMixin
 
 from .db_session import SqlAlchemyBase
 
@@ -37,7 +38,7 @@ class Collection(SqlAlchemyBase):
         return f'<Collection> {self.id} {self.name}'
 
 
-class Word(SqlAlchemyBase):
+class Word(SqlAlchemyBase, SerializerMixin):
     __tablename__ = 'word'
 
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True, index=True)

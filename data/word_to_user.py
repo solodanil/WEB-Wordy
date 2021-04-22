@@ -1,10 +1,11 @@
 import sqlalchemy
 import sqlalchemy.orm as orm
+from sqlalchemy_serializer import SerializerMixin
 
 from .db_session import SqlAlchemyBase
 
 
-class Vocabulary(SqlAlchemyBase):
+class Vocabulary(SqlAlchemyBase, SerializerMixin):
     __tablename__ = 'vocabulary'
 
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True, index=True)
