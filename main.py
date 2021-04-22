@@ -1,5 +1,6 @@
 import os
 import datetime
+import shutil
 
 import requests
 from flask import Flask, url_for, request, render_template, redirect, flash
@@ -51,7 +52,6 @@ def index():
     user_words = get_user_words(current_user)
     raw_collections = db_sess.query(Collection).all()[-2::]
     collections = get_collections(raw_collections, user_words)
-    user = db_sess.query(User).filter(User.id == current_user.id).first()
     res = list()
     soonest = db_sess.query(SpeakingClub).filter(SpeakingClub.date > datetime.date.today()).order_by(SpeakingClub.date).all()[:3]
     soonest = list(map(lambda club: ('БЛИЖАЙШИЙ', club), soonest))
@@ -59,6 +59,7 @@ def index():
     few_seats = sorted(few_seats, key=lambda x: x.number_of_seats - len(x.users))[0]
     print(soonest)
     if not current_user.is_anonymous:
+        user = db_sess.query(User).filter(User.id == current_user.id).first()
         user_clubs = user.speaking_club
         user_clubs = list(filter(lambda club: club.date > datetime.date.today(), user_clubs))
         if user_clubs:
@@ -68,7 +69,8 @@ def index():
     res.append(tuple())
     res[2] = ('ОСТАЛОСЬ МАЛО МЕСТ', few_seats)
     user_words = get_user_words(current_user)
-    res = list(map(lambda x: (x[0], get_club(x[1], current_user, user_words)), res))
+    print(res)
+    res = list(map(lambda x: (x[0], get_club(x[1], current_user, user_words)), res[:3]))
     print(res)
     return render_template('index.html', collections=collections, clubs=res)
 
@@ -204,6 +206,7 @@ def delete_club(club_id):
     club = db_sess.query(SpeakingClub).filter(SpeakingClub.id == club_id).first()
     db_sess.delete(club)
     db_sess.commit()
+    shutil.rmtree(os.path.join(basedir, f'static/images/clubs/{club_id}'))
     return redirect('index')
 
 

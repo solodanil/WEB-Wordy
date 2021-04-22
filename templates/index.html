@@ -8,19 +8,28 @@
       {{clubs[0][0]}}
     </div>
     <div class="card card_sc">
-      <img src="../static/images/tmp.jpg" class="card-img-top card-img-sc" alt="...">
+      <img src="../{{clubs[0][1]['image']}}" class="card-img-top card-img-sc" alt="{{clubs[0][1]['title']}}">
       <div class="card-body">
-        <a class="tdn" href="/clubs/0">
-          <h5 class="card-title">Делаем нормально сейчас</h5>
-          <p class="card-text card-text-sc">This is a longer card with supporting text below as a natural lead-in to
-            additional content. This content is a little bit longer.</p>
+        <a class="tdn" href="/clubs/{{clubs[0][1]['id']}}">
+          <h5 class="card-title">{{clubs[0][1]['title']}}</h5>
+          <p class="card-text card-text-sc">{{clubs[0][1]['description']}}</p>
           <ul class="sc-ul">
-            <li><i class="bi bi-calendar"></i>8 августа, в 12:00</li>
-            <li><i class="bi bi-clock"></i>30 минут</li>
-            <li><i class="bi bi-people"></i>5 мест</li>
+            <li><i class="bi bi-calendar"></i>{{clubs[0][1]['human_date']}}, в {{clubs[0][1]['human_time']}}</li>
+            <li><i class="bi bi-clock"></i>{{clubs[0][1]['duration']}}</li>
+            <li><i class="bi bi-people"></i>{{clubs[0][1]['free_seats']}}</li>
           </ul>
         </a>
-        <button type="button" class="btn btn-primary">Перейти к встрече</button>
+          {% if clubs[0][1]['booked'] %}
+                                <a href="//{{clubs[0][1]['link']}}" class="btn btn-success all-sc-card-body-a">Перейти ко встрече</a>
+          {% else %}
+            {% if clubs[0][1]['active'] %}
+                <a href="/clubs/{{clubs[0][1]['id']}}?book" class="btn btn-primary all-sc-card-body-a">Записаться</a>
+            {% else %}
+                <button type="button" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Войдите, чтобы записаться" disabled>
+                    Записаться
+                </button>
+            {% endif %}
+        {% endif %}
       </div>
     </div>
   </div>
@@ -41,7 +50,7 @@
           </ul>
         </a>
           {% if clubs[1][1]['booked'] %}
-                                <a href="{{clubs[1][1]['link']}}" class="btn btn-success all-sc-card-body-a">Перейти ко встрече</a>
+                                <a href="//{{clubs[1][1]['link']}}" class="btn btn-success all-sc-card-body-a">Перейти ко встрече</a>
           {% else %}
             {% if clubs[1][1]['active'] %}
                 <a href="/clubs/{{clubs[1][1]['id']}}?book" class="btn btn-primary all-sc-card-body-a">Записаться</a>
@@ -59,19 +68,28 @@
       {{clubs[2][0]}}
     </div>
     <div class="card card_sc">
-      <img src="../static/images/tmp.jpg" class="card-img-top card-img-sc" alt="...">
+      <img src="../{{clubs[2][1]['image']}}" class="card-img-top card-img-sc" alt="{{clubs[2][1]['title']}}">
       <div class="card-body">
-        <a class="tdn" href="/clubs/0">
-          <h5 class="card-title">Делаем нормально сейчас</h5>
-          <p class="card-text card-text-sc">This is a longer card with supporting text below as a natural lead-in to
-            additional content.</p>
+        <a class="tdn" href="/clubs/{{clubs[2][1]['id']}}">
+          <h5 class="card-title">{{clubs[2][1]['title']}}</h5>
+          <p class="card-text card-text-sc">{{clubs[2][1]['description']}}</p>
           <ul class="sc-ul">
-            <li><i class="bi bi-calendar"></i>8 августа, в 12:00</li>
-            <li><i class="bi bi-clock"></i>30 минут</li>
-            <li><i class="bi bi-people"></i>5 мест</li>
+            <li><i class="bi bi-calendar"></i>{{clubs[2][1]['human_date']}}, в {{clubs[2][1]['human_time']}}</li>
+            <li><i class="bi bi-clock"></i>{{clubs[2][1]['duration']}}</li>
+            <li><i class="bi bi-people"></i>{{clubs[2][1]['free_seats']}}</li>
           </ul>
         </a>
-        <button type="button" class="btn btn-outline-primary">Записаться</button>
+          {% if clubs[2][1]['booked'] %}
+                                <a href="//{{clubs[2][1]['link']}}" class="btn btn-success all-sc-card-body-a">Перейти ко встрече</a>
+          {% else %}
+            {% if clubs[1][1]['active'] %}
+                <a href="/clubs/{{clubs[2][1]['id']}}?book" class="btn btn-primary all-sc-card-body-a">Записаться</a>
+            {% else %}
+                <button type="button" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Войдите, чтобы записаться" disabled>
+                    Записаться
+                </button>
+            {% endif %}
+        {% endif %}
       </div>
     </div>
   </div>
