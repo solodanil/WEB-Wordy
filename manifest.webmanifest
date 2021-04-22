@@ -1,0 +1,9 @@
+{
+  "name": "Wordy — Разговорные клубы английского",
+  "short_name": "Wordy",
+  "theme_color": "#2196f3",
+  "background_color": "#2196f3",
+  "display": "minimal-ui",
+  "scope": "http://f263d7edbcfb.ngrok.io",
+  "start_url": "http://f263d7edbcfb.ngrok.io"
+}

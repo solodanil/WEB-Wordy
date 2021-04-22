@@ -359,6 +359,10 @@ def add_collection(club_id):
     return render_template('collection_club_form.html', form=form, title='Добавление подборки к клубу',
                            club_name=club.title)
 
+@app.route('/manifest.webmanifest')
+def manifest():
+    return open('manifest.webmanifest').read()
+
 
 def main():
     db_session.global_init("db/database.db")
