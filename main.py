@@ -10,6 +10,7 @@ from werkzeug.exceptions import abort
 from werkzeug.utils import secure_filename
 from dateutil import parser
 import vk_api
+from flask_restful import reqparse, abort, Api, Resource
 
 from data import db_session
 from data.speaking_club import SpeakingClub
@@ -21,12 +22,15 @@ from data.collection import Collection, Word
 from forms.collection_form import CollectionForm, CollectionClubForm
 from forms.word_form import WordForm
 
+import resources
+
 from tools import get_collections, get_club, get_user_words
 import config
 
 import dictionary
 
 app = Flask(__name__)
+api = Api(app)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -358,6 +362,7 @@ def add_collection(club_id):
 
 def main():
     db_session.global_init("db/database.db")
+    api.add_resource(resources.UserResource, '/api/v1/user/<int:social_id>')
     app.run(port=8080, host='127.0.0.1', debug=True)
 
 

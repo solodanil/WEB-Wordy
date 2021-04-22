@@ -2,6 +2,7 @@ import datetime
 import sqlalchemy
 from flask_login import UserMixin
 import sqlalchemy.orm as orm
+from sqlalchemy_serializer import SerializerMixin
 
 from .db_session import SqlAlchemyBase
 
@@ -15,7 +16,7 @@ club_to_user = sqlalchemy.Table(
 )
 
 
-class User(SqlAlchemyBase, UserMixin):
+class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     __tablename__ = 'users'
 
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True, index=True)
