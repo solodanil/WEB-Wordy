@@ -4,25 +4,35 @@
 import logging
 import os
 
-from vkbottle import Callback, GroupEventType, GroupTypes, Keyboard
+from vkbottle import Callback, GroupEventType, GroupTypes, Keyboard, Text, KeyboardButtonColor, DocMessagesUploader, \
+    PhotoMessageUploader, AudioUploader
 from vkbottle.bot import Bot, Message
 from vkbottle.modules import json
-from config import TOKEN
+from vkbottle_types import BaseStateGroup
+
+from config import TOKEN, url
 
 from requests import get
 
 bot = Bot(TOKEN)
 logging.basicConfig(level=logging.INFO)
 
-#KEYBOARD = (
-#    Keyboard(one_time=False)
-#    .add(Callback("Callback-кнопка", payload={"cmd": "callback"}))
-#    .get_json()
-#)
+
+class UserState(BaseStateGroup):
+    UNKNOWN = 1
 
 
-#@bot.on.private_message(text="/callback")
-#async def send_callback_button(message: Message):
+MAIN_KEYBOARD = Keyboard(one_time=True, inline=False)
+MAIN_KEYBOARD.add(Text("Начать тренировку"), color=KeyboardButtonColor.PRIMARY)
+MAIN_KEYBOARD = MAIN_KEYBOARD.get_json()
+
+NEXT_KEYBOARD = Keyboard(inline=False)
+NEXT_KEYBOARD.add(Text("Следующее слово"), color=KeyboardButtonColor.PRIMARY)
+NEXT_KEYBOARD = NEXT_KEYBOARD.get_json()
+
+
+# @bot.on.private_message(text="/callback")
+# async def send_callback_button(message: Message):
 #    await message.answer("Лови!", keyboard=KEYBOARD)
 
 
@@ -38,11 +48,32 @@ async def handle_message_event(event: GroupTypes.MessageEvent):
         event_data=json.dumps({"type": "show_snackbar", "text": "Сейчас я исчезну"}),
     )
 
-@bot.on.private_message(text="/start")
-async def send_message(message: Message):
-    if 'user' not in get(f'http://127.0.0.1:8080/api/v1/user/{message.peer_id}').json():
+
+@bot.on.private_message(text="Начать")
+async def start_message(message: Message):
+    if 'user' not in get(f'http://{url}/api/v1/user/{message.peer_id}').json():
         await message.answer('''Привет!
 Кажется, ты не зарегистрирован на сайте под этим аккаунтом
-Ссылка на сайт: http://127.0.0.1:8080''', keyboard=KEYBOARD)
+Ссылка на сайт: https://{url}''')
+        await bot.state_dispenser.set(message.peer_id, UserState.UNKNOWN)
+    else:
+        await message.answer('Привет!', keyboard=MAIN_KEYBOARD)
+
+
+@bot.on.private_message(text="Следующее слово")
+async def send_message(message: Message):
+    word = get(f'http://{url}/api/v1/vocabulary/{message.peer_id}').json()
+    photo_url = word['word']["image"]
+    photo_stream = get(photo_url).content
+    photo = await PhotoMessageUploader(bot.api).upload(
+        photo_stream, peer_id=message.peer_id
+    )
+    print(word)
+    await message.answer(f'''{word["word"]["emoji"]}{word["word"]["word"].capitalize()} — {word["word"]["translation"]}
+
+{word['word']["dictionary"][0]['meanings'][0]['definitions'][0]['definition']}''',
+                         keyboard=NEXT_KEYBOARD, attachment=photo)
+    await bot.state_dispenser.set(message.peer_id, UserState.UNKNOWN)
+
 
 bot.run_forever()
