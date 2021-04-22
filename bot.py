@@ -7,8 +7,9 @@ import os
 from vkbottle import Callback, GroupEventType, GroupTypes, Keyboard
 from vkbottle.bot import Bot, Message
 from vkbottle.modules import json
+from config import TOKEN
 
-bot = Bot(os.environ["TOKEN"])
+bot = Bot(TOKEN)
 logging.basicConfig(level=logging.INFO)
 
 KEYBOARD = (
