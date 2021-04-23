@@ -5,12 +5,11 @@ import shutil
 import requests
 from flask import Flask, url_for, request, render_template, redirect, flash
 from flask_login import current_user, login_user, LoginManager, logout_user, login_required
-from sqlalchemy.sql.functions import count
 from werkzeug.exceptions import abort
 from werkzeug.utils import secure_filename
 from dateutil import parser
 import vk_api
-from flask_restful import reqparse, abort, Api, Resource
+from flask_restful import abort, Api
 
 from data import db_session
 from data.speaking_club import SpeakingClub
@@ -262,7 +261,7 @@ def word():
                            emodji=smile,
                            trancription=dict_response['phonetics'][0]['text'],
                            definition=dict_response['meanings'][0]['definitions'][0]['definition'],
-                           synonyms=dictionary.search_synonyms(word), added=added, active=active)
+                           synonyms=dictionary.search_synonyms(word), added=added, active=active, title=word.capitalize())
 
 
 @app.route('/new_club', methods=['GET', 'POST'])
