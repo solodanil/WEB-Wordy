@@ -22,7 +22,7 @@
 <body>
     <nav class="navbar-main navbar navbar-expand-lg navbar-light sticky-top">
         <div class="container-fluid container">
-          <a class="navbar-brand" href="http://{{ request.headers.get('host') }}/"><img src="static/images/logo-navbar.png" alt="Wordy" height="35"></a>
+          <a class="navbar-brand" href="http://{{ request.headers.get('host') }}/"><img src="{{url_for('static', filename='images/logo-navbar.png')}}" alt="Wordy" height="35"></a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -38,7 +38,7 @@
                 <a class="nav-link" data-toggle="tab" href="https://vk.me/wordy_eng">Учить слова</a>
               </li>
             </ul>
-            <form class="d-flex ml-auto" action="word" method="get" id="send-message" autocomplete="off">
+            <form class="d-flex ml-auto" action="http://{{ request.headers.get('host') }}/word" method="get" id="send-message" autocomplete="off">
               <input name="word" class="form-control me-2" type="search" required placeholder="Поиск слова" aria-label="Search" style="float: right;">
               <button class="btn btn-outline-success" type="submit"><i class="bi bi-search"></i></button>
             </form>

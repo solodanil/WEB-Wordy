@@ -56,7 +56,7 @@ def index():
     raw_collections = db_sess.query(Collection).all()[-2::]
     collections = get_collections(raw_collections, user_words)
     res = list()
-    soonest = db_sess.query(SpeakingClub).filter(SpeakingClub.date > datetime.date.today()).order_by(SpeakingClub.date).all()[:3]
+    soonest = db_sess.query(SpeakingClub).filter(SpeakingClub.date >= datetime.date.today()).order_by(SpeakingClub.date).all()[:3]
     soonest = list(map(lambda club: ('БЛИЖАЙШИЙ', club), soonest))
     few_seats = db_sess.query(SpeakingClub).filter(SpeakingClub.date > datetime.date.today()).all()
     few_seats = sorted(few_seats, key=lambda x: x.number_of_seats - len(x.users))[0]

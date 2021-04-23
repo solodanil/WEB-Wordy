@@ -68,7 +68,8 @@ async def next_word_message(message: Message):
     word = get(f'http://{url}/api/v1/vocabulary/{message.peer_id}').json()
     answers = set(word['incorrect_words'])
     answers.add(word["word"]["word"])
-    user_words[message.peer_id] = {'correct': word["word"]["word"], 'incorrect': set(word['incorrect_words']), 'full_word': word}
+    user_words[message.peer_id] = {'correct': word["word"]["word"], 'incorrect': set(word['incorrect_words']),
+                                   'full_word': word}
     print(answers)
     answer_keyboard = Keyboard(one_time=True, inline=False)
     for answer in answers:
@@ -134,12 +135,12 @@ async def next_word_message(message: Message):
             photo_stream, peer_id=message.peer_id
         )
         print(word)
-        await message.answer(f'''{word["word"]["emoji"]}{word["word"]["word"].capitalize()} — {word["word"]["translation"]}
+        await message.answer(
+            f'''{word["word"]["emoji"]}{word["word"]["word"].capitalize()} — {word["word"]["translation"]}
     
 {word['word']["dictionary"][0]['meanings'][0]['definitions'][0]['definition']}''',
-                             keyboard=NEXT_KEYBOARD, attachment=photo)
+            keyboard=NEXT_KEYBOARD, attachment=photo)
         await bot.state_dispenser.set(message.peer_id, UserState.UNKNOWN)
-
 
 
 #
