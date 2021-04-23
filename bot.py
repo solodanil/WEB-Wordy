@@ -17,6 +17,8 @@ from requests import get
 bot = Bot(TOKEN)
 logging.basicConfig(level=logging.INFO)
 
+user_words = dict()
+
 
 class UserState(BaseStateGroup):
     UNKNOWN = 1
@@ -61,19 +63,91 @@ async def start_message(message: Message):
 
 
 @bot.on.private_message(text="Следующее слово")
-async def send_message(message: Message):
+async def next_word_message(message: Message):
     word = get(f'http://{url}/api/v1/vocabulary/{message.peer_id}').json()
+    answers = set(word['incorrect_words'])
+    answers.add(word["word"]["word"])
+    user_words[message.peer_id] = {'correct': word["word"]["word"], 'incorrect': set(word['incorrect_words']), 'full_word': word}
+    print(answers)
+    answer_keyboard = Keyboard(one_time=True, inline=False)
+    for answer in answers:
+        answer_keyboard.add(Text(answer))
+        # answer_keyboard.row()
+    print(answer_keyboard.get_json())
     photo_url = word['word']["image"]
     photo_stream = get(photo_url).content
     photo = await PhotoMessageUploader(bot.api).upload(
         photo_stream, peer_id=message.peer_id
     )
     print(word)
-    await message.answer(f'''{word["word"]["emoji"]}{word["word"]["word"].capitalize()} — {word["word"]["translation"]}
+    await message.answer(f'''Выбери слово, подходящее к картинке''',
+                         keyboard=answer_keyboard.get_json(), attachment=photo)
+    await bot.state_dispenser.set(message.peer_id, UserState.UNKNOWN)
+
+
+@bot.on.private_message()
+async def next_word_message(message: Message):
+    if message.text in user_words[message.peer_id]['correct']:
+        word = user_words[message.peer_id]['full_word']
+        photo_url = word['word']["image"]
+        photo_stream = get(photo_url).content
+        photo = await PhotoMessageUploader(bot.api).upload(
+            photo_stream, peer_id=message.peer_id
+        )
+        print(word)
+        await message.answer(
+            f'''Верно!
+{word["word"]["emoji"]}{word["word"]["word"].capitalize()} — {word["word"]["translation"]}
 
 {word['word']["dictionary"][0]['meanings'][0]['definitions'][0]['definition']}''',
-                         keyboard=NEXT_KEYBOARD, attachment=photo)
-    await bot.state_dispenser.set(message.peer_id, UserState.UNKNOWN)
+            keyboard=NEXT_KEYBOARD, attachment=photo)
+        await bot.state_dispenser.set(message.peer_id, UserState.UNKNOWN)
+    else:
+        word = user_words[message.peer_id]['full_word']
+        photo_url = word['word']["image"]
+        photo_stream = get(photo_url).content
+        photo = await PhotoMessageUploader(bot.api).upload(
+            photo_stream, peer_id=message.peer_id
+        )
+        print(word)
+        await message.answer(
+            f'''Не совсем!
+        {word["word"]["emoji"]}{word["word"]["word"].capitalize()} — {word["word"]["translation"]}
+
+        {word['word']["dictionary"][0]['meanings'][0]['definitions'][0]['definition']}''',
+            keyboard=NEXT_KEYBOARD, attachment=photo)
+        await bot.state_dispenser.set(message.peer_id, UserState.UNKNOWN)
+    if message.text == 'Дальше':
+        word = get(f'http://{url}/api/v1/vocabulary/{message.peer_id}').json()
+        photo_url = word['word']["image"]
+        photo_stream = get(photo_url).content
+        photo = await PhotoMessageUploader(bot.api).upload(
+            photo_stream, peer_id=message.peer_id
+        )
+        print(word)
+        await message.answer(f'''{word["word"]["emoji"]}{word["word"]["word"].capitalize()} — {word["word"]["translation"]}
+    
+{word['word']["dictionary"][0]['meanings'][0]['definitions'][0]['definition']}''',
+                             keyboard=NEXT_KEYBOARD, attachment=photo)
+        await bot.state_dispenser.set(message.peer_id, UserState.UNKNOWN)
+
+
+
+#
+# @bot.on.private_message(text="Следующее слово")
+# async def next_word_message(message: Message):
+#     word = get(f'http://{url}/api/v1/vocabulary/{message.peer_id}').json()
+#     photo_url = word['word']["image"]
+#     photo_stream = get(photo_url).content
+#     photo = await PhotoMessageUploader(bot.api).upload(
+#         photo_stream, peer_id=message.peer_id
+#     )
+#     print(word)
+#     await message.answer(f'''{word["word"]["emoji"]}{word["word"]["word"].capitalize()} — {word["word"]["translation"]}
+#
+# {word['word']["dictionary"][0]['meanings'][0]['definitions'][0]['definition']}''',
+#                          keyboard=NEXT_KEYBOARD, attachment=photo)
+#     await bot.state_dispenser.set(message.peer_id, UserState.UNKNOWN)
 
 
 bot.run_forever()

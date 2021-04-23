@@ -2,8 +2,10 @@ from random import choice
 
 from flask.json import jsonify
 from flask_restful import Resource, abort
+from sqlalchemy import func
 
 from data import db_session
+from data.collection import Word
 from data.user import User
 from data.word_to_user import Vocabulary
 from dictionary import google_dict, translate, emoji, search_image, search_synonyms
@@ -33,6 +35,7 @@ class VocabularyResource(Resource):
         vocab = choice(vocabs)
         print(vocab)
         word = vocab.word.word
+        incorrect_words = list(map(lambda x: x.word, session.query(Word).filter(word != vocab.word).order_by(func.random()).all()[:2]))
         return jsonify({
             'word':
                 {'word': word,
@@ -42,4 +45,5 @@ class VocabularyResource(Resource):
                  'synonyms': search_synonyms(word),
                  'dictionary': google_dict(word)
                  },
-            'lvl': vocab.lvl})
+            'lvl': vocab.lvl,
+            'incorrect_words': incorrect_words})

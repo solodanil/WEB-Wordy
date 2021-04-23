@@ -76,7 +76,7 @@ def index():
     print(res)
     res = list(map(lambda x: (x[0], get_club(x[1], current_user, user_words)), res[:3]))
     print(res)
-    return render_template('index.html', collections=collections, clubs=res)
+    return render_template('index.html', collections=collections, clubs=res, title='Wordy')
 
 
 @app.route('/auth')
