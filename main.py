@@ -255,13 +255,16 @@ def word():
             db_sess.commit()
             added = True
     dict_response = dictionary.google_dict(word)[0]
+    image = dictionary.search_image(word)
+    translated = dictionary.translate(word)
+    synonyms = dictionary.search_synonyms(dict_response)
     return render_template('word.html', original=word.capitalize(),
-                           image=dictionary.search_image(word),
-                           translate_word=dictionary.translate(word),
+                           image=image,
+                           translate_word=translated,
                            emodji=smile,
                            trancription=dict_response['phonetics'][0]['text'],
                            definition=dict_response['meanings'][0]['definitions'][0]['definition'],
-                           synonyms=dictionary.search_synonyms(word), added=added, active=active, title=word.capitalize())
+                           synonyms=synonyms, added=added, active=active, title=word.capitalize())
 
 
 @app.route('/new_club', methods=['GET', 'POST'])

@@ -40,14 +40,15 @@ class VocabularyResource(Resource):
         word = vocab.word.word
         incorrect_words = list(
             map(lambda x: x.word, session.query(Word).filter(word != vocab.word).order_by(func.random()).all()[:2]))
+        dict_response = google_dict(word)
         return jsonify({
             'word':
                 {'word': word,
                  'translation': translate(word),
                  'emoji': emoji(word),
                  'image': search_image(word),
-                 'synonyms': search_synonyms(word),
-                 'dictionary': google_dict(word),
+                 'synonyms': search_synonyms(dict_response),
+                 'dictionary': dict_response,
                  'word_id': vocab.word.id
                  },
             'lvl': vocab.lvl,

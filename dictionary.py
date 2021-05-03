@@ -1,5 +1,5 @@
 import requests
-import json
+import time
 
 import translators as ts
 from emoji_translate import Translator
@@ -32,14 +32,24 @@ def search_image(word):
     return image
 
 
-def search_synonyms(word):
-    if 'synonyms' in google_dict(word)[0]['meanings'][0]['definitions'][0]:
-        synonyms = ', '.join(google_dict(word)[0]['meanings'][0]['definitions'][0]['synonyms'])
+def search_synonyms(dict_response):
+    if 'synonyms' in dict_response['meanings'][0]['definitions'][0]:
+        synonyms = ', '.join(dict_response['meanings'][0]['definitions'][0]['synonyms'])
     else:
         synonyms = 'not found.'
     return synonyms
 
 
 if __name__ == '__main__':
+    print(time.time())
     print(translate('cold'))
+    print(time.time())
     print(emoji('cold'))
+    print(time.time())
+    print(google_dict('word'))
+    print(time.time())
+    print(search_image('word'))
+    print(time.time())
+    print(search_synonyms('word'))
+    print(time.time())
+    print(1)
