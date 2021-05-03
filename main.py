@@ -3,7 +3,7 @@ import datetime
 import shutil
 
 import requests
-from flask import Flask, url_for, request, render_template, redirect, flash
+from flask import Flask, url_for, request, render_template, redirect, flash, make_response, send_from_directory
 from flask_login import current_user, login_user, LoginManager, logout_user, login_required
 from werkzeug.exceptions import abort
 from werkzeug.utils import secure_filename
@@ -43,9 +43,9 @@ def load_user(user_id):
     return db_sess.query(User).get(user_id)
 
 
-@app.errorhandler(404)
-def not_found(error):
-    return render_template('404_error.html')
+# @app.errorhandler(404)
+# def not_found(error):
+#     return render_template('404_error.html')
 
 
 @app.route('/')
@@ -56,7 +56,8 @@ def index():
     raw_collections = db_sess.query(Collection).all()[-2::]
     collections = get_collections(raw_collections, user_words)
     res = list()
-    soonest = db_sess.query(SpeakingClub).filter(SpeakingClub.date >= datetime.date.today()).order_by(SpeakingClub.date).all()[:3]
+    soonest = db_sess.query(SpeakingClub).filter(SpeakingClub.date >= datetime.date.today()).order_by(
+        SpeakingClub.date).all()[:3]
     soonest = list(map(lambda club: ('БЛИЖАЙШИЙ', club), soonest))
     few_seats = db_sess.query(SpeakingClub).filter(SpeakingClub.date > datetime.date.today()).all()
     few_seats = sorted(few_seats, key=lambda x: x.number_of_seats - len(x.users))[0]
@@ -172,7 +173,8 @@ def collection(collection_id):
     vocs = db_sess.query(Vocabulary).filter(Vocabulary.user_id == current_user.id).all()
     for word_obj in coll.word:
         print(word_obj)
-        if not db_sess.query(Vocabulary).filter(Vocabulary.user_id == current_user.id, Vocabulary.word == word_obj).first():
+        if not db_sess.query(Vocabulary).filter(Vocabulary.user_id == current_user.id,
+                                                Vocabulary.word == word_obj).first():
             voc = Vocabulary(user_id=current_user.id, word=word_obj)
             db_sess.add(voc)
             print(f'{word_obj} was added')
@@ -361,9 +363,20 @@ def add_collection(club_id):
     return render_template('collection_club_form.html', form=form, title='Добавление подборки к клубу',
                            club_name=club.title)
 
+
 @app.route('/manifest.json')
 def manifest():
     return open('manifest.json').read()
+
+
+@app.route('/service-worker.js')
+def sw():
+    return app.send_static_file('service-worker.js')
+
+
+@app.route('/offline.html')
+def offline():
+    return render_template('offline.html')
 
 
 def main():
