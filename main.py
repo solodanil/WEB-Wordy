@@ -15,7 +15,7 @@ import vk_api
 from flask_restful import abort, Api
 from flask_sqlalchemy import SQLAlchemy
 
-from admin import MainView, UserView
+from admin import MainView, UserView, FileView
 
 from data import db_session
 from data.speaking_club import SpeakingClub
@@ -52,7 +52,7 @@ admin.add_view(MainView(SpeakingClub, db.session))
 admin.add_view(MainView(Collection, db.session))
 admin.add_view(MainView(Vocabulary, db.session))
 path = op.join(op.dirname(__file__), 'static')
-admin.add_view(FileAdmin(path, '/static/', name='Static Files'))
+admin.add_view(FileView(path, '/static/', name='Static Files'))
 
 
 basedir = os.path.abspath(os.path.dirname(__file__))
