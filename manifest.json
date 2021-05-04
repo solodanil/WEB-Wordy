@@ -1,6 +1,7 @@
 {
   "name": "Wordy — Разговорные клубы английского",
   "short_name": "Wordy",
+  "description": "Разговорные клубы английского",
   "icons": [
     {
       "src": "/static/images/icons/icon-192х192.png",
@@ -15,9 +16,16 @@
         "purpose": "any"
     }
   ],
-  "start_url": "/index",
+  "start_url": "/",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "background_color": "#ffcb31",
   "theme_color": "#4e6891",
-  "categories": ["education"]
+  "categories": ["education"],
+  "shortcuts" : [
+  {
+    "name": "Разговорные клубы",
+    "url": "/clubs"
+  }
+]
 }
