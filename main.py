@@ -4,12 +4,15 @@ import shutil
 
 import requests
 from flask import Flask, url_for, request, render_template, redirect, flash, make_response, send_from_directory
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
 from flask_login import current_user, login_user, LoginManager, logout_user, login_required
 from werkzeug.exceptions import abort
 from werkzeug.utils import secure_filename
 from dateutil import parser
 import vk_api
 from flask_restful import abort, Api
+from flask_sqlalchemy import SQLAlchemy
 
 from data import db_session
 from data.speaking_club import SpeakingClub
@@ -33,6 +36,19 @@ api = Api(app)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+app.config['DATABASE_FILE'] = "db/database.db"
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{app.config["DATABASE_FILE"]}?check_same_thread=False'
+app.config['SQLALCHEMY_ECHO'] = True
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+admin = Admin(app)
+db = SQLAlchemy(app)
+admin.add_view(ModelView(User, db.session))
+admin.add_view(ModelView(SpeakingClub, db.session))
+admin.add_view(ModelView(Collection, db.session))
+admin.add_view(ModelView(Vocabulary, db.session))
+
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
