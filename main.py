@@ -1,11 +1,12 @@
 import os
 import datetime
 import shutil
+import os.path as op
 
 import requests
 from flask import Flask, url_for, request, render_template, redirect, flash, make_response, send_from_directory
 from flask_admin import Admin
-from flask_admin.contrib.sqla import ModelView
+from flask_admin.contrib.fileadmin import FileAdmin
 from flask_login import current_user, login_user, LoginManager, logout_user, login_required
 from werkzeug.exceptions import abort
 from werkzeug.utils import secure_filename
@@ -50,6 +51,8 @@ admin.add_view(UserView(User, db.session))
 admin.add_view(MainView(SpeakingClub, db.session))
 admin.add_view(MainView(Collection, db.session))
 admin.add_view(MainView(Vocabulary, db.session))
+path = op.join(op.dirname(__file__), 'static')
+admin.add_view(FileAdmin(path, '/static/', name='Static Files'))
 
 
 basedir = os.path.abspath(os.path.dirname(__file__))
