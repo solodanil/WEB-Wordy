@@ -14,6 +14,8 @@ import vk_api
 from flask_restful import abort, Api
 from flask_sqlalchemy import SQLAlchemy
 
+from admin import MainView, UserView
+
 from data import db_session
 from data.speaking_club import SpeakingClub
 from data.user import User
@@ -44,10 +46,10 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 admin = Admin(app)
 db = SQLAlchemy(app)
-admin.add_view(ModelView(User, db.session))
-admin.add_view(ModelView(SpeakingClub, db.session))
-admin.add_view(ModelView(Collection, db.session))
-admin.add_view(ModelView(Vocabulary, db.session))
+admin.add_view(UserView(User, db.session))
+admin.add_view(MainView(SpeakingClub, db.session))
+admin.add_view(MainView(Collection, db.session))
+admin.add_view(MainView(Vocabulary, db.session))
 
 
 basedir = os.path.abspath(os.path.dirname(__file__))
