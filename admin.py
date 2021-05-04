@@ -23,5 +23,11 @@ class FileView(FileAdmin):
             return current_user.is_admin
 
 
+class RootFileView(FileAdmin):
+    def is_accessible(self):
+        if not current_user.is_anonymous:
+            return current_user.is_admin
+
+
 class UserView(MainView):
     column_searchable_list = ['name', 'surname', 'email', 'social_id']
