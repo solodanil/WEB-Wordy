@@ -168,6 +168,8 @@ def clubs():
 
 @app.route('/clubs/<club_id>')
 def club_page(club_id):
+    if club_id == 'service-worker.js':
+        return abort(404)
     db_sess = db_session.create_session()
     raw_club = db_sess.query(SpeakingClub).filter(SpeakingClub.id == club_id).first()
     booked = False
