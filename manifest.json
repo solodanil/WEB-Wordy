@@ -29,5 +29,9 @@
     "icons": [{"src": "/static/images/icons/icon-192х192.png",
       "sizes": "192x192"}]
   }
-]
+],
+  "screenshots": [
+    {"src": "/static/images/img.png",
+        "sizes": "1136x2160",
+        "type": "image/png"}]
 }
