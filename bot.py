@@ -96,7 +96,7 @@ async def next_word_message(message: Message):
 
 @bot.on.private_message()
 async def next_word_message(message: Message):
-    if message.text.lower() in user_words[message.peer_id]['correct']:
+    if message.text.lower() in user_words.get([message.peer_id])['correct']:
         word = user_words[message.peer_id]['full_word']
         photo_url = word['word']["image"]
         photo_stream = get(photo_url).content

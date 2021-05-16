@@ -47,7 +47,7 @@ class VocabularyResource(Resource):
                  'translation': translate(word),
                  'emoji': emoji(word),
                  'image': search_image(word),
-                 'synonyms': search_synonyms(dict_response),
+                 'synonyms': search_synonyms(dict_response[0]),
                  'dictionary': dict_response,
                  'word_id': vocab.word.id
                  },

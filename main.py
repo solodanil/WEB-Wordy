@@ -104,8 +104,11 @@ def index():
 
 @app.route('/auth')
 def login():
-    return redirect(
-        f'https://oauth.vk.com/authorize?client_id=7827948&display=page&redirect_uri=http://{request.headers.get("host")}/oauth_handler&scope=friends,email,offline&response_type=code&v=5.130')
+    res = make_response(redirect(
+        f'https://oauth.vk.com/authorize?client_id=7827948&display=page&redirect_uri=http://{request.headers.get("host")}/oauth_handler&scope=friends,email,offline&response_type=code&v=5.130'))
+    print(request.headers.get('Referer'))
+    res.set_cookie('auth_redirect', request.headers.get('Referer'), max_age=60 * 20)
+    return res
 
 
 @app.route('/oauth_handler')
@@ -132,14 +135,15 @@ def oauth_handler():
         db_sess.add(user)
         db_sess.commit()
     login_user(user, True)
-    return redirect(url_for('index'))
+    redirect_url = request.cookies.get("auth_redirect", request.headers.get("host"))
+    return redirect(redirect_url)
 
 
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
-    return redirect("/")
+    return redirect(f'/')
 
 
 @app.route('/clubs')
