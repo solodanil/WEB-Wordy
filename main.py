@@ -56,7 +56,6 @@ admin.add_view(FileView(path, '/static/', name='Static Files'))
 path = op.dirname(__file__)
 admin.add_view(RootFileView(path, '../', name='Root Files'))
 
-
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
@@ -66,9 +65,9 @@ def load_user(user_id):
     return db_sess.query(User).get(user_id)
 
 
-# @app.errorhandler(404)
-# def not_found(error):
-#     return render_template('404_error.html')
+@app.errorhandler(404)
+def not_found(error):
+    return render_template('404_error.html')
 
 
 @app.route('/')
@@ -105,7 +104,7 @@ def index():
 @app.route('/auth')
 def login():
     res = make_response(redirect(
-        f'https://oauth.vk.com/authorize?client_id=7827948&display=page&redirect_uri=http://{request.headers.get("host")}/oauth_handler&scope=friends,email,offline&response_type=code&v=5.130'))
+        f'https://oauth.vk.com/authorize?client_id={config.vk_id}&display=page&redirect_uri=http://{request.headers.get("host")}/oauth_handler&scope=friends,email,offline&response_type=code&v=5.130'))
     print(request.headers.get('Referer'))
     res.set_cookie('auth_redirect', request.headers.get('Referer'), max_age=60 * 20)
     return res
@@ -253,8 +252,8 @@ def word():
     db_sess = db_session.create_session()
     if word == smile:
         smile = ''
-    # if not dictionary.google_dict(word, 'en_US'):
-    #     abort(404)
+    if not dictionary.google_dict(word, 'en_US'):
+        abort(404)
     if current_user.is_anonymous:
         active = False
         added = False

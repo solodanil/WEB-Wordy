@@ -23,6 +23,7 @@ def abort_if_user_not_found(social_id):
 
 class UserResource(Resource):
     def get(self, social_id):
+        '''Функция принимает social_vk и возвращает id, is_admin, name пользователя'''
         abort_if_user_not_found(social_id)
         session = db_session.create_session()
         user = session.query(User).filter(User.social_id == social_id).first()
@@ -31,6 +32,7 @@ class UserResource(Resource):
 
 class VocabularyResource(Resource):
     def get(self, user_social_id):
+        '''Функция возвращает рандомное слово из словаря пользователя'''
         abort_if_user_not_found(user_social_id)
         session = db_session.create_session()
         user_id = session.query(User).filter(User.social_id == user_social_id).first().id
@@ -55,7 +57,7 @@ class VocabularyResource(Resource):
             'incorrect_words': incorrect_words})
 
     def post(self, user_social_id):
-        print(0)
+        '''увеличивает уровень владения словом из словаря на 1'''
         abort_if_user_not_found(user_social_id)
         session = db_session.create_session()
         word_id = parser.parse_args()['word_id']
@@ -63,7 +65,6 @@ class VocabularyResource(Resource):
         vocab = session.query(Vocabulary).filter(Vocabulary.user_id == user_id, Vocabulary.lvl <= 10,
                                                  Vocabulary.word_id == word_id).first()
         vocab.lvl = vocab.lvl + 1
-        print(0)
         print(vocab)
         session.commit()
         return jsonify({'success': True})
