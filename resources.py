@@ -27,7 +27,7 @@ class UserResource(Resource):
         abort_if_user_not_found(social_id)
         session = db_session.create_session()
         user = session.query(User).filter(User.social_id == social_id).first()
-        return jsonify({'user': user.to_dict(only=('id', 'is_admin', 'name'))})
+        return jsonify({'user': user.to_dict(only=('id', 'is_admin', 'name')), 'words_len': len(user.words)})
 
 
 class VocabularyResource(Resource):

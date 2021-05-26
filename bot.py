@@ -1,6 +1,3 @@
-# Example of sending and receiving an event after pressing the Callback button
-# Documentation: https://vk.cc/aC9JG2
-
 import logging
 import os
 import random
@@ -54,11 +51,16 @@ async def handle_message_event(event: GroupTypes.MessageEvent):
 
 @bot.on.private_message(text="Начать")
 async def start_message(message: Message):
-    if 'user' not in get(f'http://{url}/api/v1/user/{message.peer_id}').json():
-        await message.answer('''Привет!
+    response = get(f'http://{url}/api/v1/user/{message.peer_id}').json()
+    if 'user' not in response:
+        await message.answer(f'''Привет!
 Кажется, ты не зарегистрирован на сайте под этим аккаунтом
 Ссылка на сайт: https://{url}''')
         await bot.state_dispenser.set(message.peer_id, UserState.UNKNOWN)
+    elif response['words_len'] == 0:
+        await message.answer(f'''Привет!
+Кажется, ты еще не добавил ни одного слова в свой словарь.
+Заходи на сайт и добавляй: https://{url}''')
     else:
         await message.answer('Привет!', keyboard=MAIN_KEYBOARD)
 
@@ -96,7 +98,8 @@ async def next_word_message(message: Message):
 
 @bot.on.private_message()
 async def next_word_message(message: Message):
-    if message.text.lower() in user_words.get([message.peer_id])['correct']:
+    print(user_words)
+    if message.text.lower() in user_words.get(message.peer_id)['correct']:
         word = user_words[message.peer_id]['full_word']
         photo_url = word['word']["image"]
         photo_stream = get(photo_url).content

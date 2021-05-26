@@ -116,7 +116,8 @@ def oauth_handler():
     response = requests.get(req_url).json()
     if not current_user.is_anonymous:
         return redirect(url_for('index'))
-    if response['user_id'] is None:
+    if response.get('user_id') is None:
+        print(response)
         flash('Authentication failed.')
         return redirect(url_for('index'))
     db_sess = db_session.create_session()
