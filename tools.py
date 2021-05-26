@@ -7,6 +7,7 @@ from data.user import User
 
 
 def get_collections(raw_collections, user_words):
+    """сюреализация подборок"""
     collections = list()
     for collection in raw_collections:
         words = []
@@ -33,7 +34,7 @@ def get_club(raw_club, current_user, user_words, booked=False, from_club_page=Fa
     mest_parse = morph.parse('место')[0]
     min_parse = morph.parse('минута')[0]
     active = True
-    free_seats = raw_club.number_of_seats - len(raw_club.users)
+    free_seats = raw_club.number_of_seats - len(raw_club.users)  # количество оставшихся мест
     mest = mest_parse.make_agree_with_number(free_seats).word
     minut = min_parse.make_agree_with_number(raw_club.duration).word
     if current_user.is_anonymous:

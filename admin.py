@@ -14,7 +14,7 @@ class MainView(sqla.ModelView):
 
     def inaccessible_callback(self, name, **kwargs):
         # redirect to login page if user doesn't have access
-        return redirect(url_for('auth'))
+        return redirect('/auth')
 
 
 class FileView(FileAdmin):

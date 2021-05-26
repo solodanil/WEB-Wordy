@@ -74,28 +74,26 @@ def not_found(error):
 @app.route('/index')
 def index():
     db_sess = db_session.create_session()
-    user_words = get_user_words(current_user)
-    raw_collections = db_sess.query(Collection).all()[-2::]
-    collections = get_collections(raw_collections, user_words)
+    user_words = get_user_words(current_user)  # получаем слова, которые пользователь добавил в словарь
+    raw_collections = db_sess.query(Collection).all()[-2::]  # получаем две самых новых подборки слов
+    collections = get_collections(raw_collections, user_words)  # переводим подборки в нужный формат
     res = list()
     soonest = db_sess.query(SpeakingClub).filter(SpeakingClub.date >= datetime.date.today()).order_by(
-        SpeakingClub.date).all()[:3]
+        SpeakingClub.date).all()[:3]  # получаем три ближайших клуба
     soonest = list(map(lambda club: ('БЛИЖАЙШИЙ', club), soonest))
     few_seats = db_sess.query(SpeakingClub).filter(SpeakingClub.date > datetime.date.today()).all()
-    few_seats = sorted(few_seats, key=lambda x: x.number_of_seats - len(x.users))[0]
-    print(soonest)
-    if not current_user.is_anonymous:
+    few_seats = sorted(few_seats, key=lambda x: x.number_of_seats - len(x.users))[
+        0]  # получаем клуб с наименьшим кол-вом свободных мест
+    if not current_user.is_anonymous:  # ищем ближайший клуб, на который записан пользователь
         user = db_sess.query(User).filter(User.id == current_user.id).first()
         user_clubs = user.speaking_club
-        user_clubs = list(filter(lambda club: club.date > datetime.date.today(), user_clubs))
+        user_clubs = list(filter(lambda club: club.date >= datetime.date.today(), user_clubs))
         if user_clubs:
             res.append(('ВЫ ЗАПИСАНЫ', sorted(user_clubs, key=lambda club: (club.date, club.time))[0]))
-    print(soonest)
     res += soonest
     res.append(tuple())
     res[2] = ('ОСТАЛОСЬ МАЛО МЕСТ', few_seats)
     user_words = get_user_words(current_user)
-    print(res)
     res = list(map(lambda x: (x[0], get_club(x[1], current_user, user_words)), res[:3]))
     print(res)
     return render_template('index.html', collections=collections, clubs=res, title='Wordy')
@@ -103,6 +101,7 @@ def index():
 
 @app.route('/auth')
 def login():
+    """Перенаправляет пользователя на авторизацию ВК и запоминает в куки предыдущую страницу"""
     res = make_response(redirect(
         f'https://oauth.vk.com/authorize?client_id={config.vk_id}&display=page&redirect_uri=http://{request.headers.get("host")}/oauth_handler&scope=friends,email,offline&response_type=code&v=5.130'))
     print(request.headers.get('Referer'))
@@ -112,6 +111,7 @@ def login():
 
 @app.route('/oauth_handler')
 def oauth_handler():
+    """обрабатывает ответ oauth, регистрирует или авторизует пользователя, после чего возвращает на страницу из куки"""
     req_url = f'https://oauth.vk.com/access_token?client_id={config.vk_id}&client_secret={config.vk_secret}&redirect_uri=http://{request.headers.get("host")}/oauth_handler&code={request.args.get("code")}'
     response = requests.get(req_url).json()
     if not current_user.is_anonymous:
@@ -120,8 +120,9 @@ def oauth_handler():
         flash('Authentication failed.')
         return redirect(url_for('index'))
     db_sess = db_session.create_session()
-    user = db_sess.query(User).filter(User.social_id == response['user_id']).first()
-    if not user:
+    user = db_sess.query(User).filter(
+        User.social_id == response['user_id']).first()  # ищем пользователя с таким же social_id
+    if not user:  # если не находим, то создаем нового
         vk_session = vk_api.VkApi(token=response['access_token'])
         vk = vk_session.get_api()
         user_obj = vk.users.get(user_id=response['user_id'], fields="contacts")[0]
@@ -148,21 +149,21 @@ def logout():
 @app.route('/clubs')
 def clubs():
     db_sess = db_session.create_session()
-    dates = db_sess.query(SpeakingClub.date).all()
+    dates = db_sess.query(SpeakingClub.date).all()  # получаем даты, в которых проходят клубы
     if not current_user.is_anonymous:
         user = db_sess.query(User).filter(User.id == current_user.id).first()
     dates.sort()
     res_clubs = {}
     for date in dates:
         date = date[0]
-        raw_clubs = db_sess.query(SpeakingClub).filter(SpeakingClub.date == date).all()
+        raw_clubs = db_sess.query(SpeakingClub).filter(SpeakingClub.date == date).all()  # получаем клубы в нужную дату
         if date == datetime.date.today():
             date = 'Сегодня'
         elif date == datetime.date.today() + datetime.timedelta(days=1):
             date = 'Завтра'
         else:
             date = date.strftime('%d %B')
-        raw_clubs.sort(key=lambda x: (x.date, x.time))
+        raw_clubs.sort(key=lambda x: (x.date, x.time))  # сортируем по дате и времени
         res_clubs[date] = list()
         for raw_club in raw_clubs:
             user_words = get_user_words(current_user)
@@ -176,19 +177,20 @@ def club_page(club_id):
     if club_id == 'service-worker.js':
         return abort(404)
     db_sess = db_session.create_session()
-    raw_club = db_sess.query(SpeakingClub).filter(SpeakingClub.id == club_id).first()
+    raw_club = db_sess.query(SpeakingClub).filter(SpeakingClub.id == club_id).first()  # получаем информацию о клубе
     booked = False
     if not current_user.is_anonymous:
-        user = db_sess.query(User).filter(User.id == current_user.id).first()
-    if 'unbook' in request.args:
+        user = db_sess.query(User).filter(User.id == current_user.id).first()  # получаем текущего пользователя
+    if 'unbook' in request.args:  # отмена записи
         user.speaking_club.remove(raw_club)
         db_sess.commit()
         booked = False
-    elif 'book' in request.args:
+    elif 'book' in request.args:  # запись на клуб
         raw_club.users.append(user)
         db_sess.commit()
         booked = True
-    user_words = get_user_words(current_user)
+    user_words = get_user_words(
+        current_user)  # получаем словарь пользователя, чтобы определить, добавлял ли пользователь подборки
     club = get_club(raw_club, current_user, user_words, booked=booked, from_club_page=True)
     return render_template('club_page.html', club=club, title=club['title'])
 
@@ -196,9 +198,9 @@ def club_page(club_id):
 @app.route('/collection/<collection_id>')
 @login_required
 def collection(collection_id):
+    """Добавление слов из подборки в словарь пользователя"""
     db_sess = db_session.create_session()
     coll = db_sess.query(Collection).filter(Collection.id == collection_id).first()
-    vocs = db_sess.query(Vocabulary).filter(Vocabulary.user_id == current_user.id).all()
     for word_obj in coll.word:
         print(word_obj)
         if not db_sess.query(Vocabulary).filter(Vocabulary.user_id == current_user.id,
@@ -216,6 +218,7 @@ def collection(collection_id):
 @app.route('/collection/<collection_id>/delete')
 @login_required
 def collection_delete(collection_id):
+    """Удаление подборки из словаря"""
     db_sess = db_session.create_session()
     coll = db_sess.query(Collection).filter(Collection.id == collection_id).first()
     user = db_sess.query(User).filter(User.id == current_user.id).first()
@@ -233,6 +236,7 @@ def collection_delete(collection_id):
 
 @app.route('/del_club/<club_id>')
 def delete_club(club_id):
+    """Полное удаление разговорного клуба (админами)"""
     if not current_user.is_admin:
         return abort(404)
     db_sess = db_session.create_session()
@@ -247,15 +251,13 @@ def delete_club(club_id):
 def word():
     word = request.args.get('word').lower()
     print(word)
-    smile = dictionary.emoji(word)
+    smile = dictionary.emoji(word)  # получаем эмодзи по слову
     added = False
     db_sess = db_session.create_session()
-    if word == smile:
-        smile = ''
     if not dictionary.google_dict(word, 'en_US'):
         abort(404)
     if current_user.is_anonymous:
-        active = False
+        active = False  # возможность добавить в словарь
         added = False
     else:
         active = True
