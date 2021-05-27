@@ -32,7 +32,10 @@ def search_image(word):
     """поиск картинки по слову"""
     response = requests.get(
         f'https://api.unsplash.com/search/photos?page=1&query={word}&client_id=LbDsTQQY_mSADos2tEp_Y_JXtseb7l92LtH0J0Z1KjY').json()
-    image = response['results'][0]['urls']['raw']
+    try:
+        image = response['results'][0]['urls']['raw']
+    except IndexError:
+        image = ''
     return image
 
 
