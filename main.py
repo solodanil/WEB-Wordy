@@ -416,9 +416,6 @@ def main():
     api.add_resource(resources.VocabularyResource, '/api/v1/vocabulary/<int:user_social_id>')
     app.run(port=8080, host='127.0.0.1', debug=True)
 
-@app.route('/clubs')
-def clubs():
-    return render_template('clubs.html')
 
 
 if __name__ == '__main__':
