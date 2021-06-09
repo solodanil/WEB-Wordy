@@ -14,6 +14,7 @@ from dateutil import parser
 import vk_api
 from flask_restful import abort, Api
 from flask_sqlalchemy import SQLAlchemy
+from flask_moment import Moment
 
 from admin import MainView, UserView, FileView, RootFileView
 
@@ -39,6 +40,8 @@ api = Api(app)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+moment = Moment(app)
 
 app.config['DATABASE_FILE'] = "db/database.db"
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{app.config["DATABASE_FILE"]}?check_same_thread=False'
@@ -158,12 +161,12 @@ def clubs():
     for date in dates:
         date = date[0]
         raw_clubs = db_sess.query(SpeakingClub).filter(SpeakingClub.date == date).all()  # получаем клубы в нужную дату
-        if date == datetime.date.today():
-            date = 'Сегодня'
-        elif date == datetime.date.today() + datetime.timedelta(days=1):
-            date = 'Завтра'
-        else:
-            date = date.strftime('%d %B')
+        # if date == datetime.date.today():
+        #     date = 'Сегодня'
+        # elif date == datetime.date.today() + datetime.timedelta(days=1):
+        #     date = 'Завтра'
+        # else:
+        #     date = date.strftime('%d %B')
         raw_clubs.sort(key=lambda x: (x.date, x.time))  # сортируем по дате и времени
         res_clubs[date] = list()
         for raw_club in raw_clubs:

@@ -7,7 +7,7 @@
   <ul class="nav nav-pills">
       {% for date in clubs %}
     <li class="nav-item">
-      <a class="nav-link" href="#{{date}}">{{date}}</a>
+      <a class="nav-link" href="#{{date}}">{{ moment(date).format('D MMMM') }}</a>
     </li>
       {% endfor %}
   </ul>
@@ -17,7 +17,7 @@
 {% endif %}
 
 {% for date in clubs %}
-<h3 id="{{date}}">{{date}}</h3>
+<h3 id="{{date}}">{{ moment(date).format('D MMMM') }}</h3>
     {% for club in clubs[date] %}
         {% if club['active'] %}
             <div class="card mb-3 card_sc mt25">
@@ -31,7 +31,7 @@
                                 <h5 class="card-title">{{club['title']}}</h5>
                                 <p class="card-text">{{club['description']}}</p>
                                 <ul class="sc-ul">
-                                    <li><i class="bi bi-calendar"></i>{{club['human_date']}}, в {{club['human_time']}}</li>
+                                    <li><i class="bi bi-calendar"></i>{{ moment(club['date']).format('D MMMM') }}, в {{ moment(club['time']).format('LT') }}</li>
                                     <li><i class="bi bi-clock"></i>{{club['duration']}}</li>
                                     <li><i class="bi bi-people"></i>{{club['free_seats']}}</li>
                                 </ul>
