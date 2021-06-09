@@ -2,6 +2,7 @@
 
 {% block content %}
 <script type="text/javascript" src="https://vk.com/js/api/share.js?95" charset="windows-1251"></script>
+<script type="text/javascript" src="https://vk.com/js/api/share.js?95" charset="windows-1251"></script>
 
 <div>
     <div class='image' style="background-image:url({{club['image']}});"></div>
@@ -30,7 +31,7 @@
                 {% endif %}
             </ul>
             <ul class="sc-ul">
-                <li><i class="bi bi-calendar"></i>{{club['human_date']}}, в {{club['human_time']}}</li>
+                <li><i class="bi bi-calendar"></i>{{ moment(club['date']).format('D MMMM') }}, в {{ moment(club['time']).format('LT') }}</li>
                 <li><i class="bi bi-clock"></i>{{club['duration']}}</li>
                 <li><i class="bi bi-people"></i>{{club['free_seats']}}</li>
             </ul>
