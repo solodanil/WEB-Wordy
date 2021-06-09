@@ -8,7 +8,7 @@ class SpeakingClubForm(FlaskForm):
     name = StringField('Название', validators=[DataRequired()])
     content = TextAreaField("Описание")
     date = StringField('Дата')
-    time = StringField('Время')
+    time = StringField('Время в UTC')
     duration = StringField('Продолжительность (в минутах)')
     link = StringField('Ссылка')
     number_of_seats = StringField('Количество мест')

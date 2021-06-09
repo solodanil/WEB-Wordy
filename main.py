@@ -161,12 +161,6 @@ def clubs():
     for date in dates:
         date = date[0]
         raw_clubs = db_sess.query(SpeakingClub).filter(SpeakingClub.date == date).all()  # получаем клубы в нужную дату
-        # if date == datetime.date.today():
-        #     date = 'Сегодня'
-        # elif date == datetime.date.today() + datetime.timedelta(days=1):
-        #     date = 'Завтра'
-        # else:
-        #     date = date.strftime('%d %B')
         raw_clubs.sort(key=lambda x: (x.date, x.time))  # сортируем по дате и времени
         res_clubs[date] = list()
         for raw_club in raw_clubs:
