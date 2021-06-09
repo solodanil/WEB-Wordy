@@ -1,79 +1,96 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2 class="head_h2">Разговорные клубы</h2>
 
-<ul class="nav nav-pills all-sc-date-picker">
+<nav id="navbar-example2" class="navbar navbar-light px-3">
+  <a class="navbar-brand" href="http://{{ request.headers.get('host') }}/"><h2 class="head_h2">Разговорные клубы</h2></a>
+  <ul class="nav nav-pills">
+      {% for date in clubs %}
     <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="#">Сегодня</a>
+      <a class="nav-link" href="#{{date}}">{{date}}</a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#">Завтра</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#">Послезавтра</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#">11 августа</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#">12 августа</a>
-    </li>
-    <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
-            aria-expanded="false">Позже</a>
-        <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">13 авгутса</a></li>
-            <li><a class="dropdown-item" href="#">14 августа</a></li>
-            <li><a class="dropdown-item" href="#">15 августа</a></li>
-        </ul>
-    </li>
-</ul>
+      {% endfor %}
+  </ul>
+</nav>
+{% if current_user.is_anonymous %}
+<a data-bs-toggle="modal" data-bs-target="#exampleModal" href="">Войдите, чтобы записаться на разговорные клубы</a>
+{% endif %}
 
-<div class="card mb-3 card_sc mt25">
-    <div class="row g-0">
-        <div class="col-md-4">
-            <img class="all-sc-img" src="../static/images/tmp.jpg" alt="...">
-        </div>
-        <div class="col-md-8">
-            <div class="card-body all-sc-card-body">
-                <a class="tdn" href="/clubs/0">
-                    <h5 class="card-title">Название карточки</h5>
-                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
-                        additional content. This content is a little bit longer.</p>
-                    <ul class="sc-ul">
-                        <li><i class="bi bi-calendar"></i>8 августа, в 12:00</li>
-                        <li><i class="bi bi-clock"></i>30 минут</li>
-                        <li><i class="bi bi-people"></i>5 мест</li>
-                    </ul>
-                </a>
-                <button type="button" class="btn btn-outline-primary">Записаться</button>
+{% for date in clubs %}
+<h3 id="{{date}}">{{date}}</h3>
+    {% for club in clubs[date] %}
+        {% if club['active'] %}
+            <div class="card mb-3 card_sc mt25">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img class="all-sc-img" src="{{club['image']}}" alt="{{club['title']}}">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body all-sc-card-body">
+                            <a class="tdn" href="/clubs/{{club['id']}}">
+                                <h5 class="card-title">{{club['title']}}</h5>
+                                <p class="card-text">{{club['description']}}</p>
+                                <ul class="sc-ul">
+                                    <li><i class="bi bi-calendar"></i>{{club['human_date']}}, в {{club['human_time']}}</li>
+                                    <li><i class="bi bi-clock"></i>{{club['duration']}}</li>
+                                    <li><i class="bi bi-people"></i>{{club['free_seats']}}</li>
+                                </ul>
+                            </a>
+                            {% if club['booked'] %}
+                                <a href="//{{club['link']}}" class="btn btn-success all-sc-card-body-a">Перейти к встрече</a>
+                            {% else %}
+                                {% if club['active'] %}
+                                    <a href="/clubs/{{club['id']}}?book" class="btn btn-primary all-sc-card-body-a">Записаться</a>
+                                {% else %}
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Войдите, чтобы записаться" disabled>
+                                    Записаться
+                                    </button>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-</div>
+        {% else %}
 
-<div class="card mb-3 card_sc mt25 card-disabled">
-    <div class="row g-0">
-        <div class="col-md-4">
-            <img class="all-sc-img" src="../static/images/tmp.jpg" alt="...">
-        </div>
-        <div class="col-md-8">
-            <div class="card-body all-sc-card-body">
-                <a class="tdn" href="/clubs/0">
-                    <h5 class="card-title">Название карточки</h5>
-                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
-                        additional content. This content is a little bit longer.</p>
-                    <ul class="sc-ul">
-                        <li><i class="bi bi-calendar"></i>8 августа, в 12:00</li>
-                        <li><i class="bi bi-clock"></i>30 минут</li>
-                        <li><i class="bi bi-people"></i>0 мест</li>
-                    </ul>
-                </a>
-                <button type="button" class="btn btn-outline-primary" disabled>Записаться</button>
+            <div class="card mb-3 card_sc mt25 card-disabled">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img class="all-sc-img" src="{{club['image']}}" alt="{{club['title']}}">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body all-sc-card-body">
+                            <a class="tdn" href="/clubs/{{club['id']}}">
+                                <h5 class="card-title">{{club['title']}}</h5>
+                                <p class="card-text">{{club['description']}}</p>
+                                <ul class="sc-ul">
+                                    <li><i class="bi bi-calendar"></i>{{club['human_date']}}, в {{club['human_time']}}</li>
+                                    <li><i class="bi bi-clock"></i>{{club['duration']}}</li>
+                                    <li><i class="bi bi-people"></i>{{club['free_seats']}}</li>
+                                </ul>
+                            </a>
+                            {% if club['booked'] %}
+                                <li><a href="club['link']" class="btn btn-success">Перейти к встрече</a></li>
+                            {% else %}
+                                {% if club['active'] %}
+                                    <li><a href="?book" class="btn btn-primary">Записаться</a></li>
+                                {% else %}
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Войдите, чтобы записаться" disabled>
+                                    Записаться
+                                    </button>
+                                {% endif %}
+                            {% endif %}
+                            <button type="button" class="btn btn-outline-primary" disabled>Записаться</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-</div>
+        {% endif %}
+    {% endfor %}
+{% endfor %}
+
+{% if current_user.is_admin %}
+<a href="../new_club"><i class="bi bi-plus"></i> Новый разговорный клуб</a>
+{% endif %}
 
 {% endblock %}

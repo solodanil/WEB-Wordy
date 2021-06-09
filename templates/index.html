@@ -3,72 +3,186 @@
 {% block content %}
 <h2 class="head_h2"><a href="/clubs" class="head_link">Разговорные клубы <span class="link_arrow">→</span></a></h2>
 <div class="row row-cols-1 row-cols-md-3 g-4">
-    <div class="col">
-      <div class="main_card_header">
-        ВЫ ЗАПИСАНЫ
-      </div>
-      <div class="card card_sc">
-        <img src="..." class="card-img-top card-img-sc" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">Делаем нормально сейчас</h5>
-          <p class="card-text card-text-sc">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+  <div class="col">
+    <div class="main_card_header">
+      {{clubs[0][0]}}
+    </div>
+    <div class="card card_sc">
+      <img src="../{{clubs[0][1]['image']}}" class="card-img-top card-img-sc" alt="{{clubs[0][1]['title']}}">
+      <div class="card-body">
+        <a class="tdn" href="/clubs/{{clubs[0][1]['id']}}">
+          <h5 class="card-title">{{clubs[0][1]['title']}}</h5>
+          <p class="card-text card-text-sc">{{clubs[0][1]['description']}}</p>
           <ul class="sc-ul">
-            <li><i class="bi bi-calendar"></i>8 августа, в 12:00</li>
-            <li><i class="bi bi-clock"></i>30 минут</li>
-            <li><i class="bi bi-people"></i>5 мест</li>
+            <li><i class="bi bi-calendar"></i>{{clubs[0][1]['human_date']}}, в {{clubs[0][1]['human_time']}}</li>
+            <li><i class="bi bi-clock"></i>{{clubs[0][1]['duration']}}</li>
+            <li><i class="bi bi-people"></i>{{clubs[0][1]['free_seats']}}</li>
           </ul>
-          <button type="button" class="btn btn-primary">Перейти к встрече</button>
-        </div>
+        </a>
+          {% if clubs[0][1]['booked'] %}
+                                <a href="//{{clubs[0][1]['link']}}" class="btn btn-success all-sc-card-body-a">Перейти к встрече</a>
+          {% else %}
+            {% if clubs[0][1]['active'] %}
+                <a href="/clubs/{{clubs[0][1]['id']}}?book" class="btn btn-primary all-sc-card-body-a">Записаться</a>
+            {% else %}
+                <button data-bs-toggle="modal" data-bs-target="#exampleModal" type="button" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Войдите, чтобы записаться">
+                    Записаться
+                </button>
+            {% endif %}
+        {% endif %}
       </div>
     </div>
-    <div class="col">
-      <div class="main_card_header">
-        ЧЕРЕЗ 5 МИНУТ
-      </div>
-      <div class="card card_sc">
-        <img src="..." class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">Делаем нормально сейчас</h5>
-          <p class="card-text card-text-sc">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+  </div>
+  <div class="col">
+    <div class="main_card_header">
+      {{clubs[1][0]}}
+    </div>
+    <div class="card card_sc">
+      <img src="../{{clubs[1][1]['image']}}" class="card-img-top card-img-sc" alt="{{clubs[1][1]['title']}}">
+      <div class="card-body">
+        <a class="tdn" href="/clubs/{{clubs[1][1]['id']}}">
+          <h5 class="card-title">{{clubs[1][1]['title']}}</h5>
+          <p class="card-text card-text-sc">{{clubs[1][1]['description']}}</p>
           <ul class="sc-ul">
-            <li><i class="bi bi-calendar"></i>8 августа, в 12:00</li>
-            <li><i class="bi bi-clock"></i>30 минут</li>
-            <li><i class="bi bi-people"></i>5 мест</li>
+            <li><i class="bi bi-calendar"></i>{{clubs[1][1]['human_date']}}, в {{clubs[1][1]['human_time']}}</li>
+            <li><i class="bi bi-clock"></i>{{clubs[1][1]['duration']}}</li>
+            <li><i class="bi bi-people"></i>{{clubs[1][1]['free_seats']}}</li>
           </ul>
-          <button type="button" class="btn btn-outline-primary">Записаться</button>
-        </div>
+        </a>
+          {% if clubs[1][1]['booked'] %}
+                                <a href="//{{clubs[1][1]['link']}}" class="btn btn-success all-sc-card-body-a">Перейти к встрече</a>
+          {% else %}
+            {% if clubs[1][1]['active'] %}
+                <a href="/clubs/{{clubs[1][1]['id']}}?book" class="btn btn-primary all-sc-card-body-a">Записаться</a>
+            {% else %}
+                <button data-bs-toggle="modal" data-bs-target="#exampleModal" type="button" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Войдите, чтобы записаться">
+                    Записаться
+                </button>
+            {% endif %}
+        {% endif %}
       </div>
     </div>
-    <div class="col">
-      <div class="main_card_header">
-        ОСТАЛОCЬ ОДНО МЕСТО
-      </div>
-      <div class="card card_sc">
-        <img src="..." class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">Делаем нормально сейчас</h5>
-          <p class="card-text card-text-sc">This is a longer card with supporting text below as a natural lead-in to additional content.</p>
+  </div>
+  <div class="col">
+    <div class="main_card_header">
+      {{clubs[2][0]}}
+    </div>
+    <div class="card card_sc">
+      <img src="../{{clubs[2][1]['image']}}" class="card-img-top card-img-sc" alt="{{clubs[2][1]['title']}}">
+      <div class="card-body">
+        <a class="tdn" href="/clubs/{{clubs[2][1]['id']}}">
+          <h5 class="card-title">{{clubs[2][1]['title']}}</h5>
+          <p class="card-text card-text-sc">{{clubs[2][1]['description']}}</p>
           <ul class="sc-ul">
-            <li><i class="bi bi-calendar"></i>8 августа, в 12:00</li>
-            <li><i class="bi bi-clock"></i>30 минут</li>
-            <li><i class="bi bi-people"></i>5 мест</li>
+            <li><i class="bi bi-calendar"></i>{{clubs[2][1]['human_date']}}, в {{clubs[2][1]['human_time']}}</li>
+            <li><i class="bi bi-clock"></i>{{clubs[2][1]['duration']}}</li>
+            <li><i class="bi bi-people"></i>{{clubs[2][1]['free_seats']}}</li>
           </ul>
-          <button type="button" class="btn btn-outline-primary">Записаться</button>
-        </div>
+        </a>
+          {% if clubs[2][1]['booked'] %}
+                                <a href="//{{clubs[2][1]['link']}}" class="btn btn-success all-sc-card-body-a">Перейти к встрече</a>
+          {% else %}
+            {% if clubs[1][1]['active'] %}
+                <a href="/clubs/{{clubs[2][1]['id']}}?book" class="btn btn-primary all-sc-card-body-a">Записаться</a>
+            {% else %}
+                <button data-bs-toggle="modal" data-bs-target="#exampleModal" type="button" class="btn btn-primary" data-bs-placement="top" title="Войдите, чтобы записаться">
+                    Записаться
+                </button>
+            {% endif %}
+        {% endif %}
       </div>
     </div>
+  </div>
 
 </div>
 
 <h2 class="head_h2">Подборки слов</h2>
-<div>
-    <p class="rect_card"></p>
-    <h4 class="name_card">Города</h4>
-    <img class="image_card" src="..." alt="...">
-    <p class="text_card">This is a wider card with supporting text below as a natural lead-in
-            to additional content. This content is a little bit longer.</p>
-    <p class="words_card">32 слова</p>
-    <button type="button" class="button_card">Добавить в словарь</button>
-</div>
 
+<div class="container">
+  <div class="row">
+    {% for collection in collections %}
+            <div class="col-md">
+                <div class="card mb-3" style="max-width: 540px;">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <div class="collection-img">
+                                <img src="{{collection['image']}}" alt="{{collection['name']}}">
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">{{collection['name']}}</h5>
+                                <p class="card-text">{{collection['description']}}</p>
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <a href="" data-bs-toggle="modal" data-bs-target="#Modal{{loop.index}}"><p class="card-text">
+                                                <small class="text-muted">{{collection['words_len']}}</small></p></a>
+                                        </td>
+                                        <td>
+                                            {% if collection['added'] %}
+                                                <a href="collection/{{collection['id']}}/delete" class="btn btn-outline-primary btn-sm collection-btn"><i class="bi bi-trash"></i> Удалить из словаря</a>
+                                            {% else %}
+                                                    {% if not current_user.is_anonymous %}
+                                                <a href="collection/{{collection['id']}}" class="btn btn-outline-primary btn-sm collection-btn">Добавить в словарь</a>
+                                                    {% else %}
+                                                        <a data-bs-toggle="modal" data-bs-target="#exampleModal" href="#" class="btn btn-outline-primary btn-sm collection-btn">Добавить в словарь</a>
+                                                    {% endif %}
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+  </div>
+</div>
+{% if current_user.is_admin %}
+<a href="../new_collection"><i class="bi bi-plus"></i> Новая подборка</a>
+{% endif %}
+
+
+
+{% for collection in collections %}
+    <!-- Modal -->
+    <div class="modal fade" id="Modal{{loop.index}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">{{collection['name']}}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="bi bi-x"></i></button>
+          </div>
+          <div class="modal-body">
+            <ul>
+                {% for word in collection['words'] %}
+                    <li><a href="/word?word={{word}}">{{word}}</a></li>
+                {% endfor %}
+                {% if current_user.is_admin %}
+                <a href="../add_word/{{collection['id']}}"><i class="bi bi-plus"></i>Добавить слово</a>
+                {% endif %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+{% endfor %}
+
+<script>
+    const isIos = () => {
+           const userAgent = window.navigator.userAgent.toLowerCase();
+           return /iphone|ipad|ipod/.test( userAgent );
+       };
+       // Проверяем, открыто ли приложение отдельно или в браузере
+       const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
+
+
+
+       // Если приложение открыто на iOS и в браузере, то предлагаем установить
+       if (isIos() && !isInStandaloneMode()) {
+           this.setState({ isShown: true }); // На примере React
+       }
+</script>
 {% endblock %}

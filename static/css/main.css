@@ -1,12 +1,33 @@
 footer {
     text-align: center;
 }
+
+.search_form {
+    position: relative;
+    display: inline-flex;
+}
+
+.search_form button {
+    padding: 0;
+    border: none;
+    background: none;
+    position: absolute;
+    top: 7px;
+    right: 9px;
+    opacity: 0,7;
+}
+
 .head_h2 {
     margin-top: 20px;
 }
 .head_link {
     color: black;
 }
+.head_link:hover {
+    text-decoration: none;
+    color: black;
+}
+
 .link_arrow {
     color: #E9ECEF;
     font-size: 70%;
@@ -19,18 +40,38 @@ footer {
     padding-left: 15px;
 }
 div.card_sc {
-    border-radius: 25px;
+    border-radius: 15px;
     margin-bottom: 25px;
-}
-img.card_sc {
-    border-radius: 25px 25px 0 0;
+    display: flex;
 }
 
+.row {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.card-img-sc{
+    border-radius: 15px 15px 0 0;
+}
+
+.card-text {
+    color: #212529 !important
+}
+
+.table_design {
+    width: 520px;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -khtml-border-radius: 10px;
+    border: 1px solid #808080;
+    display: block;
+}
 
 .sc-ul {
     padding-top: 0;
     padding-left: 0;
-    color: #777777;
+    color: #777777; !important
 }
 .sc-ul li {
     display: block;
@@ -42,109 +83,130 @@ img.card_sc {
     margin-bottom: 7px;
 }
 
-
-img.image_card {
-    position: absolute;
-    width: 219px;
-    height: 265px;
-    left: 179px;
-    border-radius: 4px 0px 0px 4px;
+.table_design {
+    width: 520px;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -khtml-border-radius: 10px;
+    border: 1px solid #808080;
+    display: block;
 }
 
-p.text {
+.all-sc-img {
+    max-width: 100%;
+    border-radius: 15px 15px 15px 15px; /* Для десктопа тут нужно 25px 0 0 25 px */
+}
+
+.all-sc-card-body button {
+    float: right;
     position: absolute;
-    width: 698px;
-    height: 163px;
-    left: 178px;
-    font-family: Inter;
-    font-style: normal;
-    font-weight: normal;
+    bottom: 15px;
+    right: 30px;
+}
+
+.all-sc-card-body-a {
+    float: right;
+    position: absolute;
+    bottom: 15px;
+    right: 30px;
+}
+
+.all-sc-date-picker {
+    margin-bottom: 10px;
+}
+
+.mt25 {
+    margin-top: 25px;
+}
+
+.card-title{
+    color: #212529; !important
+}
+
+.card-title a:hover {
+    text-decoration: none;
+}
+
+.tdn {
+    text-decoration: none;
+}
+
+.tdn:hover {
+    text-decoration: none;
+}
+
+.card-disabled {
+    opacity: 0.50;
+}
+
+
+.collection-img img {
+    width: 100%; /*  Не знаю, как сделать нормально */
+    object-fit: cover;
+}
+
+.collection-btn {
+    position: absolute;
+    right: 30px;
+    bottom: 15px;
+}
+
+.description {
     font-size: 18px;
     line-height: 28px;
     color: #68717A;
 }
 
-p.rect_card {
-    position: absolute;
-    width: 540px;
-    height: 265px;
-    left: 179px;
-    background: #FFFFFF;
-    border: 1px solid #AAAAAA;
-    box-sizing: border-box;
-    border-radius: 4px;
+.name_club {
+    color: black;
+    z-index: 300;
 }
 
-.name_card {
-    position: absolute;
-    width: 87px;
-    height: 29px;
-    left: 420px;
-    top: 575px;
-    font-family: Inter;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 24px;
-    line-height: 29px;
-    color: #152536;
+.light_text {
+    margin-top: 20px;
+    color: #BCBCBC;
 }
 
-p.text_card {
-    position: absolute;
-    width: 272px;
-    height: 96px;
-    left: 420px;
-    top: 620px;
-    font-family: Inter;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 16px;
-    line-height: 24px;
-    color: #68717A;
+div.image {
+    width: 100%;
+    height: 400px;
+    background-position: center;
+    background-repeat: no-repeat;
+
 }
 
-p.words_card {
-    position: absolute;
-    width: 58px;
-    height: 16px;
-    left: 420px;
-    top: 770px;
-    font-family: Inter;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 13px;
-    line-height: 16px;
-    color: #ABB5BE;
+.sc-btn-group li {
+    display: inline;
 }
 
-button.button_card {
-    position: absolute;
-    width: 165px;
-    height: 36px;
-    left: 548px;
-    top: 765px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 6px 12px;
-    border: 1px solid #007BFF;
-    box-sizing: border-box;
-    border-radius: 4px;
+.sc-btn-group {
+    margin-top: 25px;
+}
 
-    font-family: SF Pro Display;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 16px;
-    line-height: 24px;
+.login-btn {
+    margin-left: 10px;
+    color: black;
+    font-size: 20pt;
+}
 
-    display: flex;
-    align-items: center;
-    text-align: center;
-    color: #007BFF;
+.btn-vk {
+    background-color: #4a85ce;
+    color: white;
+    border-radius: 30px;
+}
 
-    flex: none;
-    order: 0;
-    flex-grow: 0;
-    margin: 0px 0px;
+.btn-vk:hover {
+    background-color: #3b6eac;
+    color: white;
+}
+
+.btn {
+    border-radius: 10px;
+}
+
+.navbar-main {
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
+    background-color: rgba(240,240,240,0.8); 
 }

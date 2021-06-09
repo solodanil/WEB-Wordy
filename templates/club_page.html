@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block content %}
+<script type="text/javascript" src="https://vk.com/js/api/share.js?95" charset="windows-1251"></script>
+
+<div>
+    <div class='image' style="background-image:url({{club['image']}});"></div>
+    <div class="row">
+        <div class="col-md-8">
+            <h1 class="head_h2">{{club['title']}}</h1>
+            <h3 class="head_h2">Описание</h3>
+            <p class="description">{{club['description']}}</p>
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-3">
+            <ul class="sc-btn-group">
+                {% if club['booked'] %}
+                <li><a href="//{{club['link']}}" class="btn btn-success">Перейти к встрече</a></li>
+                <script type="text/javascript">document.write(VK.Share.button({title: 'Я иду на {{club["title"]}}'}, {type: 'custom', text: '<li><div id="share-button" class="btn btn-outline-secondary"><i class="bi bi-share-fill"></i></div></li>'}));</script>
+                <a href="?unbook"><i class="bi bi-x-circle"></i> Отменить запись</a>
+                {% else %}
+                {% if club['active'] %}
+                <li><a href="?book" class="btn btn-primary">Записаться</a></li>
+                {% else %}
+                <button type="button" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Войдите, чтобы записаться" disabled>
+                Записаться
+                </button>
+                {% endif %}
+                <script type="text/javascript">document.write(VK.Share.button({title: 'Я иду на {{club["title"]}}'}, {type: 'custom', text: '<li><div id="share-button" class="btn btn-outline-secondary"><i class="bi bi-share-fill"></i></div></li>'}));</script>
+                {% endif %}
+            </ul>
+            <ul class="sc-ul">
+                <li><i class="bi bi-calendar"></i>{{club['human_date']}}, в {{club['human_time']}}</li>
+                <li><i class="bi bi-clock"></i>{{club['duration']}}</li>
+                <li><i class="bi bi-people"></i>{{club['free_seats']}}</li>
+            </ul>
+            {% if current_user.is_admin %}
+                <a href="../del_club/{{club['id']}}"><i class="bi bi-trash"></i> Удалить клуб</a>
+                {% endif %}
+        </div>
+    </div>
+
+    <h3 class="head_h2">Эти слова пригодятся</h3>
+    {% if current_user.is_admin %}
+                <a href="../clubs/{{club['id']}}/add_collection"><i class="bi bi-plus"></i>Привязать подборку</a>
+                {% endif %}
+    <div class="row">
+        {% for collection in club['collections'] %}
+            <div class="col-md">
+                <div class="card mb-3" style="max-width: 540px;">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <div class="collection-img">
+                                <img src="{{collection['image']}}" alt="{{collection['name']}}">
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">{{collection['name']}}</h5>
+                                <p class="card-text">{{collection['description']}}</p>
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <a href="" data-bs-toggle="modal" data-bs-target="#Modal{{loop.index}}"><p class="card-text">
+                                                <small class="text-muted">{{collection['words_len']}}</small></p></a>
+                                        </td>
+                                        <td>
+                                            {% if collection['added'] %}
+                                                <a href="../collection/{{collection['id']}}/delete" class="btn btn-outline-primary btn-sm collection-btn"><i class="bi bi-trash"></i> Удалить из словаря</a>
+                                            {% else %}
+                                            {% if not current_user.is_anonymous %}
+                                                <a href="../collection/{{collection['id']}}" class="btn btn-outline-primary btn-sm collection-btn">Добавить в словарь</a>
+                                                    {% else %}
+                                                        <a data-bs-toggle="modal" data-bs-target="#exampleModal" href="#" class="btn btn-outline-primary btn-sm collection-btn">Добавить в словарь</a>
+                                                    {% endif %}
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% for collection in club['collections'] %}
+    <!-- Modal -->
+    <div class="modal fade" id="Modal{{loop.index}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">{{collection['name']}}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="bi bi-x"></i></button>
+          </div>
+          <div class="modal-body">
+            <ul>
+                {% for word in collection['words'] %}
+                    <li><a href="/word?word={{word}}">{{word}}</a></li>
+                {% endfor %}
+                {% if current_user.is_admin %}
+                <a href="../add_word/{{collection['id']}}"><i class="bi bi-plus"></i>Добавить слово</a>
+                {% endif %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+{% endfor %}
+{% endblock %}
