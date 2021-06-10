@@ -56,10 +56,7 @@ def get_club(raw_club, current_user, user_words, booked=False, from_club_page=Fa
         booked = False
     raw_collections = raw_club.collection
     collections = get_collections(raw_collections, user_words)
-    if from_club_page:
-        image = ''.join(['../', str(raw_club.image)])
-    else:
-        image = raw_club.image
+    image = raw_club.image
     calendar_link = get_calendar_link(raw_club)
     club = {'id': raw_club.id,
             'title': raw_club.title,

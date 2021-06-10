@@ -170,7 +170,7 @@ def clubs():
     return render_template('clubs.html', clubs=res_clubs, title='Разговорные клубы')
 
 
-@app.route('/clubs/<club_id>')
+@app.route('/clubs/<club_id>/')
 def club_page(club_id):
     if club_id == 'service-worker.js':
         return abort(404)
@@ -334,7 +334,7 @@ def add_club():
 
         os.mkdir(os.path.join(basedir, f'static/images/clubs/{club_id}'))
         img.save(os.path.join(basedir, f'static/images/clubs/{club_id}/{filename}'))
-        club.image = f'static/images/clubs/{club_id}/{filename}'
+        club.image = f'images/clubs/{club_id}/{filename}'
         db_sess.add(club)
         db_sess.commit()
         return redirect(f'./clubs/{club_id}')

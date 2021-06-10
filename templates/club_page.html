@@ -5,7 +5,7 @@
 <script type="text/javascript" src="https://vk.com/js/api/share.js?95" charset="windows-1251"></script>
 
 <div>
-    <div class='image' style="background-image:url({{club['image']}});"></div>
+    <div class='image' style="background-image:url( {{url_for('static', filename=club['image']) }} );"></div>
     <div class="row">
         <div class="col-md-8">
             <h1 class="head_h2">{{club['title']}}</h1>
