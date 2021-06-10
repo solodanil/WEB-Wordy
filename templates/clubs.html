@@ -23,7 +23,7 @@
             <div class="card mb-3 card_sc mt25">
                 <div class="row g-0">
                     <div class="col-md-4">
-                        <img class="all-sc-img" src="{{club['image']}}" alt="{{club['title']}}">
+                        <img class="all-sc-img" src="{{url_for('static', filename=club['image']) }}" alt="{{club['title']}}">
                     </div>
                     <div class="col-md-8">
                         <div class="card-body all-sc-card-body">
