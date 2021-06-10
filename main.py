@@ -362,7 +362,7 @@ def new_collection():
 
         os.mkdir(os.path.join(basedir, f'static/images/collection/{collection_id}'))
         img.save(os.path.join(basedir, f'static/images/collection/{collection_id}/{filename}'))
-        collection.image = f'static/images/collection/{collection_id}/{filename}'
+        collection.image = f'images/collection/{collection_id}/{filename}'
         db_sess.add(collection)
         db_sess.commit()
         return redirect(f'../add_word/{collection_id}')

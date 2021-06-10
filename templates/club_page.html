@@ -52,7 +52,7 @@
                     <div class="row g-0">
                         <div class="col-md-4">
                             <div class="collection-img">
-                                <img src="{{collection['image']}}" alt="{{collection['name']}}">
+                                <img src="{{url_for('static', filename=collection['image'])}}" alt="{{collection['name']}}">
                             </div>
                         </div>
                         <div class="col-md-8">

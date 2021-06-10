@@ -29,7 +29,7 @@ def get_collections(raw_collections, user_words):
         slov = slov_parse.make_agree_with_number(len(words)).word
         collections.append({'name': collection.name,
                             'description': collection.description,
-                            'image': ''.join(['../', str(collection.image)]),
+                            'image': collection.image,
                             'words_len': ' '.join((str(len(words)), slov)),
                             'words': words,
                             'id': collection.id,
