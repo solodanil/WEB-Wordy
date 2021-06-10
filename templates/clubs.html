@@ -37,7 +37,7 @@
                                 </ul>
                             </a>
                             {% if club['booked'] %}
-                                <a href="//{{club['link']}}" class="btn btn-success all-sc-card-body-a">Перейти к встрече</a>
+                                <a href="/clubs/{{club['id']}}/join" class="btn btn-success all-sc-card-body-a">Перейти к встрече</a>
                             {% else %}
                                 {% if club['active'] %}
                                     <a href="/clubs/{{club['id']}}?book" class="btn btn-primary all-sc-card-body-a">Записаться</a>

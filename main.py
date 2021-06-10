@@ -193,6 +193,18 @@ def club_page(club_id):
     return render_template('club_page.html', club=club, title=club['title'])
 
 
+@app.route('/clubs/<club_id>/join')
+@login_required
+def join_club(club_id):
+    db_sess = db_session.create_session()
+    raw_club = db_sess.query(SpeakingClub).filter(SpeakingClub.id == club_id).first()  # получаем информацию о клубе
+    if raw_club.link:
+        return redirect(raw_club.link)
+    else:
+        return render_template('no_link.html')
+
+
+
 @app.route('/collection/<collection_id>')
 @login_required
 def collection(collection_id):
