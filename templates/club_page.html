@@ -16,7 +16,7 @@
         <div class="col-md-3">
             <ul class="sc-btn-group">
                 {% if club['booked'] %}
-                <li><a href="{{club['id']}}/join" class="btn btn-success">Перейти к встрече</a></li><br>
+                <li><a href="join" class="btn btn-success">Перейти к встрече</a></li><br>
                 <a href="?unbook"><i class="bi bi-x-circle"></i> Отменить запись</a>
                 {% else %}
                 {% if club['active'] %}
