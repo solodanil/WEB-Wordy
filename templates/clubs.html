@@ -23,7 +23,7 @@
             <div class="card mb-3 card_sc mt25">
                 <div class="row g-0">
                     <div class="col-md-4">
-                        <img class="all-sc-img" src="{{club['image']}}" alt="{{club['title']}}">
+                        <img class="all-sc-img" src="{{url_for('static', filename=club['image']) }}" alt="{{club['title']}}">
                     </div>
                     <div class="col-md-8">
                         <div class="card-body all-sc-card-body">
@@ -37,7 +37,7 @@
                                 </ul>
                             </a>
                             {% if club['booked'] %}
-                                <a href="//{{club['link']}}" class="btn btn-success all-sc-card-body-a">Перейти к встрече</a>
+                                <a href="/clubs/{{club['id']}}/join" class="btn btn-success all-sc-card-body-a">Перейти к встрече</a>
                             {% else %}
                                 {% if club['active'] %}
                                     <a href="/clubs/{{club['id']}}?book" class="btn btn-primary all-sc-card-body-a">Записаться</a>

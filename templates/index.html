@@ -8,7 +8,7 @@
       {{clubs[0][0]}}
     </div>
     <div class="card card_sc">
-      <img src="../{{clubs[0][1]['image']}}" class="card-img-top card-img-sc" alt="{{clubs[0][1]['title']}}">
+      <img src="{{url_for('static', filename=clubs[0][1]['image']) }}" class="card-img-top card-img-sc" alt="{{clubs[0][1]['title']}}">
       <div class="card-body">
         <a class="tdn" href="/clubs/{{clubs[0][1]['id']}}">
           <h5 class="card-title">{{clubs[0][1]['title']}}</h5>
@@ -20,7 +20,7 @@
           </ul>
         </a>
           {% if clubs[0][1]['booked'] %}
-                                <a href="//{{clubs[0][1]['link']}}" class="btn btn-success all-sc-card-body-a">Перейти к встрече</a>
+                                <a href="/clubs/{{clubs[0][1]['id']}}/join" class="btn btn-success all-sc-card-body-a">Перейти к встрече</a>
           {% else %}
             {% if clubs[0][1]['active'] %}
                 <a href="/clubs/{{clubs[0][1]['id']}}?book" class="btn btn-primary all-sc-card-body-a">Записаться</a>
@@ -38,7 +38,7 @@
       {{clubs[1][0]}}
     </div>
     <div class="card card_sc">
-      <img src="../{{clubs[1][1]['image']}}" class="card-img-top card-img-sc" alt="{{clubs[1][1]['title']}}">
+      <img src="{{url_for('static', filename=clubs[1][1]['image']) }}" class="card-img-top card-img-sc" alt="{{clubs[1][1]['title']}}">
       <div class="card-body">
         <a class="tdn" href="/clubs/{{clubs[1][1]['id']}}">
           <h5 class="card-title">{{clubs[1][1]['title']}}</h5>
@@ -50,7 +50,7 @@
           </ul>
         </a>
           {% if clubs[1][1]['booked'] %}
-                                <a href="//{{clubs[1][1]['link']}}" class="btn btn-success all-sc-card-body-a">Перейти к встрече</a>
+                                <a href="/clubs/{{clubs[1][1]['id']}}/join" class="btn btn-success all-sc-card-body-a">Перейти к встрече</a>
           {% else %}
             {% if clubs[1][1]['active'] %}
                 <a href="/clubs/{{clubs[1][1]['id']}}?book" class="btn btn-primary all-sc-card-body-a">Записаться</a>
@@ -68,7 +68,7 @@
       {{clubs[2][0]}}
     </div>
     <div class="card card_sc">
-      <img src="../{{clubs[2][1]['image']}}" class="card-img-top card-img-sc" alt="{{clubs[2][1]['title']}}">
+      <img src="{{url_for('static', filename=clubs[2][1]['image']) }}" class="card-img-top card-img-sc" alt="{{clubs[2][1]['title']}}">
       <div class="card-body">
         <a class="tdn" href="/clubs/{{clubs[2][1]['id']}}">
           <h5 class="card-title">{{clubs[2][1]['title']}}</h5>
@@ -80,7 +80,7 @@
           </ul>
         </a>
           {% if clubs[2][1]['booked'] %}
-                                <a href="//{{clubs[2][1]['link']}}" class="btn btn-success all-sc-card-body-a">Перейти к встрече</a>
+                                <a href="/clubs/{{clubs[2][1]['id']}}/join" class="btn btn-success all-sc-card-body-a">Перейти к встрече</a>
           {% else %}
             {% if clubs[1][1]['active'] %}
                 <a href="/clubs/{{clubs[2][1]['id']}}?book" class="btn btn-primary all-sc-card-body-a">Записаться</a>
@@ -106,7 +106,7 @@
                     <div class="row g-0">
                         <div class="col-md-4">
                             <div class="collection-img">
-                                <img src="{{collection['image']}}" alt="{{collection['name']}}">
+                                <img src="{{url_for('static', filename=collection['image']) }}" alt="{{collection['name']}}">
                             </div>
                         </div>
                         <div class="col-md-8">

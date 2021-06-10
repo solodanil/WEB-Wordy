@@ -170,7 +170,7 @@ def clubs():
     return render_template('clubs.html', clubs=res_clubs, title='Разговорные клубы')
 
 
-@app.route('/clubs/<club_id>')
+@app.route('/clubs/<club_id>/')
 def club_page(club_id):
     if club_id == 'service-worker.js':
         return abort(404)
@@ -191,6 +191,18 @@ def club_page(club_id):
         current_user)  # получаем словарь пользователя, чтобы определить, добавлял ли пользователь подборки
     club = get_club(raw_club, current_user, user_words, booked=booked, from_club_page=True)
     return render_template('club_page.html', club=club, title=club['title'])
+
+
+@app.route('/clubs/<club_id>/join')
+@login_required
+def join_club(club_id):
+    db_sess = db_session.create_session()
+    raw_club = db_sess.query(SpeakingClub).filter(SpeakingClub.id == club_id).first()  # получаем информацию о клубе
+    if raw_club.link:
+        return redirect(raw_club.link)
+    else:
+        return render_template('no_link.html')
+
 
 
 @app.route('/collection/<collection_id>')
@@ -322,7 +334,7 @@ def add_club():
 
         os.mkdir(os.path.join(basedir, f'static/images/clubs/{club_id}'))
         img.save(os.path.join(basedir, f'static/images/clubs/{club_id}/{filename}'))
-        club.image = f'static/images/clubs/{club_id}/{filename}'
+        club.image = f'images/clubs/{club_id}/{filename}'
         db_sess.add(club)
         db_sess.commit()
         return redirect(f'./clubs/{club_id}')
@@ -350,7 +362,7 @@ def new_collection():
 
         os.mkdir(os.path.join(basedir, f'static/images/collection/{collection_id}'))
         img.save(os.path.join(basedir, f'static/images/collection/{collection_id}/{filename}'))
-        collection.image = f'static/images/collection/{collection_id}/{filename}'
+        collection.image = f'images/collection/{collection_id}/{filename}'
         db_sess.add(collection)
         db_sess.commit()
         return redirect(f'../add_word/{collection_id}')
