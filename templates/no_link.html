@@ -4,7 +4,8 @@
 
 <div class="text-center">
     <h1 class="text-center">Ссылка на разговорный клуб появится перед началом</h1>
-    <a class="btn btn-primary" href="."><i class="bi bi-arrow-left"></i> Вернуться назад</a>
+<!--    <a class="btn btn-primary" href="."><i class="bi bi-arrow-left"></i> Вернуться назад</a>-->
+    <a class="btn btn-primary" href="{{ request.headers.get('Referer') }}"><i class="bi bi-arrow-left"></i> Вернуться назад</a>
     <button class="btn btn-outline-primary" onClick="window.location.reload();"><i class="bi bi-arrow-repeat"></i></button>
 </div>
 
