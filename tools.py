@@ -4,6 +4,14 @@ import pymorphy2
 
 from data import db_session
 from data.user import User
+from data.speaking_club import SpeakingClub
+from config import url
+
+
+def get_calendar_link(raw_club):
+    start_date = datetime.datetime.combine(raw_club.date, raw_club.time)
+    stop_date = start_date + datetime.timedelta(minutes=raw_club.duration)
+    return f'''https://calendar.google.com/calendar/r/eventedit?text={raw_club.title}&details=Перейти к встрече: {url}%2Fclubs%2F{raw_club.id}&dates={start_date.isoformat().replace("-", "").replace(":", "")}Z/{stop_date.isoformat().replace("-", "").replace(":", "")}Z'''
 
 
 def get_collections(raw_collections, user_words):
@@ -52,6 +60,7 @@ def get_club(raw_club, current_user, user_words, booked=False, from_club_page=Fa
         image = ''.join(['../', str(raw_club.image)])
     else:
         image = raw_club.image
+    calendar_link = get_calendar_link(raw_club)
     club = {'id': raw_club.id,
             'title': raw_club.title,
             'description': raw_club.description,
@@ -65,7 +74,8 @@ def get_club(raw_club, current_user, user_words, booked=False, from_club_page=Fa
             'image': image,
             'active': active,
             'booked': booked,
-            'collections': collections}
+            'collections': collections,
+            'calendar_link': calendar_link}
     return club
 
 
