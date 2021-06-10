@@ -65,7 +65,7 @@ def get_club(raw_club, current_user, user_words, booked=False, from_club_page=Fa
             'title': raw_club.title,
             'description': raw_club.description,
             'date': raw_club.date,
-            'time': raw_club.time,
+            'time': datetime.datetime.combine(datetime.date.today(), raw_club.time),
             'human_date': raw_club.date.strftime('%d %B'),
             'human_time': raw_club.time.strftime('%H:%M'),
             'duration': ' '.join((str(raw_club.duration), minut)),
