@@ -18,6 +18,7 @@
                 {% if club['booked'] %}
                 <li><a href="//{{club['link']}}" class="btn btn-success">Перейти к встрече</a></li>
                 <script type="text/javascript">document.write(VK.Share.button({title: 'Я иду на {{club["title"]}}'}, {type: 'custom', text: '<li><div id="share-button" class="btn btn-outline-secondary"><i class="bi bi-share-fill"></i></div></li>'}));</script>
+                <a href="{{club['calendar_link']}}"><li><div id="share-button" class="btn btn-outline-secondary"><i class="bi bi-calendar-event"></i></div></li></a>
                 <a href="?unbook"><i class="bi bi-x-circle"></i> Отменить запись</a>
                 {% else %}
                 {% if club['active'] %}
