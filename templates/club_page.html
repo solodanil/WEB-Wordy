@@ -12,8 +12,8 @@
             <h3 class="head_h2">Описание</h3>
             <p class="description">{{club['description']}}</p>
         </div>
-<!--        <div class="col-md-1"></div>-->
-        <div class="col-md-4">
+        <div class="col-md-1"></div>
+        <div class="col-md-3">
             <ul class="sc-btn-group">
                 {% if club['booked'] %}
                 <li><a href="//{{club['link']}}" class="btn btn-success">Перейти к встрече</a></li>
@@ -31,7 +31,7 @@
                 <script type="text/javascript">document.write(VK.Share.button({title: 'Я иду на {{club["title"]}}'}, {type: 'custom', text: '<li><div id="share-button" class="btn btn-outline-secondary"><i class="bi bi-share-fill"></i></div></li>'}));</script>
                 {% endif %}
             </ul>
-            <ul class="sc-ul">
+            <ul class="sc-ul-club-page sc-ul">
                 <li><i class="bi bi-calendar"></i>{{ moment(club['date']).format('D MMMM') }}, в {{ moment(club['time']).format('LT') }}</li>
                 <li><i class="bi bi-clock"></i>{{club['duration']}}</li>
                 <li><i class="bi bi-people"></i>{{club['free_seats']}}</li>
