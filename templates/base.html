@@ -31,7 +31,7 @@
 <body>
     <nav class="navbar-main navbar navbar-expand-lg navbar-light sticky-top">
         <div class="container-fluid container">
-          <a class="navbar-brand" href="//{{ request.headers.get('host') }}/"><img src="{{url_for('static', filename='images/logo-navbar-beta.svg')}}" alt="Wordy" height="35"></a>
+          <a class="navbar-brand" href="//{{ request.headers.get('host') }}/"><img src="{{url_for('static', filename='images/logo-navbar-beta.svg')}}" alt="Wordy" height="35" data-bs-toggle="tooltip" title="Бета версия. Если заметили какие-то проблемы — пишите нам в ВК"></a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>

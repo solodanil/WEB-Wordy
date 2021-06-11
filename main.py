@@ -1,3 +1,4 @@
+import logging
 import os
 import datetime
 import shutil
@@ -15,6 +16,7 @@ import vk_api
 from flask_restful import abort, Api
 from flask_sqlalchemy import SQLAlchemy
 from flask_moment import Moment
+from waitress import serve
 
 from admin import MainView, UserView, FileView, RootFileView
 
@@ -34,6 +36,19 @@ from tools import get_collections, get_club, get_user_words
 import config
 
 import dictionary
+
+logging.getLogger("pymorphy2").setLevel(logging.DEBUG)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s:%(name)s:%(message)s')
+logging.basicConfig(
+    level="DEBUG",
+    format="%(asctime)s %(levelname)s:%(name)s:%(message)s",
+    datefmt='%d-%b-%y %H:%M:%S',
+    force=True,
+    handlers=[
+        logging.FileHandler("debug.log"),
+        logging.StreamHandler()
+    ])
+logging.info('This is app launching')
 
 app = Flask(__name__)
 api = Api(app)
@@ -202,7 +217,6 @@ def join_club(club_id):
         return redirect(raw_club.link)
     else:
         return render_template('no_link.html')
-
 
 
 @app.route('/collection/<collection_id>')
@@ -423,8 +437,8 @@ def main():
     db_session.global_init("db/database.db")
     api.add_resource(resources.UserResource, '/api/v1/user/<int:social_id>')
     api.add_resource(resources.VocabularyResource, '/api/v1/vocabulary/<int:user_social_id>')
-    app.run(port=8080, host='127.0.0.1', debug=True)
-
+    # app.run(port=8080, host='127.0.0.1', debug=True)
+    serve(app, host='0.0.0.0', port=8080)
 
 
 if __name__ == '__main__':
