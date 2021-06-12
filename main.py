@@ -9,6 +9,7 @@ from flask import Flask, url_for, request, render_template, redirect, flash, mak
 from flask_admin import Admin
 from flask_admin.contrib.fileadmin import FileAdmin
 from flask_login import current_user, login_user, LoginManager, logout_user, login_required
+from vk_api.utils import get_random_id
 from werkzeug.exceptions import abort
 from werkzeug.utils import secure_filename
 from dateutil import parser
@@ -23,7 +24,7 @@ from admin import MainView, UserView, FileView, RootFileView
 from data import db_session
 from data.speaking_club import SpeakingClub
 from data.user import User
-from forms.club_form import SpeakingClubForm
+from forms.club_form import SpeakingClubForm, MailingForm
 from data.word_to_user import Vocabulary
 
 from data.collection import Collection, Word
@@ -418,6 +419,32 @@ def add_collection(club_id):
                            club_name=club.title)
 
 
+@app.route('/clubs/<club_id>/mailing', methods=['GET', 'POST'])
+@login_required
+def club_mailing(club_id):
+    if not current_user.is_admin:
+        return abort(404)
+    db_sess = db_session.create_session()
+    club = db_sess.query(SpeakingClub).filter(SpeakingClub.id == club_id).first()
+    form = MailingForm()
+    if form.validate_on_submit():
+        vk_session = vk_api.VkApi(token=config.TOKEN)
+        vk = vk_session.get_api()
+        for user in club.users:
+            try:
+                vk.messages.send(
+                    message=form.text.data,
+                    random_id=get_random_id(),
+                    peer_id=user.social_id
+                )
+                logging.info(f'Message sent to {user}')
+            except Exception as ex:
+                logging.info(f'Message wasn’t sent to {user} (error {ex.__str__(), ex.args})')
+        return redirect(f'/clubs/{club_id}')
+    return render_template('mailing.html', form=form, title='Отправка сообщения',
+                           club_name=club.title)
+
+
 @app.route('/manifest.json')
 def manifest():
     return open('manifest.json').read()
@@ -437,7 +464,7 @@ def main():
     db_session.global_init("db/database.db")
     api.add_resource(resources.UserResource, '/api/v1/user/<int:social_id>')
     api.add_resource(resources.VocabularyResource, '/api/v1/vocabulary/<int:user_social_id>')
-    # app.run(port=8080, host='127.0.0.1', debug=True)
+    app.run(port=8080, host='127.0.0.1', debug=True)
     serve(app, host='0.0.0.0', port=8080)
 
 
