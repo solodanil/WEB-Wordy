@@ -464,7 +464,7 @@ def main():
     db_session.global_init("db/database.db")
     api.add_resource(resources.UserResource, '/api/v1/user/<int:social_id>')
     api.add_resource(resources.VocabularyResource, '/api/v1/vocabulary/<int:user_social_id>')
-    app.run(port=8080, host='127.0.0.1', debug=True)
+    # app.run(port=8080, host='127.0.0.1', debug=True)
     serve(app, host='0.0.0.0', port=8080)
 
 
