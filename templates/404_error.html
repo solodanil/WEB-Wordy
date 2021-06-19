@@ -1,19 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet"
-          href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-          crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="../static/css/main.css">
-    <title>404</title>
-</head>
-<body>
-    <h1 style="text-align: center">Кажется, здесь пусто</h1>
-    <img width="100%" src="http://{{ request.headers.get('host') }}/static/images/404.png">
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4">
+            <h1 style="margin-top: 30%;">Вы не должны были сюда попасть</h1>
+            <p>Пожалуйста, расскажите нам, как так получилось</p>
+            <a href="https://vk.me/wordy_eng" class="btn btn-primary" style="background-color: #274E76; border-color: #274E76; color: white; margin-top: 10px">Рассказать</a>
+        </div>
+        <div class="col-sm-8"><img src="../static/images/404.svg" width="125%" style="margin-left: -15%;"></div>
+    </div>
+</div>
+
+{% endblock %}
