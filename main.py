@@ -214,7 +214,7 @@ def join_club(club_id):
     db_sess = db_session.create_session()
     raw_club = db_sess.query(SpeakingClub).filter(SpeakingClub.id == club_id).first()  # получаем информацию о клубе
     if raw_club.link:
-        return redirect(raw_club.link)
+        return redirect(f'//{raw_club.link}')
     else:
         return render_template('no_link.html')
 
