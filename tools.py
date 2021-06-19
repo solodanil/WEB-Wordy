@@ -54,6 +54,9 @@ def get_club(raw_club, current_user, user_words, booked=False, from_club_page=Fa
     if raw_club.date < datetime.date.today():
         active = False
         booked = False
+    if free_seats == 0:
+        active = False
+        free_seats = 'нет'
     raw_collections = raw_club.collection
     collections = get_collections(raw_collections, user_words)
     image = raw_club.image
