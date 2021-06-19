@@ -72,7 +72,6 @@ admin.add_view(MainView(Vocabulary, db.session))
 path = op.join(op.dirname(__file__), 'static')
 admin.add_view(FileView(path, '/static/', name='Static Files'))
 path = op.dirname(__file__)
-admin.add_view(RootFileView(path, '../', name='Root Files'))
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
