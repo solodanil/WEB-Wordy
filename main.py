@@ -130,7 +130,7 @@ def login():
 @app.route('/oauth_handler')
 def oauth_handler():
     """обрабатывает ответ oauth, регистрирует или авторизует пользователя, после чего возвращает на страницу из куки"""
-    req_url = f'https://oauth.vk.com/access_token?client_id={config.vk_id}&client_secret={config.vk_secret}&redirect_uri=http://{request.headers.get("host")}/oauth_handler&code={request.args.get("code")}'
+    req_url = f'https://oauth.vk.com/access_token?client_id={config.vk_id}&client_secret={config.vk_secret}&redirect_uri=https://{request.headers.get("host")}/oauth_handler&code={request.args.get("code")}'
     response = requests.get(req_url).json()
     logging.debug(response)
     if not current_user.is_anonymous:
