@@ -455,6 +455,11 @@ def sw():
     return app.send_static_file('service-worker.js')
 
 
+@app.route('/robots.txt')
+def robots():
+    return app.send_static_file('robots.txt')
+
+
 @app.route('/offline.html')
 def offline():
     return render_template('offline.html')
