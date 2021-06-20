@@ -121,7 +121,7 @@ def index():
 def login():
     """Перенаправляет пользователя на авторизацию ВК и запоминает в куки предыдущую страницу"""
     res = make_response(redirect(
-        f'https://oauth.vk.com/authorize?client_id={config.vk_id}&display=page&redirect_uri=http://{request.headers.get("host")}/oauth_handler&scope=friends,email,offline&response_type=code&v=5.130'))
+        f'https://oauth.vk.com/authorize?client_id={config.vk_id}&display=page&redirect_uri=https://{request.headers.get("host")}/oauth_handler&scope=friends,email,offline&response_type=code&v=5.130'))
     print(request.headers.get('Referer'))
     res.set_cookie('auth_redirect', request.headers.get('Referer'), max_age=60 * 20)
     return res
