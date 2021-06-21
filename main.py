@@ -183,6 +183,7 @@ def clubs():
             user_words = get_user_words(current_user)
             club = get_club(raw_club, current_user, user_words)
             res_clubs[date].append(club)
+    db_sess.close()
     return render_template('clubs.html', clubs=res_clubs, title='Разговорные клубы')
 
 
