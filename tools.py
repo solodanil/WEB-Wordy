@@ -7,6 +7,10 @@ from data.user import User
 from data.speaking_club import SpeakingClub
 from config import url
 
+morph = pymorphy2.MorphAnalyzer()
+mest_parse = morph.parse('место')[0]
+min_parse = morph.parse('минута')[0]
+
 
 def get_calendar_link(raw_club):
     start_date = datetime.datetime.combine(raw_club.date, raw_club.time)
@@ -38,9 +42,6 @@ def get_collections(raw_collections, user_words):
 
 
 def get_club(raw_club, current_user, user_words, booked=False, from_club_page=False):
-    morph = pymorphy2.MorphAnalyzer()
-    mest_parse = morph.parse('место')[0]
-    min_parse = morph.parse('минута')[0]
     active = True
     free_seats = raw_club.number_of_seats - len(raw_club.users)  # количество оставшихся мест
     mest = mest_parse.make_agree_with_number(free_seats).word
