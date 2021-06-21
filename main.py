@@ -472,7 +472,7 @@ def main():
     # app.run(port=8080, host='127.0.0.1', debug=True)
     try:
         serve(app, host='0.0.0.0', port=5000)
-    except Exception as ex:
+    except BaseException as ex:
         logging.error(ex.__str__(), ex.args)
 
 
