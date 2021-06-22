@@ -100,6 +100,7 @@ def index():
         SpeakingClub.date).all()[:3]  # получаем три ближайших клуба
     soonest = list(map(lambda club: ('БЛИЖАЙШИЙ', club), soonest))
     few_seats = db_sess.query(SpeakingClub).filter(SpeakingClub.date > datetime.date.today()).all()
+    few_seats = list(filter(lambda x: len(x.users) < x.number_of_seats, few_seats))
     few_seats = sorted(few_seats, key=lambda x: x.number_of_seats - len(x.users))[
         0]  # получаем клуб с наименьшим кол-вом свободных мест
     if not current_user.is_anonymous:  # ищем ближайший клуб, на который записан пользователь

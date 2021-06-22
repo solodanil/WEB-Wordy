@@ -4,12 +4,55 @@ import pymorphy2
 
 from data import db_session
 from data.user import User
-from data.speaking_club import SpeakingClub
 from config import url
 
-morph = pymorphy2.MorphAnalyzer()
-mest_parse = morph.parse('место')[0]
-min_parse = morph.parse('минута')[0]
+
+def min_agree_with_number(num: int) -> str:
+    root = 'минут'
+    last_digit = int(str(num)[-1])
+    if last_digit == 1 and '11' not in str(num):
+        return f'{root}а'
+    if len(str(num)) > 1:
+        last_two_digits = int(str(num)[-2:])
+        if 10 <= last_two_digits <= 20:
+            return f'{root}'
+    if 2 <= last_digit < 5:
+        return f'{root}ы'
+    if 5 <= last_digit <= 9 or last_digit == 0:
+        return f'{root}'
+    return f'{root}'
+
+
+def mest_agree_with_number(num: int) -> str:
+    root = 'мест'
+    last_digit = int(str(num)[-1])
+    if last_digit == 1 and '11' not in str(num):
+        return f'{root}о'
+    if len(str(num)) > 1:
+        last_two_digits = int(str(num)[-2:])
+        if 10 <= last_two_digits <= 20:
+            return f'{root}'
+    if 2 <= last_digit < 5:
+        return f'{root}а'
+    if 5 <= last_digit <= 9 or last_digit == 0:
+        return f'{root}'
+    return f'{root}'
+
+
+def slov_agree_with_number(num: int) -> str:
+    root = 'слов'
+    last_digit = int(str(num)[-1])
+    if last_digit == 1 and '11' not in str(num):
+        return f'{root}о'
+    if len(str(num)) > 1:
+        last_two_digits = int(str(num)[-2:])
+        if 10 <= last_two_digits <= 20 :
+            return f'{root}'
+    if 2 <= last_digit < 5:
+        return f'{root}а'
+    if 5 <= last_digit <= 9 or last_digit == 0:
+        return f'{root}'
+    return f'{root}'
 
 
 def get_calendar_link(raw_club):
@@ -44,8 +87,12 @@ def get_collections(raw_collections, user_words):
 def get_club(raw_club, current_user, user_words, booked=False, from_club_page=False):
     active = True
     free_seats = raw_club.number_of_seats - len(raw_club.users)  # количество оставшихся мест
-    mest = mest_parse.make_agree_with_number(free_seats).word
-    minut = min_parse.make_agree_with_number(raw_club.duration).word
+    try:
+        mest = mest_agree_with_number(free_seats)
+    except IndexError:
+        mest_parse = morph.parse('место')[0]
+        mest = mest_parse.make_agree_with_number(free_seats).word
+    minut = min_agree_with_number(raw_club.duration)
     if current_user.is_anonymous:
         active = False
     else:
@@ -87,3 +134,12 @@ def get_user_words(user):
         return set(map(lambda x: x.word.word, user_new.words))
     else:
         return {}
+
+
+if __name__ == '__main__':
+    morph = pymorphy2.MorphAnalyzer()
+    slov_parse = morph.parse('минута')[0]
+    for i in range(200):
+        slov = slov_parse.make_agree_with_number(i).word
+        if slov != min_agree_with_number(i):
+            print(i, slov, min_agree_with_number(i))
