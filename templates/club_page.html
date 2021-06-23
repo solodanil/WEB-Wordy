@@ -69,10 +69,10 @@
                                         </td>
                                         <td>
                                             {% if collection['added'] %}
-                                                <a href="../collection/{{collection['id']}}/delete" class="btn btn-outline-primary btn-sm collection-btn"><i class="bi bi-trash"></i> Удалить из словаря</a>
+                                                <a href="../../collection/{{collection['id']}}/delete" class="btn btn-outline-primary btn-sm collection-btn"><i class="bi bi-trash"></i> Удалить из словаря</a>
                                             {% else %}
                                             {% if not current_user.is_anonymous %}
-                                                <a href="../collection/{{collection['id']}}" class="btn btn-outline-primary btn-sm collection-btn">Добавить в словарь</a>
+                                                <a href="../../collection/{{collection['id']}}" class="btn btn-outline-primary btn-sm collection-btn">Добавить в словарь</a>
                                                     {% else %}
                                                         <a data-bs-toggle="modal" data-bs-target="#exampleModal" href="#" class="btn btn-outline-primary btn-sm collection-btn">Добавить в словарь</a>
                                                     {% endif %}
@@ -105,7 +105,7 @@
                     <li><a href="/word?word={{word}}">{{word}}</a></li>
                 {% endfor %}
                 {% if current_user.is_admin %}
-                <a href="../add_word/{{collection['id']}}"><i class="bi bi-plus"></i>Добавить слово</a>
+                <a href="../../add_word/{{collection['id']}}"><i class="bi bi-plus"></i>Добавить слово</a>
                 {% endif %}
             </ul>
           </div>
