@@ -71,9 +71,7 @@ def get_collections(raw_collections, user_words):
             words.append(word.word)
         if set(words) == set(user_words) & set(words):
             added = True
-        morph = pymorphy2.MorphAnalyzer()
-        slov_parse = morph.parse('слово')[0]
-        slov = slov_parse.make_agree_with_number(len(words)).word
+        slov = slov_agree_with_number(len(words))
         collections.append({'name': collection.name,
                             'description': collection.description,
                             'image': collection.image,
