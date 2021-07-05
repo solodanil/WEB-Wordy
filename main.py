@@ -64,7 +64,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{app.config["DATABASE_FILE"]
 app.config['SQLALCHEMY_ECHO'] = True
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-admin = Admin(app)
+admin = Admin(app, name='Wordy admin', template_mode='bootstrap3')
 db = SQLAlchemy(app)
 admin.add_view(UserView(User, db.session))
 admin.add_view(MainView(SpeakingClub, db.session))
