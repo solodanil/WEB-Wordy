@@ -35,7 +35,7 @@ class Collection(SqlAlchemyBase):
                         backref="collection")
 
     def __repr__(self):
-        return f'<Collection> {self.id} {self.name}'
+        return f'<Collection {self.id} {self.name}>'
 
 
 class Word(SqlAlchemyBase, SerializerMixin):
@@ -45,4 +45,4 @@ class Word(SqlAlchemyBase, SerializerMixin):
     word = sqlalchemy.Column(sqlalchemy.String, index=True)
 
     def __repr__(self):
-        return f'<Word {self.id}> {self.word}'
+        return f'<Word {self.id} {self.word}>'
