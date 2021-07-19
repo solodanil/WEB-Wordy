@@ -49,6 +49,12 @@ async def handle_message_event(event: GroupTypes.MessageEvent):
     )
 
 
+@bot.on.private_message(text="test-test")
+async def test_message(message: Message):
+    print(0)
+    await message.answer('Работаю')
+
+
 @bot.on.private_message(text="Начать")
 async def start_message(message: Message):
     response = get(f'http://{url}/api/v1/user/{message.peer_id}').json()
@@ -72,12 +78,27 @@ async def next_word_message(message: Message):
     answers.add(word["word"]["word"])
     user_words[message.peer_id] = {'correct': word["word"]["word"], 'incorrect': set(word['incorrect_words']),
                                    'full_word': word}
-    print(answers)
     answer_keyboard = Keyboard(one_time=True, inline=False)
     for answer in answers:
         answer_keyboard.add(Text(answer))
     rnd = random.randint(0, 3)
     print(rnd)
+    if word['lvl'] <= 1:
+        photo_url = word['word']["image"]
+        photo_stream = get(photo_url).content
+        photo = await PhotoMessageUploader(bot.api).upload(
+            photo_stream, peer_id=message.peer_id
+        )
+        print(word)
+        post(f'http://{url}/api/v1/vocabulary/{message.peer_id}', json={'word_id': word["word"]['word_id']})
+        await message.answer(
+            f'''{word["word"]["emoji"]}{word["word"]["word"].capitalize()} — {word["word"]["translation"]}
+
+        {word['word']["dictionary"][0]['meanings'][0]['definitions'][0]['definition']}''',
+            keyboard=NEXT_KEYBOARD, attachment=photo)
+        await bot.state_dispenser.set(message.peer_id, UserState.UNKNOWN)
+        post(f'http://{url}/api/v1/vocabulary/{message.peer_id}', json={'word_id': word["word"]['word_id']})
+        return None
     if rnd == 0:
         photo_url = word['word']["image"]
         photo_stream = get(photo_url).content
