@@ -17,4 +17,4 @@ class Vocabulary(SqlAlchemyBase, SerializerMixin):
     word = orm.relation('Word')
 
     def __repr__(self):
-        return f'<word_to_user> {self.id} {self.word} {self.user} {self.lvl}'
+        return f'<word_to_user id{self.id} {self.word} {self.user} lvl{self.lvl}>'

@@ -30,4 +30,4 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     words = orm.relation("Vocabulary", back_populates='user')
 
     def __repr__(self):
-        return f'<User> {self.id} {self.name} {self.social_id} {self.email}'
+        return f'<User {self.id} {self.name} {self.social_id} {self.email}>'
