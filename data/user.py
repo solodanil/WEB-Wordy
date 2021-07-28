@@ -16,6 +16,36 @@ club_to_user = sqlalchemy.Table(
 )
 
 
+class AccessLevel(SqlAlchemyBase, SerializerMixin):
+    __tablename__ = 'access_level'
+    id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True, index=True)
+    name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
+
+    index = sqlalchemy.Column(sqlalchemy.Boolean, default=True)
+    club_booking = sqlalchemy.Column(sqlalchemy.Boolean, default=True)
+    words_learning = sqlalchemy.Column(sqlalchemy.Boolean, default=True)
+    new_club = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
+    new_collection = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
+    admin_panel = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
+
+    admin_panel_users = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
+
+    admin_panel_clubs = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
+
+    admin_panel_collections = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
+
+    admin_panel_vocabulary = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
+
+    admin_panel_access = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
+
+    static_files = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
+
+    users = orm.relation('User', back_populates='access_level')
+
+    def __repr__(self):
+        return f'{self.name} ({self.id})'
+
+
 class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     __tablename__ = 'users'
 
@@ -27,6 +57,9 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     email = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     registration_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now())
     is_admin = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
+    access_level_id = sqlalchemy.Column(sqlalchemy.Integer,
+                                sqlalchemy.ForeignKey("access_level.id"))
+    access_level = orm.relation('AccessLevel')
     words = orm.relation("Vocabulary", back_populates='user')
 
     def __repr__(self):

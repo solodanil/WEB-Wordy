@@ -19,12 +19,13 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_moment import Moment
 from waitress import serve
 
-from admin import MainView, UserView, FileView, RootFileView
+from admin import MainView, UserView, FileView, ClubView, CollectionView, VocabularyView, AccessLevelView
 
 from data import db_session
 from data.speaking_club import SpeakingClub
-from data.user import User
-from forms.club_form import SpeakingClubForm, MailingForm
+feature_acess_levels
+from data.user import User, AccessLevel
+from forms.club_form import SpeakingClubForm
 from data.word_to_user import Vocabulary
 
 from data.collection import Collection, Word
@@ -67,12 +68,13 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 admin = Admin(app, name='Wordy admin', template_mode='bootstrap3')
 db = SQLAlchemy(app)
 admin.add_view(UserView(User, db.session))
-admin.add_view(MainView(SpeakingClub, db.session))
-admin.add_view(MainView(Collection, db.session))
-admin.add_view(MainView(Vocabulary, db.session))
+admin.add_view(ClubView(SpeakingClub, db.session))
+admin.add_view(CollectionView(Collection, db.session))
+admin.add_view(VocabularyView(Vocabulary, db.session))
+admin.add_view(AccessLevelView(AccessLevel, db.session))
 path = op.join(op.dirname(__file__), 'static')
 admin.add_view(FileView(path, '/static/', name='Static Files'))
-path = op.dirname(__file__)
+
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -103,8 +105,12 @@ def index():
     few_seats = list(filter(lambda x: len(x.users) < x.number_of_seats, few_seats))
     few_seats = sorted(few_seats, key=lambda x: x.number_of_seats - len(x.users))[
         0]  # получаем клуб с наименьшим кол-вом свободных мест
+    new_collection_show = False
     if not current_user.is_anonymous:  # ищем ближайший клуб, на который записан пользователь
         user = db_sess.query(User).filter(User.id == current_user.id).first()
+        if not user.access_level.index:
+            return 'Отказано в доступе. Обратитесь в поддержку'
+        new_collection_show = user.access_level.new_collection
         user_clubs = user.speaking_club
         user_clubs = list(filter(lambda club: club.date >= datetime.date.today(), user_clubs))
         if user_clubs:
@@ -115,7 +121,7 @@ def index():
     user_words = get_user_words(current_user)
     res = list(map(lambda x: (x[0], get_club(x[1], current_user, user_words)), res[:3]))
     print(res)
-    return render_template('index.html', collections=collections, clubs=res, title='Wordy')
+    return render_template('index.html', collections=collections, clubs=res, title='Wordy', new_collection_show=new_collection_show)
 
 
 @app.route('/auth')
@@ -153,6 +159,7 @@ def oauth_handler():
         user.name = user_obj['first_name']
         user.surname = user_obj['last_name']
         user.email = response.get('email')
+        user.access_level = db_sess.query(AccessLevel).get(1)
         db_sess.add(user)
         db_sess.commit()
     login_user(user, True)
@@ -171,8 +178,12 @@ def logout():
 def clubs():
     db_sess = db_session.create_session()
     dates = db_sess.query(SpeakingClub.date).all()  # получаем даты, в которых проходят клубы
+    show_new_club_link = False
     if not current_user.is_anonymous:
         user = db_sess.query(User).filter(User.id == current_user.id).first()
+        if not user.access_level.index:
+            return 'Отказано в доступе. Обратитесь в поддержку'
+        show_new_club_link = db_sess.query(User).get(current_user.id).access_level.new_club
     dates.sort()
     res_clubs = {}
     for date in dates:
@@ -184,8 +195,7 @@ def clubs():
             user_words = get_user_words(current_user)
             club = get_club(raw_club, current_user, user_words)
             res_clubs[date].append(club)
-    db_sess.close()
-    return render_template('clubs.html', clubs=res_clubs, title='Разговорные клубы')
+    return render_template('clubs.html', clubs=res_clubs, title='Разговорные клубы', show_new_club_link=show_new_club_link)
 
 
 @app.route('/clubs/<club_id>/')
@@ -197,11 +207,15 @@ def club_page(club_id):
     booked = False
     if not current_user.is_anonymous:
         user = db_sess.query(User).filter(User.id == current_user.id).first()  # получаем текущего пользователя
+        if not user.access_level.index:
+            return 'Отказано в доступе. Обратитесь в поддержку'
     if 'unbook' in request.args:  # отмена записи
         user.speaking_club.remove(raw_club)
         db_sess.commit()
         booked = False
     elif 'book' in request.args:  # запись на клуб
+        if not user.access_level.club_booking:
+            return 'Отказано в доступе. Обратитесь в поддержку'
         raw_club.users.append(user)
         db_sess.commit()
         booked = True
@@ -228,6 +242,9 @@ def collection(collection_id):
     """Добавление слов из подборки в словарь пользователя"""
     db_sess = db_session.create_session()
     coll = db_sess.query(Collection).filter(Collection.id == collection_id).first()
+    user = db_sess.query(User).get(current_user.id)
+    if not user.access_level.words_learning:
+        return 'Отказано в доступе. Обратитесь в поддержку'
     for word_obj in coll.word:
         print(word_obj)
         if not db_sess.query(Vocabulary).filter(Vocabulary.user_id == current_user.id,
@@ -304,6 +321,9 @@ def word():
             db_sess.commit()
             added = False
         elif 'add' in request.args and not added:
+            user = db_sess.query(User).get(current_user.id)
+            if not user.access_level.words_learning:
+                return 'Отказано в доступе. Обратитесь в поддержку'
             word_obj = db_sess.query(Word).filter(Word.word == word).first()
             if not word_obj:
                 word_obj = Word()
@@ -329,7 +349,7 @@ def word():
 @app.route('/new_club', methods=['GET', 'POST'])
 @login_required
 def add_club():
-    if not current_user.is_admin:
+    if not current_user.access_level.new_club:
         return abort(404)
     form = SpeakingClubForm()
     if form.validate_on_submit():
@@ -362,7 +382,7 @@ def add_club():
 @app.route('/new_collection', methods=['GET', 'POST'])
 @login_required
 def new_collection():
-    if not current_user.is_admin:
+    if not current_user.access_level.new_collection:
         return abort(404)
     form = CollectionForm()
     if form.validate_on_submit():
