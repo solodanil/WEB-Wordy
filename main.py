@@ -1,4 +1,3 @@
-import logging
 import os
 import datetime
 import shutil
@@ -9,7 +8,7 @@ from flask import Flask, url_for, request, render_template, redirect, flash, mak
 from flask_admin import Admin
 from flask_admin.contrib.fileadmin import FileAdmin
 from flask_login import current_user, login_user, LoginManager, logout_user, login_required
-from vk_api.utils import get_random_id
+from waitress import serve
 from werkzeug.exceptions import abort
 from werkzeug.utils import secure_filename
 from dateutil import parser
@@ -17,13 +16,11 @@ import vk_api
 from flask_restful import abort, Api
 from flask_sqlalchemy import SQLAlchemy
 from flask_moment import Moment
-from waitress import serve
 
 from admin import MainView, UserView, FileView, ClubView, CollectionView, VocabularyView, AccessLevelView
 
 from data import db_session
 from data.speaking_club import SpeakingClub
-feature_acess_levels
 from data.user import User, AccessLevel
 from forms.club_form import SpeakingClubForm
 from data.word_to_user import Vocabulary
@@ -39,19 +36,6 @@ import config
 
 import dictionary
 
-logging.getLogger("pymorphy2").setLevel(logging.DEBUG)
-logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s:%(name)s:%(message)s')
-logging.basicConfig(
-    level="DEBUG",
-    format="%(asctime)s %(levelname)s:%(name)s:%(message)s",
-    datefmt='%d-%b-%y %H:%M:%S',
-    force=True,
-    handlers=[
-        logging.FileHandler("debug.log"),
-        logging.StreamHandler()
-    ])
-logging.info('This is app launching')
-
 app = Flask(__name__)
 api = Api(app)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -65,7 +49,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{app.config["DATABASE_FILE"]
 app.config['SQLALCHEMY_ECHO'] = True
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-admin = Admin(app, name='Wordy admin', template_mode='bootstrap3')
+admin = Admin(app)
 db = SQLAlchemy(app)
 admin.add_view(UserView(User, db.session))
 admin.add_view(ClubView(SpeakingClub, db.session))
@@ -102,7 +86,6 @@ def index():
         SpeakingClub.date).all()[:3]  # получаем три ближайших клуба
     soonest = list(map(lambda club: ('БЛИЖАЙШИЙ', club), soonest))
     few_seats = db_sess.query(SpeakingClub).filter(SpeakingClub.date > datetime.date.today()).all()
-    few_seats = list(filter(lambda x: len(x.users) < x.number_of_seats, few_seats))
     few_seats = sorted(few_seats, key=lambda x: x.number_of_seats - len(x.users))[
         0]  # получаем клуб с наименьшим кол-вом свободных мест
     new_collection_show = False
@@ -128,7 +111,7 @@ def index():
 def login():
     """Перенаправляет пользователя на авторизацию ВК и запоминает в куки предыдущую страницу"""
     res = make_response(redirect(
-        f'https://oauth.vk.com/authorize?client_id={config.vk_id}&display=page&redirect_uri=https://{request.headers.get("host")}/oauth_handler&scope=friends,email,offline&response_type=code&v=5.130'))
+        f'https://oauth.vk.com/authorize?client_id={config.vk_id}&display=page&redirect_uri=http://{request.headers.get("host")}/oauth_handler&scope=friends,email,offline&response_type=code&v=5.130'))
     print(request.headers.get('Referer'))
     res.set_cookie('auth_redirect', request.headers.get('Referer'), max_age=60 * 20)
     return res
@@ -137,9 +120,8 @@ def login():
 @app.route('/oauth_handler')
 def oauth_handler():
     """обрабатывает ответ oauth, регистрирует или авторизует пользователя, после чего возвращает на страницу из куки"""
-    req_url = f'https://oauth.vk.com/access_token?client_id={config.vk_id}&client_secret={config.vk_secret}&redirect_uri=https://{request.headers.get("host")}/oauth_handler&code={request.args.get("code")}'
+    req_url = f'https://oauth.vk.com/access_token?client_id={config.vk_id}&client_secret={config.vk_secret}&redirect_uri=http://{request.headers.get("host")}/oauth_handler&code={request.args.get("code")}'
     response = requests.get(req_url).json()
-    logging.debug(response)
     if not current_user.is_anonymous:
         return redirect(url_for('index'))
     if response.get('user_id') is None:
@@ -231,7 +213,7 @@ def join_club(club_id):
     db_sess = db_session.create_session()
     raw_club = db_sess.query(SpeakingClub).filter(SpeakingClub.id == club_id).first()  # получаем информацию о клубе
     if raw_club.link:
-        return redirect(f'//{raw_club.link}')
+        return redirect(raw_club.link)
     else:
         return render_template('no_link.html')
 
@@ -441,32 +423,6 @@ def add_collection(club_id):
                            club_name=club.title)
 
 
-@app.route('/clubs/<club_id>/mailing', methods=['GET', 'POST'])
-@login_required
-def club_mailing(club_id):
-    if not current_user.is_admin:
-        return abort(404)
-    db_sess = db_session.create_session()
-    club = db_sess.query(SpeakingClub).filter(SpeakingClub.id == club_id).first()
-    form = MailingForm()
-    if form.validate_on_submit():
-        vk_session = vk_api.VkApi(token=config.TOKEN)
-        vk = vk_session.get_api()
-        for user in club.users:
-            try:
-                vk.messages.send(
-                    message=form.text.data,
-                    random_id=get_random_id(),
-                    peer_id=user.social_id
-                )
-                logging.info(f'Message sent to {user}')
-            except Exception as ex:
-                logging.info(f'Message wasn’t sent to {user} (error {ex.__str__(), ex.args})')
-        return redirect(f'/clubs/{club_id}')
-    return render_template('mailing.html', form=form, title='Отправка сообщения',
-                           club_name=club.title)
-
-
 @app.route('/manifest.json')
 def manifest():
     return open('manifest.json').read()
@@ -475,11 +431,6 @@ def manifest():
 @app.route('/service-worker.js')
 def sw():
     return app.send_static_file('service-worker.js')
-
-
-@app.route('/robots.txt')
-def robots():
-    return app.send_static_file('robots.txt')
 
 
 @app.route('/offline.html')
