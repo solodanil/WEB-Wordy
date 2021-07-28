@@ -1,0 +1,22 @@
+<svg id="Шрифт_в_кривые" data-name="Шрифт в кривые" xmlns="http://www.w3.org/2000/svg" width="2389" height="657" viewBox="0 0 2389 657">
+  <defs>
+    <style>
+      .cls-1 {
+        font-size: 410px;
+        text-anchor: middle;
+        font-family: "MADE Outer Sans";
+        font-weight: 700;
+      }
+
+      .cls-1, .cls-2 {
+        fill: #516791;
+      }
+
+      .cls-2 {
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <text id="wordy" class="cls-1" x="1478.554" y="439.476"><tspan x="1478.554">wordy</tspan></text>
+  <path id="Фигура_1_копия" data-name="Фигура 1 копия" class="cls-2" d="M297.564,174.436H206.436L270.871,110H362ZM426.436,485.564h91.128L453.129,550H362ZM324.258,238.871L142,421.129V238.871H324.258Zm75.484,182.258L270.871,550,142,421.129H399.742Zm37.742-128.871-64.435,64.435H281.92l64.436-64.435h91.128ZM582,238.871H324.258L453.129,110Zm0,0V421.129H399.742Z"/>
+</svg>

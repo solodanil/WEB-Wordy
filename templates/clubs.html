@@ -3,7 +3,7 @@
 {% block content %}
 
 <nav id="navbar-example2" class="navbar navbar-light px-3">
-  <a class="navbar-brand" href="http://{{ request.headers.get('host') }}/"><h2 class="head_h2">Разговорные клубы</h2></a>
+  <a class="navbar-brand"><h2 class="head_h2">Разговорные клубы</h2></a>
   <ul class="nav nav-pills">
       {% for date in clubs %}
     <li class="nav-item">
@@ -56,7 +56,7 @@
             <div class="card mb-3 card_sc mt25 card-disabled">
                 <div class="row g-0">
                     <div class="col-md-4">
-                        <img class="all-sc-img" src="{{club['image']}}" alt="{{club['title']}}">
+                        <img class="all-sc-img" src="{{url_for('static', filename=club['image']) }}" alt="{{club['title']}}">
                     </div>
                     <div class="col-md-8">
                         <div class="card-body all-sc-card-body">

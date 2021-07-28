@@ -28,4 +28,4 @@ class SpeakingClub(SqlAlchemyBase):
                               backref="speaking_club")
 
     def __repr__(self):
-        return f'<speaking club> {self.id} {self.title}'
+        return f'<speaking club {self.id} {self.title}>'

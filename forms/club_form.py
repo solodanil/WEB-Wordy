@@ -14,3 +14,8 @@ class SpeakingClubForm(FlaskForm):
     number_of_seats = StringField('Количество мест')
     image = FileField('Обложка')
     submit = SubmitField('Создать')
+
+
+class MailingForm(FlaskForm):
+    text = StringField('Сообщение', validators=[DataRequired()])
+    submit = SubmitField('Отправить')
