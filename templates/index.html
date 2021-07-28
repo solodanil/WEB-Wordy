@@ -140,7 +140,7 @@
         {% endfor %}
   </div>
 </div>
-{% if current_user.is_admin %}
+{% if new_collection_show %}
 <a href="../new_collection"><i class="bi bi-plus"></i> Новая подборка</a>
 {% endif %}
 
@@ -160,7 +160,7 @@
                 {% for word in collection['words'] %}
                     <li><a href="/word?word={{word}}">{{word}}</a></li>
                 {% endfor %}
-                {% if current_user.is_admin %}
+                {% if new_collection_show %}
                 <a href="../add_word/{{collection['id']}}"><i class="bi bi-plus"></i>Добавить слово</a>
                 {% endif %}
             </ul>

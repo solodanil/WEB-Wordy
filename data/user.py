@@ -26,28 +26,15 @@ class AccessLevel(SqlAlchemyBase, SerializerMixin):
     words_learning = sqlalchemy.Column(sqlalchemy.Boolean, default=True)
     new_club = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
     new_collection = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
-    word2collection = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
     admin_panel = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
 
     admin_panel_users = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
-    users_edit = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
-    users_create = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
-    users_delete = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
 
     admin_panel_clubs = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
-    clubs_edit = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
-    clubs_create = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
-    clubs_delete = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
 
     admin_panel_collections = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
-    collections_edit = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
-    collections_create = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
-    collections_delete = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
 
     admin_panel_vocabulary = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
-    vocabulary_edit = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
-    vocabulary_create = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
-    vocabulary_delete = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
 
     admin_panel_access = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
 
