@@ -103,7 +103,14 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        Для записи на разговорные клубы и заучивания слов в боте Вам нужно войти с помощью вашего аккаунта VK. <br> Мы будем использовать Ваш список друзей, чтобы рекомендовать самые интересные клубы.
+        Для записи на разговорные клубы и заучивания слов в боте Вам нужно войти с помощью вашего аккаунта VK. <br><br>
+          <div class="alert alert-success d-flex align-items-center" role="alert">
+            <i class="bi bi-shield-fill-check"></i>
+            <div>
+                <b>Безопасно!</b> Wordy не имеет доступа к Вашим паролям и страницам.
+            </div>
+          </div>
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-vk" onclick="location.href='//{{request.headers.get('host')}}/auth'">
