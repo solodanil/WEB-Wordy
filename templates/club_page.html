@@ -36,7 +36,7 @@
                 <li><a href='{{club["calendar_link"]}}'><i class="bi bi-calendar-event"></i>Добавить в календарь</a></li>
             {% if current_user.is_admin %}
                 <li><br></li>
-                <li><a href="./../del_club/{{club['id']}}"><i class="bi bi-trash"></i> Удалить клуб</a></li>
+                <li><a href="./../../del_club/{{club['id']}}"><i class="bi bi-trash"></i> Удалить клуб</a></li>
                 <li><a href="mailing"><i class="bi bi-reply-all-fill"></i> Разослать сообщение участникам</a></li>
             {% endif %}
                 </ul>

@@ -1,3 +1,4 @@
+import logging
 import os
 import datetime
 import shutil
@@ -8,7 +9,7 @@ from flask import Flask, url_for, request, render_template, redirect, flash, mak
 from flask_admin import Admin
 from flask_admin.contrib.fileadmin import FileAdmin
 from flask_login import current_user, login_user, LoginManager, logout_user, login_required
-from waitress import serve
+from vk_api.utils import get_random_id
 from werkzeug.exceptions import abort
 from werkzeug.utils import secure_filename
 from dateutil import parser
@@ -16,13 +17,14 @@ import vk_api
 from flask_restful import abort, Api
 from flask_sqlalchemy import SQLAlchemy
 from flask_moment import Moment
+from waitress import serve
 
 from admin import MainView, UserView, FileView, ClubView, CollectionView, VocabularyView, AccessLevelView
 
 from data import db_session
 from data.speaking_club import SpeakingClub
 from data.user import User, AccessLevel
-from forms.club_form import SpeakingClubForm
+from forms.club_form import SpeakingClubForm, MailingForm
 from data.word_to_user import Vocabulary
 
 from data.collection import Collection, Word
@@ -35,6 +37,19 @@ from tools import get_collections, get_club, get_user_words
 import config
 
 import dictionary
+
+logging.getLogger("pymorphy2").setLevel(logging.DEBUG)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s:%(name)s:%(message)s')
+logging.basicConfig(
+    level="DEBUG",
+    format="%(asctime)s %(levelname)s:%(name)s:%(message)s",
+    datefmt='%d-%b-%y %H:%M:%S',
+    force=True,
+    handlers=[
+        logging.FileHandler("debug.log"),
+        logging.StreamHandler()
+    ])
+logging.info('This is app launching')
 
 app = Flask(__name__)
 api = Api(app)
@@ -420,6 +435,32 @@ def add_collection(club_id):
         db_sess.commit()
         return redirect(f'/clubs/{club_id}')
     return render_template('collection_club_form.html', form=form, title='Добавление подборки к клубу',
+                           club_name=club.title)
+
+
+@app.route('/clubs/<club_id>/mailing', methods=['GET', 'POST'])
+@login_required
+def club_mailing(club_id):
+    # if not current_user.is_admin:
+    #     return abort(404)
+    db_sess = db_session.create_session()
+    club = db_sess.query(SpeakingClub).filter(SpeakingClub.id == club_id).first()
+    form = MailingForm()
+    if form.validate_on_submit():
+        vk_session = vk_api.VkApi(token=config.TOKEN)
+        vk = vk_session.get_api()
+        for user in club.users:
+            try:
+                vk.messages.send(
+                    message=form.text.data,
+                    random_id=get_random_id(),
+                    peer_id=user.social_id
+                )
+                logging.info(f'Message sent to {user}')
+            except Exception as ex:
+                logging.info(f'Message wasn’t sent to {user} (error {ex.__str__(), ex.args})')
+        return redirect(f'/clubs/{club_id}')
+    return render_template('mailing.html', form=form, title='Отправка сообщения',
                            club_name=club.title)
 
 
