@@ -45,7 +45,7 @@
 
     <h3 class="head_h2">Эти слова пригодятся</h3>
     {% if current_user.is_admin %}
-                <a href="../clubs/{{club['id']}}/add_collection"><i class="bi bi-plus"></i>Привязать подборку</a>
+                <a href="../../clubs/{{club['id']}}/add_collection"><i class="bi bi-plus"></i>Привязать подборку</a>
                 {% endif %}
     <div class="row">
         {% for collection in club['collections'] %}
