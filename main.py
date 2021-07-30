@@ -33,12 +33,11 @@ from forms.word_form import WordForm
 
 import resources
 
-from tools import get_collections, get_club, get_user_words
+from tools import get_collections, get_club, get_user_words, del_dir
 import config
 
 import dictionary
 
-logging.getLogger("pymorphy2").setLevel(logging.DEBUG)
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s:%(name)s:%(message)s')
 logging.basicConfig(
     level="DEBUG",
@@ -365,7 +364,7 @@ def add_club():
             club_id = db_sess.query(SpeakingClub).order_by(SpeakingClub.id.desc()).first().id + 1
         except AttributeError:
             club_id = 1
-
+        del_dir(f'static/images/clubs/{club_id}')
         os.mkdir(os.path.join(basedir, f'static/images/clubs/{club_id}'))
         img.save(os.path.join(basedir, f'static/images/clubs/{club_id}/{filename}'))
         club.image = f'images/clubs/{club_id}/{filename}'
@@ -394,6 +393,7 @@ def new_collection():
         except AttributeError:
             collection_id = 1
 
+        del_dir(f'static/images/collection/{collection_id}')
         os.mkdir(os.path.join(basedir, f'static/images/collection/{collection_id}'))
         img.save(os.path.join(basedir, f'static/images/collection/{collection_id}/{filename}'))
         collection.image = f'images/collection/{collection_id}/{filename}'

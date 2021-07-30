@@ -1,4 +1,5 @@
 import datetime
+import os
 
 import pymorphy2
 
@@ -46,7 +47,7 @@ def slov_agree_with_number(num: int) -> str:
         return f'{root}о'
     if len(str(num)) > 1:
         last_two_digits = int(str(num)[-2:])
-        if 10 <= last_two_digits <= 20 :
+        if 10 <= last_two_digits <= 20:
             return f'{root}'
     if 2 <= last_digit < 5:
         return f'{root}а'
@@ -85,11 +86,7 @@ def get_collections(raw_collections, user_words):
 def get_club(raw_club, current_user, user_words, booked=False, from_club_page=False):
     active = True
     free_seats = raw_club.number_of_seats - len(raw_club.users)  # количество оставшихся мест
-    try:
-        mest = mest_agree_with_number(free_seats)
-    except IndexError:
-        mest_parse = morph.parse('место')[0]
-        mest = mest_parse.make_agree_with_number(free_seats).word
+    mest = mest_agree_with_number(free_seats)
     minut = min_agree_with_number(raw_club.duration)
     if current_user.is_anonymous:
         active = False
@@ -134,10 +131,20 @@ def get_user_words(user):
         return {}
 
 
+def del_dir(dir):
+    for root, dirs, files in os.walk(dir, topdown=False):
+        for name in files:
+            os.remove(os.path.join(root, name))
+        for name in dirs:
+            os.rmdir(os.path.join(root, name))
+    os.rmdir(os.path.join(dir))
+
+
 if __name__ == '__main__':
-    morph = pymorphy2.MorphAnalyzer()
-    slov_parse = morph.parse('минута')[0]
-    for i in range(200):
-        slov = slov_parse.make_agree_with_number(i).word
-        if slov != min_agree_with_number(i):
-            print(i, slov, min_agree_with_number(i))
+    del_dir('not_exist')
+    # morph = pymorphy2.MorphAnalyzer()
+    # slov_parse = morph.parse('минута')[0]
+    # for i in range(200):
+    #     slov = slov_parse.make_agree_with_number(i).word
+    #     if slov != min_agree_with_number(i):
+    #         print(i, slov, min_agree_with_number(i))
