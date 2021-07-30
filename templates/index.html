@@ -21,6 +21,8 @@
         </a>
           {% if clubs[0][1]['booked'] %}
                                 <a href="/clubs/{{clubs[0][1]['id']}}/join" class="btn btn-success all-sc-card-body-a">Перейти к встрече</a>
+            {% elif clubs[0][1]['free_seats'] == "нет мест" %}
+                <a href="/clubs/{{clubs[0][1]['id']}}?book" class="btn btn-primary all-sc-card-body-a disabled">Записаться</a>
           {% else %}
             {% if clubs[0][1]['active'] %}
                 <a href="/clubs/{{clubs[0][1]['id']}}?book" class="btn btn-primary all-sc-card-body-a">Записаться</a>
@@ -54,6 +56,8 @@
           {% else %}
             {% if clubs[1][1]['active'] %}
                 <a href="/clubs/{{clubs[1][1]['id']}}?book" class="btn btn-primary all-sc-card-body-a">Записаться</a>
+            {% elif clubs[1][1]['free_seats'] == "нет мест" %}
+                <a href="/clubs/{{clubs[1][1]['id']}}?book" class="btn btn-primary all-sc-card-body-a disabled">Записаться</a>
             {% else %}
                 <button data-bs-toggle="modal" data-bs-target="#exampleModal" type="button" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Войдите, чтобы записаться">
                     Записаться
@@ -84,6 +88,8 @@
           {% else %}
             {% if clubs[1][1]['active'] %}
                 <a href="/clubs/{{clubs[2][1]['id']}}?book" class="btn btn-primary all-sc-card-body-a">Записаться</a>
+            {% elif clubs[2][1]['free_seats'] == "нет мест" %}
+                <a href="/clubs/{{clubs[2][1]['id']}}?book" class="btn btn-primary all-sc-card-body-a disabled">Записаться</a>
             {% else %}
                 <button data-bs-toggle="modal" data-bs-target="#exampleModal" type="button" class="btn btn-primary" data-bs-placement="top" title="Войдите, чтобы записаться">
                     Записаться

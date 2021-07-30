@@ -70,7 +70,7 @@
                                 </ul>
                             </a>
                             {% if club['booked'] %}
-                                <li><a href="club['link']" class="btn btn-success">Перейти к встрече</a></li>
+                                <li><a href="/clubs/{{club['id']}}/join" class="btn btn-success">Перейти к встрече</a></li>
                             {% else %}
                                 {% if club['active'] %}
                                     <li><a href="?book" class="btn btn-primary">Записаться</a></li>
