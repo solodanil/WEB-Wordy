@@ -206,9 +206,12 @@ def club_page(club_id):
         if not user.access_level.index:
             return 'Отказано в доступе. Обратитесь в поддержку'
     if 'unbook' in request.args:  # отмена записи
-        user.speaking_club.remove(raw_club)
-        db_sess.commit()
-        booked = False
+        try:
+            user.speaking_club.remove(raw_club)
+            db_sess.commit()
+            booked = False
+        except ValueError:
+            pass
     elif 'book' in request.args:  # запись на клуб
         if not user.access_level.club_booking:
             return 'Отказано в доступе. Обратитесь в поддержку'

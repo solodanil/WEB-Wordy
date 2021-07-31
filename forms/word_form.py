@@ -6,4 +6,4 @@ from wtforms.validators import DataRequired
 
 class WordForm(FlaskForm):
     name = StringField('Слово', validators=[DataRequired()])
-    submit = SubmitField('Создать')
+    submit = SubmitField('Добавить')
