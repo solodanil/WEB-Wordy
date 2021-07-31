@@ -14,6 +14,9 @@
         {% endfor %}
     </p>
     {{message}}
-    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+    <ul class="list-inline">
+        <li class="list-inline-item"><p>{{ form.submit(type="submit", class="btn btn-primary") }}</p></li>
+        <li class="list-inline-item"><a class="btn btn-outline-primary" href="../../new_collection" target="_blank"><i class="bi bi-box-arrow-up-right"></i> Создать новую подборку</a></li>
+    </ul>
 </form>
 {% endblock %}

@@ -135,12 +135,15 @@ def get_user_words(user):
 
 
 def del_dir(dir):
-    for root, dirs, files in os.walk(dir, topdown=False):
-        for name in files:
-            os.remove(os.path.join(root, name))
-        for name in dirs:
-            os.rmdir(os.path.join(root, name))
-    os.rmdir(os.path.join(dir))
+    try:
+        for root, dirs, files in os.walk(dir, topdown=False):
+            for name in files:
+                os.remove(os.path.join(root, name))
+            for name in dirs:
+                os.rmdir(os.path.join(root, name))
+        os.rmdir(os.path.join(dir))
+    except Exception:
+        pass
 
 
 if __name__ == '__main__':
