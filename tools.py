@@ -27,6 +27,8 @@ def min_agree_with_number(num: int) -> str:
 def mest_agree_with_number(num: int) -> str:
     root = 'мест'
     last_digit = int(str(num)[-1])
+    if num <= 0:
+        return f'{root}'
     if last_digit == 1 and '11' not in str(num):
         return f'{root}о'
     if len(str(num)) > 1:
@@ -93,6 +95,7 @@ def get_club(raw_club, current_user, user_words, booked=False, from_club_page=Fa
     else:
         if current_user in raw_club.users:
             booked = True
+            active = True
 
     if raw_club.date < datetime.date.today():
         active = False
