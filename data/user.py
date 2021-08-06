@@ -29,14 +29,24 @@ class AccessLevel(SqlAlchemyBase, SerializerMixin):
     admin_panel = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
 
     admin_panel_users = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
+    admin_panel_users_create = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
+    admin_panel_users_edit = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
 
     admin_panel_clubs = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
+    admin_panel_clubs_create = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
+    admin_panel_clubs_edit = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
 
     admin_panel_collections = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
+    admin_panel_collections_create = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
+    admin_panel_collections_edit = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
 
     admin_panel_vocabulary = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
+    admin_panel_vocabulary_create = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
+    admin_panel_vocabulary_edit = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
 
     admin_panel_access = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
+    admin_panel_access_create = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
+    admin_panel_access_edit = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
 
     static_files = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
 
