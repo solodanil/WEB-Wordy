@@ -94,7 +94,7 @@ async def next_word_message(message: Message):
         await message.answer(
             f'''{word["word"]["emoji"]}{word["word"]["word"].capitalize()} — {word["word"]["translation"]}
 
-        {word['word']["dictionary"][0]['meanings'][0]['definitions'][0]['definition']}''',
+{word['word']["dictionary"][0]['meanings'][0]['definitions'][0]['definition']}''',
             keyboard=NEXT_KEYBOARD, attachment=photo)
         await bot.state_dispenser.set(message.peer_id, UserState.UNKNOWN)
         post(f'http://{url}/api/v1/vocabulary/{message.peer_id}', json={'word_id': word["word"]['word_id']})
