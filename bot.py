@@ -128,7 +128,7 @@ async def next_word_message(message: Message):
             photo_stream, peer_id=message.peer_id
         )
         print(word)
-        post(f'http://{url}/api/v1/vocabulary/{message.peer_id}', json={'word_id': word["word"]['word_id']})
+        post(f'https://{url}/api/v1/vocabulary/{message.peer_id}', json={'word_id': word["word"]['word_id']})
         await message.answer(
             f'''✅Верно!
 {word["word"]["emoji"]}{word["word"]["word"].capitalize()} — {word["word"]["translation"]}
