@@ -57,7 +57,7 @@ async def test_message(message: Message):
 
 @bot.on.private_message(text="Начать")
 async def start_message(message: Message):
-    response = get(f'http://{url}/api/v1/user/{message.peer_id}').json()
+    response = get(f'https://{url}/api/v1/user/{message.peer_id}').json()
     if 'user' not in response:
         await message.answer(f'''Привет!
 Кажется, ты не зарегистрирован на сайте под этим аккаунтом
@@ -73,7 +73,7 @@ async def start_message(message: Message):
 
 @bot.on.private_message(text="Следующее слово")
 async def next_word_message(message: Message):
-    word = get(f'http://{url}/api/v1/vocabulary/{message.peer_id}').json()
+    word = get(f'https://{url}/api/v1/vocabulary/{message.peer_id}').json()
     answers = set(word['incorrect_words'])
     answers.add(word["word"]["word"])
     user_words[message.peer_id] = {'correct': word["word"]["word"], 'incorrect': set(word['incorrect_words']),
@@ -90,14 +90,14 @@ async def next_word_message(message: Message):
             photo_stream, peer_id=message.peer_id
         )
         print(word)
-        post(f'http://{url}/api/v1/vocabulary/{message.peer_id}', json={'word_id': word["word"]['word_id']})
+        post(f'https://{url}/api/v1/vocabulary/{message.peer_id}', json={'word_id': word["word"]['word_id']})
         await message.answer(
             f'''{word["word"]["emoji"]}{word["word"]["word"].capitalize()} — {word["word"]["translation"]}
 
 {word['word']["dictionary"][0]['meanings'][0]['definitions'][0]['definition']}''',
             keyboard=NEXT_KEYBOARD, attachment=photo)
         await bot.state_dispenser.set(message.peer_id, UserState.UNKNOWN)
-        post(f'http://{url}/api/v1/vocabulary/{message.peer_id}', json={'word_id': word["word"]['word_id']})
+        post(f'https://{url}/api/v1/vocabulary/{message.peer_id}', json={'word_id': word["word"]['word_id']})
         return None
     if rnd == 0:
         photo_url = word['word']["image"]
@@ -152,7 +152,7 @@ async def next_word_message(message: Message):
             keyboard=NEXT_KEYBOARD, attachment=photo)
         await bot.state_dispenser.set(message.peer_id, UserState.UNKNOWN)
     if message.text == 'Дальше':
-        word = get(f'http://{url}/api/v1/vocabulary/{message.peer_id}').json()
+        word = get(f'https://{url}/api/v1/vocabulary/{message.peer_id}').json()
         photo_url = word['word']["image"]
         photo_stream = get(photo_url).content
         photo = await PhotoMessageUploader(bot.api).upload(
