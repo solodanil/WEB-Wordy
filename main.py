@@ -38,6 +38,8 @@ import config
 
 import dictionary
 
+werkzeug_logger = logging.getLogger('werkzeug')
+werkzeug_logger.setLevel(logging.INFO)
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s:%(name)s:%(message)s')
 logging.basicConfig(
     level="DEBUG",
@@ -72,7 +74,6 @@ admin.add_view(VocabularyView(Vocabulary, db.session))
 admin.add_view(AccessLevelView(AccessLevel, db.session))
 path = op.join(op.dirname(__file__), 'static')
 admin.add_view(FileView(path, '/static/', name='Static Files'))
-
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -118,7 +119,8 @@ def index():
     user_words = get_user_words(current_user)
     res = list(map(lambda x: (x[0], get_club(x[1], current_user, user_words)), res[:3]))
     print(res)
-    return render_template('index.html', collections=collections, clubs=res, title='Wordy', new_collection_show=new_collection_show)
+    return render_template('index.html', collections=collections, clubs=res, title='Wordy',
+                           new_collection_show=new_collection_show)
 
 
 @app.route('/auth')
@@ -191,7 +193,8 @@ def clubs():
             user_words = get_user_words(current_user)
             club = get_club(raw_club, current_user, user_words)
             res_clubs[date].append(club)
-    return render_template('clubs.html', clubs=res_clubs, title='Разговорные клубы', show_new_club_link=show_new_club_link)
+    return render_template('clubs.html', clubs=res_clubs, title='Разговорные клубы',
+                           show_new_club_link=show_new_club_link)
 
 
 @app.route('/clubs/<club_id>/')
@@ -465,6 +468,11 @@ def club_mailing(club_id):
         return redirect(f'/clubs/{club_id}')
     return render_template('mailing.html', form=form, title='Отправка сообщения',
                            club_name=club.title)
+
+
+@app.route('/start')
+def landing():
+    return redirect('https://wordy-start.tilda.ws')
 
 
 @app.route('/manifest.json')
