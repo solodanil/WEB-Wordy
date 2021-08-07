@@ -138,6 +138,7 @@ def oauth_handler():
     """обрабатывает ответ oauth, регистрирует или авторизует пользователя, после чего возвращает на страницу из куки"""
     req_url = f'https://oauth.vk.com/access_token?client_id={config.vk_id}&client_secret={config.vk_secret}&redirect_uri=http://{request.headers.get("host")}/oauth_handler&code={request.args.get("code")}'
     response = requests.get(req_url).json()
+    redirect_url = request.cookies.get("auth_redirect", request.headers.get("host"))
     if not current_user.is_anonymous:
         return redirect(url_for('index'))
     if response.get('user_id') is None:
@@ -160,8 +161,9 @@ def oauth_handler():
         user.access_level = db_sess.query(AccessLevel).get(1)
         db_sess.add(user)
         db_sess.commit()
+        login_user(user, True)
+        return redirect(redirect_url + '#notification')
     login_user(user, True)
-    redirect_url = request.cookies.get("auth_redirect", request.headers.get("host"))
     return redirect(redirect_url)
 
 
