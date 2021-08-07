@@ -223,6 +223,23 @@ def club_page(club_id):
         raw_club.users.append(user)
         db_sess.commit()
         booked = True
+        vk_session = vk_api.VkApi(token=config.TOKEN)
+        vk = vk_session.get_api()
+        try:
+            vk.messages.send(
+                message=f'Новая запись на клуб {user}  '
+                        f' https://vk.com/gim204114880?sel={user.social_id}',
+                random_id=get_random_id(),
+                peer_id=user.social_id
+            )
+            vk.messages.send(
+                message=f'Здравствуйте! Мы получили Вашу заявку на запись на разговорный клуб. Скоро мы отправим Вам ссылку на оплату. Однако уже сейчас можно учить слова, для этого добавьте подбору в свой словарь на сайте и напишите сюда «Начать»',
+                random_id=get_random_id(),
+                peer_id=281317152
+            )
+            logging.info(f'Message sent to {user}')
+        except Exception as ex:
+            logging.info(f'Message wasn’t sent to {user} (error {ex.__str__(), ex.args})')
     user_words = get_user_words(
         current_user)  # получаем словарь пользователя, чтобы определить, добавлял ли пользователь подборки
     club = get_club(raw_club, current_user, user_words, booked=booked, from_club_page=True)
