@@ -67,6 +67,7 @@ class User(SqlAlchemyBase, UserMixin, SerializerMixin):
     email = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     registration_date = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now())
     is_admin = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
+    balance = sqlalchemy.Column(sqlalchemy.Integer, nullable=False, default=0)
     access_level_id = sqlalchemy.Column(sqlalchemy.Integer,
                                 sqlalchemy.ForeignKey("access_level.id"))
     access_level = orm.relation('AccessLevel')
