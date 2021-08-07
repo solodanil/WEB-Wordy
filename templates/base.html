@@ -3,12 +3,20 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <link rel="stylesheet"
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
           crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+var hash_v = window.location.hash;
+if (hash_v == "#notification") {$('#modal_uveg').modal('show');}
+});
+</script>
     <link rel="stylesheet" href="{{url_for('static', filename='css/main.css')}}">
+             <script src="https://vk.com/js/api/openapi.js?169" type="text/javascript"></script>
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="msapplication-starturl" content="/">
@@ -61,7 +69,7 @@
                 <a class="navbar-brand" style="text-indent: 15px;">{{ current_user.name }}</a>
               <a href="/logout"> <i class="bi bi-door-closed-fill"></i></a>
 {% else %}
-    <a class="d-flex login-btn tdn" data-bs-toggle="modal" data-bs-target="#exampleModal" href="">
+    <a class="d-flex login-btn tdn" onclick="$('#exampleModal').modal('show');">
               <i class="bi bi-box-arrow-in-right"></i>
             </a>
 {% endif %}
@@ -95,14 +103,33 @@
 
     <script src="//{{ request.headers.get('host') }}/service-worker.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script> 
 <!-- Modal -->
+<div class="modal fade" id="modal_uveg">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Еще один шаг</h4>
+        </div>
+        <div class="modal-body text-center">Разрешите сообщения от сообщетсва. Только после этого мы сможем отправлять Вам напоминания о начале клубов.
+<div id="vk_allow_messages_from_community"></div>
+<script type="text/javascript">
+VK.Widgets.AllowMessagesFromCommunity("vk_allow_messages_from_community", {height: 30}, 204114880);
+</script>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" data-dismiss="modal">Готово</button>
+        </div>
+      </div>
+    </div>
+  </div> 
+<!-- МО -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h3 class="modal-title" id="exampleModalLabel">Войти или зарегистрироваться</h3>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
       </div>
       <div class="modal-body">
         Для записи на разговорные клубы и заучивания слов в боте Вам нужно войти с помощью вашего аккаунта VK. <br><br>
