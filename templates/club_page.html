@@ -15,18 +15,36 @@
         <div class="col-md-1"></div>
         <div class="col-md-3">
             <ul class="sc-btn-group">
+
                 {% if club['booked'] %}
-                <li><a href="join" class="btn btn-success">Перейти к встрече</a></li><br>
-                <a href="?unbook"><i class="bi bi-x-circle"></i> Отменить запись</a>
+                    <li><a href="join" class="btn btn-success">Перейти к встрече</a></li><br>
+                    <a href="?unbook"><i class="bi bi-x-circle"></i> Отменить запись</a>
+                {% elif club['free_seats'] == "нет мест" %}
+                    <button type="button" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Нет мест" disabled>
+                        Записаться
+                    </button>
                 {% else %}
-                {% if club['active'] %}
-                <li><a href="?book" class="btn btn-primary">Записаться</a></li>
-                {% else %}
-                <button type="button" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Войдите, чтобы записаться" disabled>
-                Записаться
-                </button>
+                    {% if club['active'] %}
+                        <li><a href="?book" class="btn btn-primary">Записаться</a></li>
+                    {% else %}
+                        <li><button data-bs-toggle="modal" data-bs-target="#exampleModal" type="button" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Войдите, чтобы записаться">
+                        Записаться
+                        </button></li>
+                    {% endif %}
                 {% endif %}
-                {% endif %}
+
+<!--                {% if club['booked'] %}-->
+<!--                <li><a href="join" class="btn btn-success">Перейти к встрече</a></li><br>-->
+<!--                <a href="?unbook"><i class="bi bi-x-circle"></i> Отменить запись</a>-->
+<!--                {% else %}-->
+<!--                {% if club['active'] %}-->
+<!--                <li><a href="?book" class="btn btn-primary">Записаться</a></li>-->
+<!--                {% else %}-->
+<!--                <button type="button" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Войдите, чтобы записаться" disabled>-->
+<!--                Записаться-->
+<!--                </button>-->
+<!--                {% endif %}-->
+<!--                {% endif %}-->
             </ul>
             <ul class="sc-ul-club-page sc-ul">
                 <li><i class="bi bi-calendar"></i>{{ moment(club['date']).format('D MMMM') }}, в {{ moment(club['time']).format('LT') }}</li>
