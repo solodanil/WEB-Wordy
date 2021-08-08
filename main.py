@@ -139,16 +139,21 @@ def oauth_handler():
     req_url = f'https://oauth.vk.com/access_token?client_id={config.vk_id}&client_secret={config.vk_secret}&redirect_uri=http://{request.headers.get("host")}/oauth_handler&code={request.args.get("code")}'
     response = requests.get(req_url).json()
     redirect_url = request.cookies.get("auth_redirect", request.headers.get("host"))
+    logging.debug(response)
     if not current_user.is_anonymous:
+        logging.debug(f'not current_user.is_anonymous {response}')
         return redirect(url_for('index'))
     if response.get('user_id') is None:
+        logging.debug(f'user_id is none {response}')
         print(response)
         flash('Authentication failed.')
         return redirect(url_for('index'))
     db_sess = db_session.create_session()
     user = db_sess.query(User).filter(
         User.social_id == response['user_id']).first()  # ищем пользователя с таким же social_id
+    logging.debug(f"{user}, {response['user_id']}")
     if not user:  # если не находим, то создаем нового
+        logging.debug(f'not user {user} {response["user_id"]} {response}')
         vk_session = vk_api.VkApi(token=response['access_token'])
         vk = vk_session.get_api()
         user_obj = vk.users.get(user_id=response['user_id'], fields="contacts")[0]
@@ -162,8 +167,10 @@ def oauth_handler():
         db_sess.add(user)
         db_sess.commit()
         login_user(user, True)
+        logging.debug(f'{user} {response} logged in')
         return redirect(redirect_url + '#notification')
     login_user(user, True)
+    logging.debug(f'{user} {response} logged in')
     return redirect(redirect_url)
 
 
