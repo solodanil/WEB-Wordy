@@ -43,6 +43,11 @@ class Word(SqlAlchemyBase, SerializerMixin):
 
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True, index=True)
     word = sqlalchemy.Column(sqlalchemy.String, index=True)
+    translation = sqlalchemy.Column(sqlalchemy.String)
+    image_url = sqlalchemy.Column(sqlalchemy.String)
+    emoji = sqlalchemy.Column(sqlalchemy.String)
+    phonetic = sqlalchemy.Column(sqlalchemy.String)
+    definition = sqlalchemy.Column(sqlalchemy.String)
 
     def __repr__(self):
         return f'<Word {self.id} {self.word}>'
