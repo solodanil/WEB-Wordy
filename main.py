@@ -324,14 +324,13 @@ def delete_club(club_id):
 def word():
     word = request.args.get('word').lower()
     print(word)
-    smile = dictionary.emoji(word)  # получаем эмодзи по слову
     added = False
     db_sess = db_session.create_session()
     word_obj = db_sess.query(Word).filter(Word.word == word).first()
     if not word_obj:
         word_obj = Word()
         word_obj.word = word
-        word_obj.emoji = smile
+        word_obj.emoji = dictionary.emoji(word)
         word_obj.translation = dictionary.translate(word)
         dict_response = dictionary.google_dict(word)[0]
         if not dict_response:
@@ -445,9 +444,21 @@ def add_word(collection_id):
     collection = db_sess.query(Collection).filter(Collection.id == collection_id).first()
     form = WordForm()
     if form.validate_on_submit():
-        new_word = Word()
-        new_word.word = form.name.data.lower()
-        collection.word.append(new_word)
+        word = form.name.data.lower()
+        word_obj = db_sess.query(Word).filter(Word.word == word).first()
+        if not word_obj:
+            word_obj = Word()
+            word_obj.word = word
+            word_obj.emoji = dictionary.emoji(word)
+            word_obj.translation = dictionary.translate(word)
+            dict_response = dictionary.google_dict(word)[0]
+            if not dict_response:
+                abort(404)
+            word_obj.definition = dict_response['meanings'][0]['definitions'][0]['definition']
+            word_obj.image_url = dictionary.search_image(word)
+            word_obj.phonetic = dict_response['phonetics'][0]['text']
+            db_sess.add(word_obj)
+        collection.word.append(word_obj)
         db_sess.commit()
         return redirect(f'/add_word/{collection_id}')
     return render_template('add_word.html', form=form, title='Добавление слова', collection_name=collection.name)
