@@ -1,3 +1,4 @@
+import time
 from random import choice
 
 from flask.json import jsonify
@@ -42,15 +43,14 @@ class VocabularyResource(Resource):
         word = vocab.word.word
         incorrect_words = list(
             map(lambda x: x.word, session.query(Word).filter(word != vocab.word).order_by(func.random()).all()[:2]))
-        dict_response = google_dict(word)
         return jsonify({
             'word':
                 {'word': word,
-                 'translation': translate(word),
-                 'emoji': emoji(word),
-                 'image': search_image(word),
-                 'synonyms': search_synonyms(dict_response[0]),
-                 'dictionary': dict_response,
+                 'translation': vocab.word.translation,
+                 'emoji': vocab.word.emoji,
+                 'image': vocab.word.image_url,
+                 'definition': vocab.word.definition,
+                 'phonetic': vocab.word.phonetic,
                  'word_id': vocab.word.id
                  },
             'lvl': vocab.lvl,
