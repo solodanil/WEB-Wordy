@@ -71,6 +71,7 @@ admin.add_view(UserView(User, db.session))
 admin.add_view(ClubView(SpeakingClub, db.session))
 admin.add_view(CollectionView(Collection, db.session))
 admin.add_view(VocabularyView(Vocabulary, db.session))
+admin.add_view(VocabularyView(Word, db.session))
 admin.add_view(AccessLevelView(AccessLevel, db.session))
 path = op.join(op.dirname(__file__), 'static')
 admin.add_view(FileView(path, '/static/', name='Static Files'))
@@ -326,8 +327,20 @@ def word():
     smile = dictionary.emoji(word)  # получаем эмодзи по слову
     added = False
     db_sess = db_session.create_session()
-    if not dictionary.google_dict(word, 'en_US'):
-        abort(404)
+    word_obj = db_sess.query(Word).filter(Word.word == word).first()
+    if not word_obj:
+        word_obj = Word()
+        word_obj.word = word
+        word_obj.emoji = smile
+        word_obj.translation = dictionary.translate(word)
+        dict_response = dictionary.google_dict(word)[0]
+        if not dict_response:
+            abort(404)
+        word_obj.definition = dict_response['meanings'][0]['definitions'][0]['definition']
+        word_obj.image_url = dictionary.search_image(word)
+        word_obj.phonetic = dict_response['phonetics'][0]['text']
+        db_sess.add(word_obj)
+        db_sess.commit()
     if current_user.is_anonymous:
         active = False  # возможность добавить в словарь
         added = False
@@ -338,11 +351,6 @@ def word():
             if voc.word.word == word:
                 added = True
         if 'del' in request.args and added:
-            word_obj = db_sess.query(Word).filter(Word.word == word).first()
-            if not word_obj:
-                word_obj = Word()
-                word_obj.word = word
-                db_sess.commit()
             voc = db_sess.query(Vocabulary).filter(Vocabulary.user_id == current_user.id,
                                                    Vocabulary.word == word_obj).first()
             db_sess.delete(voc)
@@ -352,26 +360,18 @@ def word():
             user = db_sess.query(User).get(current_user.id)
             if not user.access_level.words_learning:
                 return 'Отказано в доступе. Обратитесь в поддержку'
-            word_obj = db_sess.query(Word).filter(Word.word == word).first()
-            if not word_obj:
-                word_obj = Word()
-                word_obj.word = word
-                db_sess.commit()
             voc = Vocabulary(user_id=current_user.id, word=word_obj)
             db_sess.add(voc)
             db_sess.commit()
             added = True
-    dict_response = dictionary.google_dict(word)[0]
-    image = dictionary.search_image(word)
-    translated = dictionary.translate(word)
-    synonyms = dictionary.search_synonyms(dict_response)
+    # synonyms = dictionary.search_synonyms(dict_response)
     return render_template('word.html', original=word.capitalize(),
-                           image=image,
-                           translate_word=translated,
-                           emodji=smile,
-                           trancription=dict_response['phonetics'][0]['text'],
-                           definition=dict_response['meanings'][0]['definitions'][0]['definition'],
-                           synonyms=synonyms, added=added, active=active, title=word.capitalize())
+                           image=word_obj.image_url,
+                           translate_word=word_obj.translation,
+                           emodji=word_obj.emoji,
+                           trancription=word_obj.phonetic,
+                           definition=word_obj.definition,
+                           added=added, active=active, title=word.capitalize())
 
 
 @app.route('/new_club', methods=['GET', 'POST'])
