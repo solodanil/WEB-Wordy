@@ -241,6 +241,12 @@ def club_page(club_id):
                 peer_id=281317152
             )
             vk.messages.send(
+                message=f'Новая запись на клуб {user}  '
+                        f' https://vk.com/gim204114880?sel={user.social_id}',
+                random_id=get_random_id(),
+                peer_id=215381931
+            )
+            vk.messages.send(
                 message=f'Здравствуйте! Мы получили Вашу заявку на запись на разговорный клуб. Скоро мы отправим Вам ссылку на оплату. Однако уже сейчас можно учить слова, для этого добавьте подбору в свой словарь на сайте и напишите сюда «Начать»',
                 random_id=get_random_id(),
                 peer_id=user.social_id
