@@ -518,6 +518,11 @@ def landing():
     return redirect('https://wordy-start.tilda.ws')
 
 
+@app.route('/st')
+def landing():
+    return redirect('https://wordy-start.tilda.ws')
+
+
 @app.route('/manifest.json')
 def manifest():
     return open('manifest.json').read()
