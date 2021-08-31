@@ -519,7 +519,7 @@ def landing():
 
 
 @app.route('/st')
-def landing():
+def st():
     return redirect('https://wordy-start.tilda.ws')
 
 
